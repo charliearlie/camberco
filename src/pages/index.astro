@@ -36,7 +36,7 @@
         <a href="#proof" class="nav-link">Results</a>
         <a href="#services" class="nav-link">Services</a>
         <a href="#process" class="nav-link">Process</a>
-        <a href="#cta" class="nav-btn">Book Free Audit →</a>
+        <a href="https://calendly.com/camber-co/30min" class="nav-btn" target="_blank" rel="noopener noreferrer">Book Free Audit →</a>
       </div>
       <button class="mobile-toggle" aria-label="Menu" id="menuToggle">
         <span></span>
@@ -50,12 +50,13 @@
     <a href="#proof" class="mobile-menu-link">Results</a>
     <a href="#services" class="mobile-menu-link">Services</a>
     <a href="#process" class="mobile-menu-link">Process</a>
-    <a href="#cta" class="mobile-menu-link cta">Book Free Audit →</a>
+    <a href="https://calendly.com/camber-co/30min" class="mobile-menu-link cta" target="_blank" rel="noopener noreferrer">Book Free Audit →</a>
   </div>
 
   <main>
     <!-- ===== HERO ===== -->
     <section class="hero" id="hero">
+      <canvas id="hero-canvas" aria-hidden="true" role="presentation"></canvas>
       <div class="container">
         <div class="hero-content">
           <div class="hero-tag reveal">AI consultancy that ships</div>
@@ -69,7 +70,7 @@
             your team can use from day one.
           </p>
           <div class="hero-actions reveal">
-            <a href="#cta" class="btn btn-primary">Book Your Free AI Audit</a>
+            <a href="https://calendly.com/camber-co/30min" class="btn btn-primary" target="_blank" rel="noopener noreferrer">Book Your Free AI Audit</a>
             <a href="#proof" class="btn btn-ghost">See What We've Built ↓</a>
           </div>
         </div>
@@ -92,43 +93,6 @@
       </div>
     </section>
 
-    <!-- ===== DIFFERENCE ===== -->
-    <section class="difference" id="difference">
-      <div class="container">
-        <div class="section-header reveal">
-          <p class="section-tag">The difference</p>
-          <h2 class="section-title">Most AI consultants make presentations.<br />We make things that <em>work</em>.</h2>
-        </div>
-        <div class="comparison reveal">
-          <div class="compare-card compare-them">
-            <div class="compare-header">
-              <span class="compare-icon">📊</span>
-              <h3>Typical AI Consultancy</h3>
-            </div>
-            <ul>
-              <li>Delivers a strategy PDF</li>
-              <li>Recommends tools they've never used</li>
-              <li>Charges for "discovery phases" that discover nothing</li>
-              <li>Leaves you with a roadmap and no roadworthy vehicle</li>
-              <li>Bills by the hour, punished for efficiency</li>
-            </ul>
-          </div>
-          <div class="compare-card compare-us">
-            <div class="compare-header">
-              <span class="compare-icon">⚡</span>
-              <h3>Camber Co</h3>
-            </div>
-            <ul>
-              <li>Builds and deploys working automation</li>
-              <li>Uses the same AI tools daily — knows what actually works</li>
-              <li>Paid audit that converts directly into implementation</li>
-              <li>You get a working product, not a PowerPoint</li>
-              <li>Priced on value delivered, not hours burned</li>
-            </ul>
-          </div>
-        </div>
-      </div>
-    </section>
 
     <!-- ===== PROOF POINTS ===== -->
     <section class="proof" id="proof">
@@ -178,6 +142,19 @@
               <span class="proof-tag">End-to-End</span>
             </div>
           </div>
+          <div class="proof-card reveal">
+            <div class="proof-number">04</div>
+            <h3 class="proof-title">Solo App Developer — £20k Exit</h3>
+            <p class="proof-body">
+              A non-technical founder used our AI-augmented development workflow to
+              build a complete app from scratch. No coding background. No development
+              team. The app was built and sold for £20,000 in under 12 months.
+            </p>
+            <div class="proof-tag-row">
+              <span class="proof-tag">App Development</span>
+              <span class="proof-tag">Non-Technical Founder</span>
+            </div>
+          </div>
         </div>
       </div>
     </section>
@@ -193,9 +170,7 @@
         <div class="services-grid">
           <div class="service-card reveal">
             <div class="service-icon">
-              <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M9 11l3 3L22 4" /><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11" />
-              </svg>
+              <img src="/svg/01-ai-readiness-audit.svg" alt="" width="56" height="56" />
             </div>
             <h3>AI Readiness Audit</h3>
             <p>Half-day assessment of your business. You get a prioritised report showing exactly where AI saves you time and money. No fluff.</p>
@@ -203,9 +178,7 @@
           </div>
           <div class="service-card reveal">
             <div class="service-icon">
-              <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-                <polyline points="16 18 22 12 16 6" /><polyline points="8 6 2 12 8 18" />
-              </svg>
+              <img src="/svg/02-workflow-automation.svg" alt="" width="56" height="56" />
             </div>
             <h3>Workflow Automation</h3>
             <p>We automate your most painful manual processes. Invoicing, lead qualification, onboarding, report generation — built and deployed.</p>
@@ -213,9 +186,7 @@
           </div>
           <div class="service-card reveal">
             <div class="service-icon">
-              <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z" />
-              </svg>
+              <img src="/svg/03-ai-chatbots.svg" alt="" width="56" height="56" />
             </div>
             <h3>AI Chatbots &amp; Assistants</h3>
             <p>Customer service bots for WhatsApp, web, or Messenger. Handle FAQs and bookings 24/7 with warm handoff to your team for complex queries.</p>
@@ -223,9 +194,7 @@
           </div>
           <div class="service-card reveal">
             <div class="service-icon">
-              <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M2 3h6a4 4 0 014 4v14a3 3 0 00-3-3H2z" /><path d="M22 3h-6a4 4 0 00-4 4v14a3 3 0 013-3h7z" />
-              </svg>
+              <img src="/svg/04-knowledge-assistant.svg" alt="" width="56" height="56" />
             </div>
             <h3>Internal Knowledge Assistant</h3>
             <p>AI trained on your docs, processes, and SOPs. New starter onboarding drops from weeks to days. Your team's knowledge, available instantly.</p>
@@ -233,9 +202,7 @@
           </div>
           <div class="service-card reveal">
             <div class="service-icon">
-              <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-                <circle cx="12" cy="12" r="10" /><path d="M12 6v6l4 2" />
-              </svg>
+              <img src="/svg/05-fractional-cto.svg" alt="" width="56" height="56" />
             </div>
             <h3>Fractional CTO</h3>
             <p>Embedded in your business 1-2 days a week. Strategic AI roadmap, vendor management, team training. Your technology leader, without the full-time cost.</p>
@@ -243,9 +210,7 @@
           </div>
           <div class="service-card reveal">
             <div class="service-icon">
-              <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2" /><circle cx="9" cy="7" r="4" /><path d="M23 21v-2a4 4 0 00-3-3.87" /><path d="M16 3.13a4 4 0 010 7.75" />
-              </svg>
+              <img src="/svg/06-team-workshops.svg" alt="" width="56" height="56" />
             </div>
             <h3>Team Workshops</h3>
             <p>Hands-on AI training tailored to your industry and roles. Your team leaves knowing how to use AI effectively in their daily work, not just what AI "could" do.</p>
@@ -321,7 +286,7 @@
             the highest-impact opportunities, and show you exactly what's possible.
             No commitment. No sales pitch. Just clarity.
           </p>
-          <a href="https://calendly.com/camberco" class="btn btn-primary btn-large" target="_blank" rel="noopener noreferrer">
+          <a href="https://calendly.com/camber-co/30min" class="btn btn-primary btn-large" target="_blank" rel="noopener noreferrer">
             Book Your Free AI Audit
           </a>
           <p class="cta-note">30-minute call. We'll tell you honestly if AI is right for your business.</p>
@@ -343,6 +308,12 @@
       </div>
     </div>
     <div class="container">
+      <div class="built-badge">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>
+        </svg>
+        <span>This site was designed, built, and deployed in 30 minutes using AI-augmented workflows. That's the Camber Co difference.</span>
+      </div>
       <p class="footer-legal">© 2025 Camber Co LTD. Registered in England and Wales.</p>
     </div>
   </footer>
@@ -598,6 +569,21 @@
     pointer-events: none;
   }
 
+  #hero-canvas {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .hero > .container {
+    position: relative;
+    z-index: 1;
+  }
+
   .hero-content {
     max-width: 720px;
   }
@@ -689,102 +675,16 @@
   }
 
   /* ================================
-     DIFFERENCE SECTION
-     ================================ */
-  .difference {
-    padding: 100px 0;
-    background: #fafaf8;
-  }
-
-  .comparison {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 32px;
-    margin-top: 56px;
-  }
-
-  .compare-card {
-    padding: 40px;
-    border-radius: 16px;
-    border: 1px solid #e2e8f0;
-    background: #ffffff;
-  }
-
-  .compare-header {
-    display: flex;
-    align-items: center;
-    gap: 14px;
-    margin-bottom: 28px;
-  }
-
-  .compare-icon {
-    font-size: 24px;
-  }
-
-  .compare-card h3 {
-    font-family: 'Figtree', sans-serif;
-    font-size: 18px;
-    font-weight: 600;
-  }
-
-  .compare-card ul {
-    list-style: none;
-    display: flex;
-    flex-direction: column;
-    gap: 14px;
-  }
-
-  .compare-card li {
-    font-size: 15px;
-    line-height: 1.6;
-    padding-left: 24px;
-    position: relative;
-    color: #475569;
-  }
-
-  .compare-them li::before {
-    content: '✕';
-    position: absolute;
-    left: 0;
-    color: #e11d48;
-    font-size: 13px;
-    font-weight: 700;
-    top: 2px;
-  }
-
-  .compare-us {
-    border-color: #0f172a;
-    background: #0f172a;
-  }
-
-  .compare-us h3 {
-    color: #ffffff;
-  }
-
-  .compare-us li {
-    color: #cbd5e1;
-  }
-
-  .compare-us li::before {
-    content: '✓';
-    position: absolute;
-    left: 0;
-    color: #34d399;
-    font-size: 14px;
-    font-weight: 700;
-    top: 2px;
-  }
-
-  /* ================================
      PROOF SECTION
      ================================ */
   .proof {
     padding: 100px 0;
+    background: #fafaf8;
   }
 
   .proof-grid {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(2, 1fr);
     gap: 28px;
     margin-top: 56px;
   }
@@ -848,7 +748,6 @@
      ================================ */
   .services {
     padding: 100px 0;
-    background: #fafaf8;
   }
 
   .services-grid {
@@ -873,15 +772,15 @@
   }
 
   .service-icon {
-    width: 52px;
-    height: 52px;
-    border-radius: 12px;
-    background: #f1f5f9;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    width: 56px;
+    height: 56px;
     margin-bottom: 24px;
-    color: #0f172a;
+  }
+
+  .service-icon img {
+    width: 56px;
+    height: 56px;
+    display: block;
   }
 
   .service-card h3 {
@@ -911,6 +810,7 @@
      ================================ */
   .process {
     padding: 100px 0;
+    background: #fafaf8;
   }
 
   .process-steps {
@@ -968,7 +868,6 @@
      ================================ */
   .industries {
     padding: 100px 0;
-    background: #fafaf8;
   }
 
   .industry-tags {
@@ -1098,6 +997,26 @@
     color: #0f172a;
   }
 
+  .built-badge {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 14px 20px;
+    margin-bottom: 24px;
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 10px;
+    font-size: 13px;
+    font-weight: 500;
+    color: #64748b;
+    line-height: 1.5;
+  }
+
+  .built-badge svg {
+    flex-shrink: 0;
+    color: #94a3b8;
+  }
+
   .footer-legal {
     font-size: 13px;
     color: #cbd5e1;
@@ -1121,6 +1040,7 @@
   /* Stagger children in grids */
   .proof-grid .reveal:nth-child(2) { transition-delay: 0.1s; }
   .proof-grid .reveal:nth-child(3) { transition-delay: 0.2s; }
+  .proof-grid .reveal:nth-child(4) { transition-delay: 0.3s; }
 
   .services-grid .reveal:nth-child(2) { transition-delay: 0.08s; }
   .services-grid .reveal:nth-child(3) { transition-delay: 0.16s; }
@@ -1138,7 +1058,6 @@
     .nav-links { display: none; }
     .mobile-toggle { display: flex; }
 
-    .comparison { grid-template-columns: 1fr; }
     .proof-grid { grid-template-columns: 1fr; }
     .services-grid { grid-template-columns: 1fr 1fr; }
     .metric-grid { grid-template-columns: 1fr; gap: 28px; }
@@ -1146,7 +1065,7 @@
     .hero { padding: 130px 0 60px; }
     .hero-metric { margin-top: 56px; padding-top: 36px; }
 
-    .difference, .proof, .services, .process, .industries, .final-cta {
+    .proof, .services, .process, .industries, .final-cta {
       padding: 72px 0;
     }
   }
@@ -1158,6 +1077,7 @@
     .hero-actions .btn { width: 100%; justify-content: center; }
     .footer-inner { flex-direction: column; gap: 16px; text-align: center; }
     .footer-right { justify-content: center; }
+    .built-badge { text-align: left; }
     .step { gap: 20px; }
     .step-num { width: 44px; height: 44px; font-size: 20px; }
   }
@@ -1171,6 +1091,7 @@
       transform: none;
       transition: none;
     }
+    #hero-canvas { display: none; }
     html { scroll-behavior: auto; }
   }
 </style>
@@ -1226,4 +1147,159 @@
       }
     });
   });
+
+  // Hero particle constellation
+  if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    const canvas = document.getElementById('hero-canvas') as HTMLCanvasElement;
+    if (canvas) {
+      const ctx = canvas.getContext('2d');
+      if (ctx) {
+        const dpr = Math.min(window.devicePixelRatio || 1, 2);
+        let width = 0;
+        let height = 0;
+        let particles: { x: number; y: number; vx: number; vy: number }[] = [];
+        let animId = 0;
+        let isVisible = true;
+        let mouseX = -1000;
+        let mouseY = -1000;
+        const connectionDist = 150;
+        const hasFineMouse = window.matchMedia('(pointer: fine)').matches;
+
+        function getParticleCount() {
+          return window.innerWidth > 900 ? 80 : 45;
+        }
+
+        function resize() {
+          const parent = canvas.parentElement;
+          if (!parent) return;
+          const rect = parent.getBoundingClientRect();
+          width = rect.width;
+          height = rect.height;
+          canvas.width = width * dpr;
+          canvas.height = height * dpr;
+          canvas.style.width = width + 'px';
+          canvas.style.height = height + 'px';
+          ctx!.setTransform(dpr, 0, 0, dpr, 0, 0);
+        }
+
+        function initParticles() {
+          const count = getParticleCount();
+          particles = [];
+          for (let i = 0; i < count; i++) {
+            particles.push({
+              x: Math.random() * width,
+              y: Math.random() * height,
+              vx: (Math.random() - 0.5) * 0.4,
+              vy: (Math.random() - 0.5) * 0.4,
+            });
+          }
+        }
+
+        function draw() {
+          ctx!.clearRect(0, 0, width, height);
+
+          // Mouse offset for parallax
+          const offsetX = hasFineMouse ? (mouseX - width / 2) * 0.015 : 0;
+          const offsetY = hasFineMouse ? (mouseY - height / 2) * 0.015 : 0;
+
+          // Update positions
+          for (const p of particles) {
+            p.x += p.vx;
+            p.y += p.vy;
+            if (p.x < 0 || p.x > width) p.vx *= -1;
+            if (p.y < 0 || p.y > height) p.vy *= -1;
+            p.x = Math.max(0, Math.min(width, p.x));
+            p.y = Math.max(0, Math.min(height, p.y));
+          }
+
+          // Draw connections
+          ctx!.strokeStyle = 'rgba(15, 23, 42, 0.06)';
+          ctx!.lineWidth = 1;
+          for (let i = 0; i < particles.length; i++) {
+            for (let j = i + 1; j < particles.length; j++) {
+              const dx = particles[i].x - particles[j].x;
+              const dy = particles[i].y - particles[j].y;
+              const dist = Math.sqrt(dx * dx + dy * dy);
+              if (dist < connectionDist) {
+                const opacity = 0.06 * (1 - dist / connectionDist);
+                ctx!.strokeStyle = `rgba(15, 23, 42, ${opacity})`;
+                ctx!.beginPath();
+                ctx!.moveTo(particles[i].x + offsetX, particles[i].y + offsetY);
+                ctx!.lineTo(particles[j].x + offsetX, particles[j].y + offsetY);
+                ctx!.stroke();
+              }
+            }
+          }
+
+          // Draw particles
+          ctx!.fillStyle = 'rgba(15, 23, 42, 0.1)';
+          for (const p of particles) {
+            ctx!.beginPath();
+            ctx!.arc(p.x + offsetX, p.y + offsetY, 2, 0, Math.PI * 2);
+            ctx!.fill();
+          }
+
+          animId = requestAnimationFrame(draw);
+        }
+
+        document.fonts.ready.then(() => {
+          resize();
+          initParticles();
+          animId = requestAnimationFrame(draw);
+        });
+
+        // Pause when not visible — actually stop the loop
+        const heroSection = document.getElementById('hero');
+        if (heroSection) {
+          const heroObserver = new IntersectionObserver(
+            ([entry]) => {
+              if (entry.isIntersecting && !isVisible) {
+                isVisible = true;
+                animId = requestAnimationFrame(draw);
+              } else if (!entry.isIntersecting) {
+                isVisible = false;
+                cancelAnimationFrame(animId);
+              }
+            },
+            { threshold: 0 }
+          );
+          heroObserver.observe(heroSection);
+        }
+
+        // Mouse parallax (desktop only)
+        if (hasFineMouse) {
+          const parent = canvas.parentElement;
+          if (parent) {
+            parent.addEventListener('mousemove', (e) => {
+              const rect = parent.getBoundingClientRect();
+              mouseX = e.clientX - rect.left;
+              mouseY = e.clientY - rect.top;
+            });
+          }
+        }
+
+        // Debounced resize
+        let resizeTimer: number;
+        const onResize = () => {
+          clearTimeout(resizeTimer);
+          resizeTimer = window.setTimeout(() => {
+            resize();
+            const targetCount = getParticleCount();
+            if (Math.abs(particles.length - targetCount) > 10) {
+              initParticles();
+            }
+          }, 200);
+        };
+        window.addEventListener('resize', onResize);
+
+        // Cleanup on View Transitions or page unload
+        const cleanup = () => {
+          cancelAnimationFrame(animId);
+          window.removeEventListener('resize', onResize);
+        };
+        document.addEventListener('astro:before-swap', cleanup);
+        window.addEventListener('pagehide', cleanup);
+      }
+    }
+  }
 </script>
