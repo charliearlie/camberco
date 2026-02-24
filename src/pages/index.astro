@@ -93,7 +93,6 @@
       </div>
     </section>
 
-
     <!-- ===== PROOF POINTS ===== -->
     <section class="proof" id="proof">
       <div class="container">
@@ -105,10 +104,10 @@
         <div class="proof-grid">
           <div class="proof-card reveal">
             <div class="proof-number">01</div>
-            <h3 class="proof-title">Claude Code + MCP Servers</h3>
+            <h3 class="proof-title">AI-Augmented Development</h3>
             <p class="proof-body">
-              Our primary development environment. Claude Code connected to MCP
-              servers for Figma, Postgres, external APIs and more — turning
+              Our primary development environment. Advanced AI assistants connected to
+              specialized context servers for design, databases, external APIs and more — turning
               multi-hour tasks into minutes.
             </p>
             <div class="proof-tag-row">
@@ -118,7 +117,7 @@
           </div>
           <div class="proof-card reveal">
             <div class="proof-number">02</div>
-            <h3 class="proof-title">OpenClaw Cloud Bot</h3>
+            <h3 class="proof-title">Autonomous Cloud Agent</h3>
             <p class="proof-body">
               An autonomous AI agent deployed in the cloud, managing this website
               and coordinating our schedule. Always on, always current, no manual
@@ -131,10 +130,10 @@
           </div>
           <div class="proof-card reveal">
             <div class="proof-number">03</div>
-            <h3 class="proof-title">n8n Automation Workflows</h3>
+            <h3 class="proof-title">Intelligent Workflow Automation</h3>
             <p class="proof-body">
-              When an audit is requested, an n8n workflow picks it up instantly —
-              triaging the enquiry, notifying us on WhatsApp, and kicking off
+              When an audit is requested, an automated workflow picks it up instantly —
+              triaging the enquiry, notifying our team, and kicking off
               onboarding before we've finished our coffee.
             </p>
             <div class="proof-tag-row">
@@ -170,7 +169,7 @@
         <div class="services-grid">
           <div class="service-card reveal">
             <div class="service-icon">
-              <img src="/svg/01-ai-readiness-audit.svg" alt="" width="56" height="56" />
+              <img src="/svg/01-ai-readiness-audit.svg" alt="" width="56" height="56" onerror="this.style.display='none'" />
             </div>
             <h3>AI Readiness Audit</h3>
             <p>Half-day assessment of your business. You get a prioritised report showing exactly where AI saves you time and money. No fluff.</p>
@@ -178,7 +177,7 @@
           </div>
           <div class="service-card reveal">
             <div class="service-icon">
-              <img src="/svg/02-workflow-automation.svg" alt="" width="56" height="56" />
+              <img src="/svg/02-workflow-automation.svg" alt="" width="56" height="56" onerror="this.style.display='none'" />
             </div>
             <h3>Workflow Automation</h3>
             <p>We automate your most painful manual processes. Invoicing, lead qualification, onboarding, report generation — built and deployed.</p>
@@ -186,7 +185,7 @@
           </div>
           <div class="service-card reveal">
             <div class="service-icon">
-              <img src="/svg/03-ai-chatbots.svg" alt="" width="56" height="56" />
+              <img src="/svg/03-ai-chatbots.svg" alt="" width="56" height="56" onerror="this.style.display='none'" />
             </div>
             <h3>AI Chatbots &amp; Assistants</h3>
             <p>Customer service bots for WhatsApp, web, or Messenger. Handle FAQs and bookings 24/7 with warm handoff to your team for complex queries.</p>
@@ -194,7 +193,7 @@
           </div>
           <div class="service-card reveal">
             <div class="service-icon">
-              <img src="/svg/04-knowledge-assistant.svg" alt="" width="56" height="56" />
+              <img src="/svg/04-knowledge-assistant.svg" alt="" width="56" height="56" onerror="this.style.display='none'" />
             </div>
             <h3>Internal Knowledge Assistant</h3>
             <p>AI trained on your docs, processes, and SOPs. New starter onboarding drops from weeks to days. Your team's knowledge, available instantly.</p>
@@ -202,7 +201,7 @@
           </div>
           <div class="service-card reveal">
             <div class="service-icon">
-              <img src="/svg/05-fractional-cto.svg" alt="" width="56" height="56" />
+              <img src="/svg/05-fractional-cto.svg" alt="" width="56" height="56" onerror="this.style.display='none'" />
             </div>
             <h3>Fractional CTO</h3>
             <p>Embedded in your business 1-2 days a week. Strategic AI roadmap, vendor management, team training. Your technology leader, without the full-time cost.</p>
@@ -210,7 +209,7 @@
           </div>
           <div class="service-card reveal">
             <div class="service-icon">
-              <img src="/svg/06-team-workshops.svg" alt="" width="56" height="56" />
+              <img src="/svg/06-team-workshops.svg" alt="" width="56" height="56" onerror="this.style.display='none'" />
             </div>
             <h3>Team Workshops</h3>
             <p>Hands-on AI training tailored to your industry and roles. Your team leaves knowing how to use AI effectively in their daily work, not just what AI "could" do.</p>
@@ -575,15 +574,17 @@
   }
 
   .btn-ghost {
-    background: transparent;
+    background: rgba(255, 255, 255, 0.9);
     color: #64748b;
     border: 1.5px solid #e2e8f0;
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
   }
 
   .btn-ghost:hover {
     color: #0f172a;
     border-color: #cbd5e1;
-    background: #f8fafc;
+    background: #ffffff;
   }
 
   .btn-large {
@@ -621,6 +622,7 @@
     height: 100%;
     pointer-events: none;
     z-index: 0;
+    display: block;
   }
 
   .hero > .container {
@@ -1101,7 +1103,11 @@
   }
 </style>
 
-<script>
+<script type="module">
+  // We use a module script to cleanly import Three.js while keeping your existing code running
+
+  // --- 1. EXISTING UI LOGIC ---
+
   // Scroll reveal animation
   const observer = new IntersectionObserver(
     (entries) => {
@@ -1113,7 +1119,6 @@
     },
     { threshold: 0.1, rootMargin: '0px 0px -40px 0px' }
   );
-
   document.querySelectorAll('.reveal').forEach((el) => observer.observe(el));
 
   // Nav scroll effect
@@ -1153,158 +1158,312 @@
     });
   });
 
-  // Hero particle constellation
+
+  // --- 2. WEBGL HERO ANIMATION (THREE.JS) ---
+
+  import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js';
+
   if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-    const canvas = document.getElementById('hero-canvas') as HTMLCanvasElement;
+    const canvas = document.getElementById('hero-canvas');
+    
     if (canvas) {
-      const ctx = canvas.getContext('2d');
-      if (ctx) {
-        const dpr = Math.min(window.devicePixelRatio || 1, 2);
-        let width = 0;
-        let height = 0;
-        let particles: { x: number; y: number; vx: number; vy: number }[] = [];
-        let animId = 0;
-        let isVisible = true;
-        let mouseX = -1000;
-        let mouseY = -1000;
-        const connectionDist = 150;
-        const hasFineMouse = window.matchMedia('(pointer: fine)').matches;
+      const parent = canvas.parentElement;
+      const scene = new THREE.Scene();
+      
+      const camera = new THREE.PerspectiveCamera(60, parent.clientWidth / parent.clientHeight, 0.1, 1000);
+      const renderer = new THREE.WebGLRenderer({ canvas: canvas, alpha: true, antialias: true });
+      
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+      
+      // CRITICAL FIX: Pass 'false' as 3rd parameter to prevent Astro Layout thrashing / flicker
+      renderer.setSize(parent.clientWidth, parent.clientHeight, false);
 
-        function getParticleCount() {
-          return window.innerWidth > 900 ? 80 : 45;
-        }
+      const networkGroup = new THREE.Group();
+      scene.add(networkGroup);
 
-        function resize() {
-          const parent = canvas.parentElement;
-          if (!parent) return;
-          const rect = parent.getBoundingClientRect();
-          width = rect.width;
-          height = rect.height;
-          canvas.width = width * dpr;
-          canvas.height = height * dpr;
-          canvas.style.width = width + 'px';
-          canvas.style.height = height + 'px';
-          ctx!.setTransform(dpr, 0, 0, dpr, 0, 0);
-        }
+      // --- 1. GENERATE THE AI ROUTING MATRIX (NODES) ---
+      const nodeCount = 120;
+      const radius = 6;
+      const nodes = [];
+      const nodeSizes = new Float32Array(nodeCount);
+      const isHubAttr = new Float32Array(nodeCount);
+      
+      // 6 Core Hubs (The AI Engines)
+      for(let i=0; i<6; i++) {
+         const theta = Math.random() * Math.PI * 2;
+         const phi = Math.acos(2 * Math.random() - 1);
+         const r = radius * 0.4; // Clustered near center
+         nodes.push(new THREE.Vector3(
+             r * Math.sin(phi) * Math.cos(theta),
+             r * Math.sin(phi) * Math.sin(theta),
+             r * Math.cos(phi)
+         ));
+         nodeSizes[i] = 14.0;
+         isHubAttr[i] = 1.0;
+      }
 
-        function initParticles() {
-          const count = getParticleCount();
-          particles = [];
-          for (let i = 0; i < count; i++) {
-            particles.push({
-              x: Math.random() * width,
-              y: Math.random() * height,
-              vx: (Math.random() - 0.5) * 0.4,
-              vy: (Math.random() - 0.5) * 0.4,
-            });
-          }
-        }
+      // 114 Endpoints (Data Sources)
+      for(let i=6; i<nodeCount; i++) {
+         const theta = Math.random() * Math.PI * 2;
+         const phi = Math.acos(2 * Math.random() - 1);
+         const r = radius * (0.7 + Math.random() * 0.3); // Outer shell
+         nodes.push(new THREE.Vector3(
+             r * Math.sin(phi) * Math.cos(theta),
+             r * Math.sin(phi) * Math.sin(theta),
+             r * Math.cos(phi)
+         ));
+         nodeSizes[i] = 4.0;
+         isHubAttr[i] = 0.0;
+      }
 
-        function draw() {
-          ctx!.clearRect(0, 0, width, height);
+      const pointsGeo = new THREE.BufferGeometry().setFromPoints(nodes);
+      pointsGeo.setAttribute('size', new THREE.BufferAttribute(nodeSizes, 1));
+      pointsGeo.setAttribute('isHub', new THREE.BufferAttribute(isHubAttr, 1));
 
-          // Mouse offset for parallax
-          const offsetX = hasFineMouse ? (mouseX - width / 2) * 0.015 : 0;
-          const offsetY = hasFineMouse ? (mouseY - height / 2) * 0.015 : 0;
-
-          // Update positions
-          for (const p of particles) {
-            p.x += p.vx;
-            p.y += p.vy;
-            if (p.x < 0 || p.x > width) p.vx *= -1;
-            if (p.y < 0 || p.y > height) p.vy *= -1;
-            p.x = Math.max(0, Math.min(width, p.x));
-            p.y = Math.max(0, Math.min(height, p.y));
-          }
-
-          // Draw connections
-          ctx!.strokeStyle = 'rgba(15, 23, 42, 0.06)';
-          ctx!.lineWidth = 1;
-          for (let i = 0; i < particles.length; i++) {
-            for (let j = i + 1; j < particles.length; j++) {
-              const dx = particles[i].x - particles[j].x;
-              const dy = particles[i].y - particles[j].y;
-              const dist = Math.sqrt(dx * dx + dy * dy);
-              if (dist < connectionDist) {
-                const opacity = 0.06 * (1 - dist / connectionDist);
-                ctx!.strokeStyle = `rgba(15, 23, 42, ${opacity})`;
-                ctx!.beginPath();
-                ctx!.moveTo(particles[i].x + offsetX, particles[i].y + offsetY);
-                ctx!.lineTo(particles[j].x + offsetX, particles[j].y + offsetY);
-                ctx!.stroke();
+      // Custom Shader for soft, branded nodes
+      const pointsMat = new THREE.ShaderMaterial({
+          vertexShader: `
+              attribute float size;
+              attribute float isHub;
+              varying float vIsHub;
+              void main() {
+                  vIsHub = isHub;
+                  vec4 mvPosition = modelViewMatrix * vec4(position, 1.0);
+                  gl_PointSize = size * (10.0 / -mvPosition.z);
+                  gl_Position = projectionMatrix * mvPosition;
               }
+          `,
+          fragmentShader: `
+              varying float vIsHub;
+              void main() {
+                  float d = length(gl_PointCoord - vec2(0.5));
+                  if (d > 0.5) discard;
+                  float alpha = smoothstep(0.5, 0.4, d);
+                  
+                  // UPDATED: Softer Navy (Slate 600ish) for Hubs and lighter for endpoints
+                  vec3 hubColor = vec3(0.28, 0.33, 0.41); // Softer slate/navy (#475569ish)
+                  vec3 endColor = vec3(0.48, 0.54, 0.62); // Lighter slate
+                  vec3 color = mix(endColor, hubColor, vIsHub);
+                  
+                  gl_FragColor = vec4(color, alpha * (0.5 + vIsHub * 0.5));
+              }
+          `,
+          transparent: true,
+          depthWrite: false
+      });
+      networkGroup.add(new THREE.Points(pointsGeo, pointsMat));
+
+      // --- 2. GENERATE WORKFLOW CONNECTIONS (CURVED PATHS) ---
+      const maxDist = 4.0;
+      const curvePoints = [];
+      const curveUvs = [];
+      const curveSeeds = [];
+      let connectionCount = 0;
+
+      for (let i = 0; i < nodeCount; i++) {
+        for (let j = i + 1; j < nodeCount; j++) {
+          // Bias connections towards hubs to create a realistic network topology
+          const isHubConnection = isHubAttr[i] === 1.0 || isHubAttr[j] === 1.0;
+          const threshold = isHubConnection ? maxDist * 1.5 : maxDist;
+
+          if (nodes[i].distanceTo(nodes[j]) < threshold && connectionCount < 300) {
+            const start = nodes[i];
+            const end = nodes[j];
+            
+            // Push control point outward from center to create beautiful organic arcs
+            const mid = new THREE.Vector3().addVectors(start, end).multiplyScalar(0.5);
+            const distFromCenter = mid.length();
+            mid.normalize().multiplyScalar(distFromCenter + 1.0 + Math.random() * 0.5);
+
+            const curve = new THREE.QuadraticBezierCurve3(start, mid, end);
+            const segments = 15;
+            const points = curve.getPoints(segments);
+            
+            const seed = Math.random() * 100.0;
+            
+            for (let k = 0; k < points.length - 1; k++) {
+              curvePoints.push(points[k].x, points[k].y, points[k].z);
+              curvePoints.push(points[k+1].x, points[k+1].y, points[k+1].z);
+              
+              // Map UVs across the entire length of the curved path
+              curveUvs.push(k / segments, 0);
+              curveUvs.push((k + 1) / segments, 0);
+              
+              curveSeeds.push(seed, seed);
             }
+            connectionCount++;
           }
-
-          // Draw particles
-          ctx!.fillStyle = 'rgba(15, 23, 42, 0.1)';
-          for (const p of particles) {
-            ctx!.beginPath();
-            ctx!.arc(p.x + offsetX, p.y + offsetY, 2, 0, Math.PI * 2);
-            ctx!.fill();
-          }
-
-          animId = requestAnimationFrame(draw);
         }
+      }
 
-        document.fonts.ready.then(() => {
-          resize();
-          initParticles();
-          animId = requestAnimationFrame(draw);
-        });
+      const linesGeo = new THREE.BufferGeometry();
+      linesGeo.setAttribute('position', new THREE.Float32BufferAttribute(curvePoints, 3));
+      linesGeo.setAttribute('uv', new THREE.Float32BufferAttribute(curveUvs, 2));
+      linesGeo.setAttribute('seed', new THREE.Float32BufferAttribute(curveSeeds, 1));
 
-        // Pause when not visible — actually stop the loop
-        const heroSection = document.getElementById('hero');
-        if (heroSection) {
-          const heroObserver = new IntersectionObserver(
-            ([entry]) => {
-              if (entry.isIntersecting && !isVisible) {
-                isVisible = true;
-                animId = requestAnimationFrame(draw);
-              } else if (!entry.isIntersecting) {
-                isVisible = false;
-                cancelAnimationFrame(animId);
+      // Shader to animate high-speed data packets along the workflow curves
+      const linesMat = new THREE.ShaderMaterial({
+          uniforms: {
+              time: { value: 0 },
+              baseColor: { value: new THREE.Color('#e2e8f0') }, // Much lighter background path
+              pulseColor: { value: new THREE.Color('#475569') } // UPDATED: Softer slate pulse instead of harsh navy
+          },
+          vertexShader: `
+              attribute float seed;
+              varying vec2 vUv;
+              varying float vSeed;
+              void main() {
+                  vUv = uv;
+                  vSeed = seed;
+                  gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
               }
-            },
-            { threshold: 0 }
-          );
-          heroObserver.observe(heroSection);
-        }
+          `,
+          fragmentShader: `
+              uniform float time;
+              uniform vec3 baseColor;
+              uniform vec3 pulseColor;
+              
+              varying vec2 vUv;
+              varying float vSeed;
+              
+              void main() {
+                  float speed = 0.15 + fract(vSeed * 1.234) * 0.25; 
+                  float pulse = fract(time * speed + vSeed);
+                  
+                  // Calculate distance behind the pulse head
+                  float dist = pulse - vUv.x;
+                  if (dist < 0.0) dist += 1.0; // Wrap tail over edge
+                  
+                  // Only activate ~40% of the network pathways
+                  float isActive = step(0.6, fract(vSeed * 7.89)); 
+                  
+                  float intensity = 0.0;
+                  if (isActive > 0.5) {
+                      float trail = 1.0 - smoothstep(0.0, 0.25, dist);
+                      float head = 1.0 - smoothstep(0.0, 0.015, dist);
+                      intensity = trail * 0.5 + head * 1.5; // Sharp, leading pulse
+                  }
+                  
+                  vec3 finalColor = mix(baseColor, pulseColor, clamp(intensity, 0.0, 1.0));
+                  float alpha = 0.2 + intensity; // Reveal faint path underneath
+                  
+                  gl_FragColor = vec4(finalColor, clamp(alpha, 0.0, 1.0));
+              }
+          `,
+          transparent: true,
+          depthWrite: false,
+          blending: THREE.NormalBlending
+      });
 
-        // Mouse parallax (desktop only)
-        if (hasFineMouse) {
-          const parent = canvas.parentElement;
-          if (parent) {
-            parent.addEventListener('mousemove', (e) => {
-              const rect = parent.getBoundingClientRect();
-              mouseX = e.clientX - rect.left;
-              mouseY = e.clientY - rect.top;
-            });
-          }
-        }
+      const networkLines = new THREE.LineSegments(linesGeo, linesMat);
+      networkGroup.add(networkLines);
 
-        // Debounced resize
-        let resizeTimer: number;
-        const onResize = () => {
+      // --- 3. RAW DATA DUST (BACKGROUND CHAOS) ---
+      const dustCount = 800;
+      const dustPos = new Float32Array(dustCount * 3);
+      for(let i=0; i<dustCount * 3; i++) {
+         dustPos[i] = (Math.random() - 0.5) * 25; 
+      }
+      const dustGeo = new THREE.BufferGeometry();
+      dustGeo.setAttribute('position', new THREE.BufferAttribute(dustPos, 3));
+      const dustMat = new THREE.PointsMaterial({
+         color: 0x94a3b8, // Lighter Slate 400
+         size: 0.06,
+         transparent: true,
+         opacity: 0.25
+      });
+      const dust = new THREE.Points(dustGeo, dustMat);
+      scene.add(dust);
+
+      // --- 4. ANIMATION & INTERACTION ---
+      camera.position.z = 10;
+      camera.position.y = 2;
+
+      let mouseX = 0;
+      let mouseY = 0;
+      let targetX = 0;
+      let targetY = 0;
+      const hasFineMouse = window.matchMedia('(pointer: fine)').matches;
+
+      if (hasFineMouse) {
+          document.addEventListener('mousemove', (event) => {
+              mouseX = (event.clientX - window.innerWidth / 2) * 0.001;
+              mouseY = (event.clientY - window.innerHeight / 2) * 0.001;
+          });
+      }
+
+      let time = 0;
+      let animId = 0;
+      let isVisible = true;
+
+      function animate() {
+          if (!isVisible) return;
+          animId = requestAnimationFrame(animate);
+          time += 0.016; // Stable delta time
+
+          linesMat.uniforms.time.value = time;
+
+          // UPDATED: Smooth majestic rotation deeply influenced by mouse position
+          networkGroup.rotation.y = time * 0.08 + mouseX * 2.0;
+          networkGroup.rotation.x = mouseY * 1.5;
+          networkGroup.rotation.z = time * 0.04 - mouseX * 0.5;
+          dust.rotation.y = -time * 0.05 + mouseX * 0.5; // Counter-rotating raw data
+
+          // Mouse Parallax Engine for Camera
+          targetX = mouseX * 4.0; // Increased responsiveness multiplier
+          targetY = mouseY * 4.0;
+          camera.position.x += (targetX - camera.position.x) * 0.05;
+          camera.position.y += (-targetY + 2.0 - camera.position.y) * 0.05; // Base Y offset
+          camera.lookAt(scene.position);
+
+          renderer.render(scene, camera);
+      }
+
+      animate();
+
+      // --- 5. CLEANUP & PERFORMANCE ---
+      let resizeTimer;
+      const onResize = () => {
           clearTimeout(resizeTimer);
-          resizeTimer = window.setTimeout(() => {
-            resize();
-            const targetCount = getParticleCount();
-            if (Math.abs(particles.length - targetCount) > 10) {
-              initParticles();
-            }
+          resizeTimer = setTimeout(() => {
+              const w = parent.clientWidth;
+              const h = parent.clientHeight;
+              camera.aspect = w / h;
+              camera.updateProjectionMatrix();
+              // CRITICAL FIX: Ensure 'false' is passed during debounced resize too
+              renderer.setSize(w, h, false);
           }, 200);
-        };
-        window.addEventListener('resize', onResize);
+      };
+      window.addEventListener('resize', onResize);
 
-        // Cleanup on View Transitions or page unload
-        const cleanup = () => {
+      // Halt calculations when user scrolls past the hero
+      const heroSection = document.getElementById('hero');
+      if (heroSection) {
+          const heroObserver = new IntersectionObserver(([entry]) => {
+              if (entry.isIntersecting && !isVisible) {
+                  isVisible = true;
+                  animate();
+              } else if (!entry.isIntersecting) {
+                  isVisible = false;
+                  cancelAnimationFrame(animId);
+              }
+          }, { threshold: 0 });
+          heroObserver.observe(heroSection);
+      }
+
+      const cleanup = () => {
           cancelAnimationFrame(animId);
           window.removeEventListener('resize', onResize);
-        };
-        document.addEventListener('astro:before-swap', cleanup);
-        window.addEventListener('pagehide', cleanup);
-      }
+          renderer.dispose();
+          linesGeo.dispose();
+          linesMat.dispose();
+          pointsGeo.dispose();
+          pointsMat.dispose();
+          dustGeo.dispose();
+          dustMat.dispose();
+      };
+      document.addEventListener('astro:before-swap', cleanup, { once: true });
+      window.addEventListener('pagehide', cleanup);
     }
   }
 </script>
