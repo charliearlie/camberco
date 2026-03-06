@@ -296,9 +296,11 @@
         <span class="logo-text">Camber Co</span>
       </a>
       <div class="nav-links">
+        <a href="/about-me" class="nav-link">About Me</a>
         <a href="#proof" class="nav-link">Results</a>
         <a href="#services" class="nav-link">Services</a>
         <a href="#process" class="nav-link">Process</a>
+        <a href="#estimator" class="nav-link">Estimator</a>
         <a href="#faq" class="nav-link">FAQ</a>
         <a href="https://calendly.com/camber-co/30min" class="nav-btn" target="_blank" rel="noopener noreferrer">Book Free Audit →</a>
       </div>
@@ -311,9 +313,11 @@
 
   <!-- Mobile Menu -->
   <div class="mobile-menu" id="mobileMenu">
+    <a href="/about-me" class="mobile-menu-link">About Me</a>
     <a href="#proof" class="mobile-menu-link">Results</a>
     <a href="#services" class="mobile-menu-link">Services</a>
     <a href="#process" class="mobile-menu-link">Process</a>
+    <a href="#estimator" class="mobile-menu-link">Estimator</a>
     <a href="#faq" class="mobile-menu-link">FAQ</a>
     <a href="https://calendly.com/camber-co/30min" class="mobile-menu-link cta" target="_blank" rel="noopener noreferrer">Book Free Audit →</a>
   </div>
@@ -423,15 +427,15 @@
           </div>
           <div class="proof-card reveal">
             <div class="proof-number">04</div>
-            <h3 class="proof-title">Custom AI Tools</h3>
+            <h3 class="proof-title">AI-Native QA With Playwright</h3>
             <p class="proof-body">
-              Purpose-built AI tools for marketing copy, financial reporting, and
-              client analytics. Not off-the-shelf software — bespoke tools shaped
-              around how we actually work.
+              We brought AI-guided Playwright testing into production workflows
+              when AI was still early as a productivity layer, improving release
+              confidence and shrinking regression time.
             </p>
             <div class="proof-tag-row">
-              <span class="proof-tag">Marketing</span>
-              <span class="proof-tag">Accountancy</span>
+              <span class="proof-tag">Quality Engineering</span>
+              <span class="proof-tag">AI Testing</span>
             </div>
           </div>
         </div>
@@ -534,54 +538,64 @@
       </div>
     </section>
 
-    <!-- ===== RESULTS ===== -->
-    <section class="results" id="results">
+    <!-- ===== ESTIMATOR ===== -->
+    <section class="estimator" id="estimator">
       <div class="container">
         <div class="section-header reveal">
-          <p class="section-tag">Track record</p>
-          <h2 class="section-title">AI automation results we've delivered</h2>
-          <p class="section-desc">Every project below was delivered using the same AI-augmented workflows we implement for clients.</p>
+          <p class="section-tag">Interactive ROI Estimator</p>
+          <h2 class="section-title">Estimate how many hours AI could save each month</h2>
+          <p class="section-desc">Add repetitive tasks and monthly hours. We estimate savings using an AI model with a practical fallback heuristic.</p>
         </div>
-        <div class="proof-grid">
-          <div class="proof-card reveal">
-            <div class="proof-number">01</div>
-            <h3 class="proof-title">120 Hours → 20 Hours</h3>
-            <p class="proof-body">
-              We compressed 120 hours of work into 20 using the same AI-augmented
-              workflows we implement for clients. Not a theoretical improvement.
-              A measured, repeatable result across real projects.
-            </p>
-            <div class="proof-tag-row">
-              <span class="proof-tag">Productivity</span>
-              <span class="proof-tag">Workflow Design</span>
+
+        <div class="estimator-shell reveal">
+          <div class="lp-panel">
+            <h3 class="lp-title">Your repetitive tasks</h3>
+            <div id="lpTaskRows" class="lp-task-rows">
+              <div class="lp-task-row">
+                <input class="lp-task-name" type="text" placeholder="Task name (e.g. Weekly reporting)" maxlength="100" />
+                <input class="lp-task-hours" type="number" min="0.5" max="500" step="0.5" placeholder="Hours / month" />
+                <button class="lp-task-remove" type="button" aria-label="Remove task">x</button>
+              </div>
+            </div>
+            <div class="lp-actions">
+              <button id="lpAddTask" class="btn btn-ghost" type="button">Add Task</button>
+              <button id="lpSampleTasks" class="btn btn-ghost" type="button">Load Example</button>
+              <button id="lpClearTasks" class="btn btn-ghost" type="button">Clear</button>
             </div>
           </div>
-          <div class="proof-card reveal">
-            <div class="proof-number">02</div>
-            <h3 class="proof-title">WhatsApp Business Automation</h3>
-            <p class="proof-body">
-              Built an AI-powered WhatsApp bot handling scheduling, quoting, and
-              customer enquiries. Fully automated, running 24/7, reducing response
-              time from hours to seconds.
-            </p>
-            <div class="proof-tag-row">
-              <span class="proof-tag">Chatbot</span>
-              <span class="proof-tag">Customer Service</span>
+
+          <div class="lp-panel lp-output">
+            <h3 class="lp-title">Estimated time recovered</h3>
+            <div class="lp-metrics">
+              <div class="lp-metric-card">
+                <p>Hours / Month</p>
+                <strong id="lpMonthlySaved">0</strong>
+              </div>
+              <div class="lp-metric-card">
+                <p>Hours / Year</p>
+                <strong id="lpYearlySaved">0</strong>
+              </div>
+              <div class="lp-metric-card">
+                <p>Workdays / Year</p>
+                <strong id="lpDaysSaved">0</strong>
+              </div>
             </div>
-          </div>
-          <div class="proof-card reveal">
-            <div class="proof-number">03</div>
-            <h3 class="proof-title">Two Solo Developers → Market</h3>
-            <p class="proof-body">
-              Two solo developers used our AI-augmented workflows to take products
-              from concept to launch. One built and shipped a complete product
-              end-to-end. Another, a non-technical founder, built and sold an
-              app for £20k in under 12 months. No teams. No agencies.
-            </p>
-            <div class="proof-tag-row">
-              <span class="proof-tag">Solo Developers</span>
-              <span class="proof-tag">Go-to-Market</span>
+
+            <div class="lp-run-row">
+              <button id="lpRunEstimate" class="btn btn-primary" type="button">Estimate Time Saved</button>
+              <span id="lpEstimatorNote" class="lp-note">Confidential: we only process what you enter.</span>
             </div>
+
+            <div class="lp-flow" id="lpFlow" aria-hidden="true">
+              <span class="lp-flow-dot"></span>
+              <span class="lp-flow-dot"></span>
+              <span class="lp-flow-dot"></span>
+              <span class="lp-flow-dot"></span>
+            </div>
+
+            <p id="lpConfidence" class="lp-confidence">Awaiting estimate...</p>
+            <p id="lpRationale" class="lp-rationale">Run the estimator to see task-level and total projected savings.</p>
+            <div id="lpBreakdown" class="lp-breakdown"></div>
           </div>
         </div>
       </div>
@@ -1309,18 +1323,246 @@
   }
 
   /* ================================
-     RESULTS SECTION
+     ESTIMATOR SECTION
      ================================ */
-  .results {
+  .estimator {
     padding: 100px 0;
+    background: #ffffff;
+    border-top: 1px solid #e2e8f0;
+    border-bottom: 1px solid #e2e8f0;
   }
 
-  .results .proof-grid {
-    grid-template-columns: repeat(3, 1fr);
+  .estimator-shell {
+    margin-top: 48px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
   }
 
-  .results .proof-grid .reveal:nth-child(2) { transition-delay: 0.1s; }
-  .results .proof-grid .reveal:nth-child(3) { transition-delay: 0.2s; }
+  .lp-panel {
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 16px;
+    padding: 18px;
+  }
+
+  .lp-title {
+    font-family: 'Figtree', sans-serif;
+    font-size: 20px;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    margin-bottom: 12px;
+  }
+
+  .lp-task-rows {
+    display: grid;
+    gap: 8px;
+  }
+
+  .lp-task-row {
+    display: grid;
+    grid-template-columns: 1.35fr 0.82fr auto;
+    gap: 8px;
+  }
+
+  .lp-task-name,
+  .lp-task-hours {
+    border: 1px solid #dbe4ee;
+    border-radius: 10px;
+    background: #ffffff;
+    min-height: 44px;
+    padding: 10px 12px;
+    font-size: 13px;
+    font-family: inherit;
+    color: #0f172a;
+  }
+
+  .lp-task-name:focus,
+  .lp-task-hours:focus {
+    outline: 2px solid rgba(15, 23, 42, 0.14);
+    border-color: #94a3b8;
+  }
+
+  .lp-task-remove {
+    min-height: 44px;
+    min-width: 44px;
+    border: 1px solid #dbe4ee;
+    border-radius: 10px;
+    background: #ffffff;
+    color: #64748b;
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+  }
+
+  .lp-task-remove:hover {
+    color: #0f172a;
+    border-color: #94a3b8;
+  }
+
+  .lp-actions {
+    margin-top: 10px;
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+
+  .lp-metrics {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 8px;
+    margin-bottom: 12px;
+  }
+
+  .lp-metric-card {
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    padding: 10px;
+    text-align: center;
+  }
+
+  .lp-metric-card p {
+    margin: 0;
+    font-size: 12px;
+    color: #64748b;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    font-weight: 600;
+  }
+
+  .lp-metric-card strong {
+    display: block;
+    margin-top: 4px;
+    font-family: 'Instrument Serif', Georgia, serif;
+    font-size: 30px;
+    line-height: 1;
+    color: #0f172a;
+  }
+
+  .lp-run-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+
+  .lp-note {
+    font-size: 13px;
+    color: #64748b;
+  }
+
+  .lp-flow {
+    margin-top: 12px;
+    border: 1px solid #dbe4ee;
+    border-radius: 10px;
+    height: 56px;
+    position: relative;
+    overflow: hidden;
+    background: linear-gradient(90deg, #ffffff, #f8fafc);
+  }
+
+  .lp-flow::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 8px;
+    right: 8px;
+    height: 2px;
+    background: #e2e8f0;
+    transform: translateY(-50%);
+  }
+
+  .lp-flow-dot {
+    position: absolute;
+    top: 50%;
+    left: -10%;
+    width: 10px;
+    height: 10px;
+    border-radius: 999px;
+    transform: translateY(-50%);
+    background: linear-gradient(180deg, #0f172a, #475569);
+    opacity: 0;
+  }
+
+  .lp-flow.running .lp-flow-dot {
+    animation: lp-flow-move 1500ms linear infinite;
+    opacity: 1;
+  }
+
+  .lp-flow.running .lp-flow-dot:nth-child(2) { animation-delay: 350ms; }
+  .lp-flow.running .lp-flow-dot:nth-child(3) { animation-delay: 700ms; }
+  .lp-flow.running .lp-flow-dot:nth-child(4) { animation-delay: 1050ms; }
+
+  .lp-confidence {
+    margin: 12px 0 8px;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: #475569;
+  }
+
+  .lp-rationale {
+    margin: 0;
+    font-size: 14px;
+    line-height: 1.7;
+    color: #64748b;
+  }
+
+  .lp-breakdown {
+    margin-top: 12px;
+    display: grid;
+    gap: 8px;
+  }
+
+  .lp-breakdown-item {
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 10px;
+    padding: 10px;
+  }
+
+  .lp-breakdown-head {
+    display: flex;
+    justify-content: space-between;
+    gap: 8px;
+    margin-bottom: 8px;
+    align-items: center;
+  }
+
+  .lp-breakdown-head strong {
+    font-size: 13px;
+    font-weight: 600;
+    color: #0f172a;
+  }
+
+  .lp-breakdown-head span {
+    font-size: 12px;
+    color: #64748b;
+    font-weight: 600;
+  }
+
+  .lp-breakdown-bar {
+    height: 8px;
+    background: #e2e8f0;
+    border-radius: 999px;
+    overflow: hidden;
+  }
+
+  .lp-breakdown-bar span {
+    display: block;
+    height: 100%;
+    border-radius: 999px;
+    background: linear-gradient(90deg, #0f172a, #475569);
+  }
+
+  @keyframes lp-flow-move {
+    0% { left: -10%; opacity: 0; }
+    8% { opacity: 1; }
+    92% { opacity: 1; }
+    100% { left: 105%; opacity: 0; }
+  }
 
   /* ================================
      FAQ SECTION
@@ -1598,11 +1840,12 @@
     .proof-grid { grid-template-columns: 1fr; }
     .services-grid { grid-template-columns: 1fr 1fr; }
     .metric-grid { grid-template-columns: 1fr; gap: 28px; }
+    .estimator-shell { grid-template-columns: 1fr; }
 
     .hero { padding: 130px 0 60px; }
     .hero-metric { margin-top: 56px; padding-top: 36px; }
 
-    .proof, .services, .process, .results, .final-cta, .faq {
+    .proof, .services, .process, .estimator, .final-cta, .faq {
       padding: 72px 0;
     }
 
@@ -1611,9 +1854,6 @@
       gap: 32px;
     }
 
-    .results .proof-grid {
-      grid-template-columns: 1fr;
-    }
   }
 
   @media (max-width: 600px) {
@@ -1621,6 +1861,8 @@
     .services-grid { grid-template-columns: 1fr; }
     .hero-actions { flex-direction: column; }
     .hero-actions .btn { width: 100%; justify-content: center; }
+    .lp-task-row { grid-template-columns: 1fr; }
+    .lp-metrics { grid-template-columns: 1fr; }
     .footer-inner { flex-direction: column; gap: 16px; text-align: center; }
     .footer-right { justify-content: center; }
     .built-badge { text-align: left; }
@@ -1638,6 +1880,7 @@
       transition: none;
     }
     #hero-canvas { display: none; }
+    .lp-flow-dot { animation: none !important; }
     html { scroll-behavior: auto; }
   }
 </style>
@@ -1696,6 +1939,177 @@
       }
     });
   });
+
+  // Landing page interactive estimator
+  const lpTaskRows = document.getElementById('lpTaskRows');
+  const lpAddTask = document.getElementById('lpAddTask');
+  const lpSampleTasks = document.getElementById('lpSampleTasks');
+  const lpClearTasks = document.getElementById('lpClearTasks');
+  const lpRunEstimate = document.getElementById('lpRunEstimate');
+  const lpFlow = document.getElementById('lpFlow');
+  const lpMonthlySaved = document.getElementById('lpMonthlySaved');
+  const lpYearlySaved = document.getElementById('lpYearlySaved');
+  const lpDaysSaved = document.getElementById('lpDaysSaved');
+  const lpConfidence = document.getElementById('lpConfidence');
+  const lpRationale = document.getElementById('lpRationale');
+  const lpEstimatorNote = document.getElementById('lpEstimatorNote');
+  const lpBreakdown = document.getElementById('lpBreakdown');
+
+  if (lpTaskRows && lpRunEstimate) {
+    const createLpTaskRow = (name = '', hours = '') => {
+      const row = document.createElement('div');
+      row.className = 'lp-task-row';
+      row.innerHTML = `
+        <input class="lp-task-name" type="text" placeholder="Task name (e.g. Weekly reporting)" maxlength="100" />
+        <input class="lp-task-hours" type="number" min="0.5" max="500" step="0.5" placeholder="Hours / month" />
+        <button class="lp-task-remove" type="button" aria-label="Remove task">x</button>
+      `;
+      row.querySelector('.lp-task-name').value = name;
+      row.querySelector('.lp-task-hours').value = hours;
+      return row;
+    };
+
+    const animateLpNumber = (element, target) => {
+      const start = Number(element.textContent) || 0;
+      const delta = target - start;
+      const duration = 420;
+      const startTime = performance.now();
+      const tick = (now) => {
+        const progress = Math.min(1, (now - startTime) / duration);
+        element.textContent = String(Math.round((start + delta * progress) * 10) / 10);
+        if (progress < 1) requestAnimationFrame(tick);
+      };
+      requestAnimationFrame(tick);
+    };
+
+    const collectLpTasks = () =>
+      [...lpTaskRows.querySelectorAll('.lp-task-row')]
+        .map((row) => {
+          const name = row.querySelector('.lp-task-name')?.value?.trim() || '';
+          const hours = Number(row.querySelector('.lp-task-hours')?.value);
+          return { name, hoursPerMonth: hours };
+        })
+        .filter((task) => task.name && Number.isFinite(task.hoursPerMonth) && task.hoursPerMonth > 0);
+
+    const setLpLoading = (loading) => {
+      lpRunEstimate.disabled = loading;
+      lpRunEstimate.textContent = loading ? 'Estimating...' : 'Estimate Time Saved';
+      lpFlow?.classList.toggle('running', loading);
+      if (loading && lpEstimatorNote) lpEstimatorNote.textContent = 'Running AI estimate...';
+    };
+
+    const renderLpBreakdown = (tasks) => {
+      if (!lpBreakdown) return;
+      if (!Array.isArray(tasks) || tasks.length === 0) {
+        lpBreakdown.innerHTML = '';
+        return;
+      }
+      lpBreakdown.innerHTML = tasks.map((task) => {
+        const name = String(task.name || 'Task');
+        const saved = Number(task.estimatedHoursSavedPerMonth) || 0;
+        const potential = Math.max(5, Math.min(100, Number(task.automationPotentialPercent) || 0));
+        return `
+          <div class="lp-breakdown-item">
+            <div class="lp-breakdown-head">
+              <strong>${name}</strong>
+              <span>${saved}h / mo</span>
+            </div>
+            <div class="lp-breakdown-bar"><span style="width:${potential}%"></span></div>
+          </div>
+        `;
+      }).join('');
+    };
+
+    const resetLpOutputs = () => {
+      animateLpNumber(lpMonthlySaved, 0);
+      animateLpNumber(lpYearlySaved, 0);
+      animateLpNumber(lpDaysSaved, 0);
+      lpConfidence.textContent = 'Awaiting estimate...';
+      lpRationale.textContent = 'Run the estimator to see task-level and total projected savings.';
+      if (lpEstimatorNote) lpEstimatorNote.textContent = 'Confidential: we only process what you enter.';
+      lpBreakdown.innerHTML = '';
+      lpFlow?.classList.remove('running');
+    };
+
+    lpTaskRows.addEventListener('click', (event) => {
+      const target = event.target;
+      if (!(target instanceof HTMLElement) || !target.classList.contains('lp-task-remove')) return;
+      const row = target.closest('.lp-task-row');
+      if (!row) return;
+      if (lpTaskRows.children.length <= 1) {
+        row.querySelector('.lp-task-name').value = '';
+        row.querySelector('.lp-task-hours').value = '';
+        return;
+      }
+      row.remove();
+    });
+
+    lpAddTask?.addEventListener('click', () => {
+      if (lpTaskRows.children.length >= 8) return;
+      lpTaskRows.appendChild(createLpTaskRow());
+    });
+
+    lpSampleTasks?.addEventListener('click', () => {
+      const examples = [
+        ['Weekly reporting prep', '12'],
+        ['Inbox sorting and follow-up', '18'],
+        ['CRM updates and admin logging', '16'],
+        ['Meeting notes and summaries', '10']
+      ];
+      lpTaskRows.innerHTML = '';
+      examples.forEach(([name, hours]) => lpTaskRows.appendChild(createLpTaskRow(name, hours)));
+    });
+
+    lpClearTasks?.addEventListener('click', () => {
+      lpTaskRows.innerHTML = '';
+      lpTaskRows.appendChild(createLpTaskRow());
+      resetLpOutputs();
+    });
+
+    lpRunEstimate.addEventListener('click', async () => {
+      const tasks = collectLpTasks();
+      if (!tasks.length) {
+        lpConfidence.textContent = 'Add at least one task';
+        lpRationale.textContent = 'Enter repetitive tasks and monthly hours before running the estimate.';
+        return;
+      }
+
+      setLpLoading(true);
+      try {
+        const response = await fetch('/api/estimate-savings', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ tasks })
+        });
+        const payload = await response.json();
+        if (!response.ok) {
+          lpConfidence.textContent = 'Estimate unavailable';
+          lpRationale.textContent = payload?.error || 'Could not calculate estimate right now.';
+          return;
+        }
+
+        animateLpNumber(lpMonthlySaved, Number(payload?.summary?.estimatedHoursSavedPerMonth) || 0);
+        animateLpNumber(lpYearlySaved, Number(payload?.summary?.estimatedHoursSavedPerYear) || 0);
+        animateLpNumber(lpDaysSaved, Number(payload?.summary?.workingDaysRecoveredPerYear) || 0);
+        lpConfidence.textContent = `Confidence: ${String(payload?.summary?.confidence || 'medium').toUpperCase()}`;
+        lpRationale.textContent = String(payload?.summary?.rationale || 'Estimated from task structure and automation potential.');
+        if (lpEstimatorNote) {
+          lpEstimatorNote.textContent = payload?.source === 'ai'
+            ? 'AI model estimate complete.'
+            : 'AI key unavailable. Showing heuristic estimate.';
+        }
+        renderLpBreakdown(payload?.tasks || []);
+        lpFlow?.classList.remove('running');
+        void lpFlow?.offsetWidth;
+        lpFlow?.classList.add('running');
+      } catch {
+        lpConfidence.textContent = 'Network error';
+        lpRationale.textContent = 'Could not reach the estimator endpoint.';
+      } finally {
+        setLpLoading(false);
+      }
+    });
+  }
 
 
   // --- 2. WEBGL HERO ANIMATION (THREE.JS) ---
