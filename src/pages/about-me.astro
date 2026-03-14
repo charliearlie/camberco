@@ -1,1289 +1,799 @@
 ---
+import Layout from '../layouts/Layout.astro';
+import { TYPEWRITER_CSS, initTypewriters } from '../scripts/typewriter.ts';
+import { SCROLL_REVEAL_CSS, initScrollReveal } from '../scripts/scroll-reveal.ts';
+
+const schema = JSON.stringify({
+  "@context": "https://schema.org",
+  "@type": "Person",
+  "@id": "https://camberco.uk/about-me#person",
+  "name": "Charlie Waite",
+  "jobTitle": "AI Engineer & Founder Coach",
+  "worksFor": { "@id": "https://camberco.uk/#organization" },
+  "url": "https://camberco.uk/about-me",
+  "knowsAbout": ["AI Automation", "N8n", "Workflow Automation", "Solo Founder Coaching", "OpenClaw"],
+  "address": {
+    "@type": "PostalAddress",
+    "addressLocality": "London",
+    "addressCountry": "GB"
+  }
+});
 ---
 
-<html lang="en-GB">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="view-transition" content="same-origin" />
-  <title>About Charlie Waite | Camber Co</title>
-  <meta name="description" content="About Charlie Waite: London software engineer, founder of Camber Consulting, and builder of AI-driven products and systems." />
-  <link rel="icon" type="image/png" href="/favicon.png" />
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Figtree:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
-</head>
-
-<body>
-  <canvas id="lightField" aria-hidden="true"></canvas>
-  <div class="grain" aria-hidden="true"></div>
-
-  <nav class="nav" role="navigation" aria-label="Main navigation">
-    <div class="nav-inner">
-      <a href="/" class="nav-logo"><span class="logo-text">Camber Co</span></a>
-      <div class="nav-links">
-        <a href="/" class="nav-link">Home</a>
-        <a href="#journey" class="nav-link">Journey</a>
-        <a href="#projects" class="nav-link">Projects</a>
-        <a href="#play" class="nav-link">Interactive</a>
-      </div>
-      <a href="https://calendly.com/camber-co/30min" class="nav-btn" target="_blank" rel="noopener noreferrer">Book Free Audit →</a>
-    </div>
-  </nav>
-
+<Layout
+  title="Charlie Waite — AI Engineer & Founder Coach | Camber Co"
+  description="Charlie Waite is a London-based AI engineer with 12 years of experience. Founder of Camber Co, coach to non-technical founders, and builder of AI systems that ship."
+  canonicalUrl="https://camberco.uk/about-me"
+  schema={schema}
+>
   <main>
-    <section class="hero" id="hero">
-      <div class="container hero-grid">
-        <div class="hero-copy reveal">
-          <p class="hero-tag">About Me</p>
-          <h1 class="hero-title">Charlie Waite,<br /><em>software engineer for 12 years</em></h1>
-          <p class="hero-subtitle">
-            I'm based in London and founded Camber Consulting in <strong>2026</strong>.
-            I started it to help businesses actually deploy AI systems, not just discuss them.
-            My focus is practical architecture: agentic workflows, automation pipelines,
-            and products that make teams significantly more efficient.
-          </p>
-          <div class="hero-actions">
-            <a href="#projects" class="btn btn-primary">See Projects</a>
-            <a href="#play" class="btn btn-ghost">Try Interactive Mode</a>
-          </div>
-        </div>
 
-        <aside class="hero-panel reveal" aria-label="Founder summary">
-          <div class="terminal">
-            <p><span class="prompt">$</span> founder.summary --latest</p>
-            <p id="typeLine" class="type-line"></p>
-            <p><span class="prompt">$</span> expertise</p>
-            <p><strong>Delivery:</strong> AI systems and automation</p>
-            <p><strong>Approach:</strong> Build fast, test hard, ship outcomes</p>
+    <!-- ===== HERO ===== -->
+    <section class="hero" id="hero">
+      <div class="container">
+        <div class="hero-inner">
+
+          <div class="hero-copy">
+            <div class="status-chip" data-reveal>
+              <span class="status-dot" aria-hidden="true"></span>
+              <span class="status-label">[ ACTIVE ]</span>
+              <span class="status-path">camber/about</span>
+            </div>
+
+            <h1 class="hero-title" data-reveal>Charlie Waite</h1>
+
+            <p class="hero-sub" data-reveal>
+              Software engineer for 12 years. Building AI systems that ship.
+            </p>
           </div>
-          <div class="nano-art">
-            <div class="ring ring-1"></div>
-            <div class="ring ring-2"></div>
-            <div class="ring ring-3"></div>
-            <p>Nano Banana Concept Layer</p>
+
+          <div class="hero-terminal" data-reveal>
+            <div class="tw-bar" aria-hidden="true">
+              <span class="tw-dot tw-dot--red"></span>
+              <span class="tw-dot tw-dot--yellow"></span>
+              <span class="tw-dot tw-dot--green"></span>
+              <span class="tw-label">camber — about.ts</span>
+            </div>
+            <div class="tw-body">
+              <p class="tw-line"><span class="tw-prompt">$</span> <span class="tw-cmd">cat ./founder-origin.md</span></p>
+              <div
+                class="tw-output"
+                data-typewriter
+                data-lines='["2024: founded Camber Co to turn AI potential into working systems."]'
+                data-speed="28"
+                data-start-delay="600"
+                aria-label="2024: founded Camber Co to turn AI potential into working systems."
+              ></div>
+            </div>
           </div>
-        </aside>
+
+        </div>
       </div>
     </section>
 
+    <!-- ===== JOURNEY ===== -->
     <section class="journey" id="journey">
       <div class="container">
-        <div class="section-header reveal">
-          <p class="section-tag">Journey</p>
-          <h2 class="section-title">Building with AI before it was standard</h2>
+
+        <div class="section-header" data-reveal>
+          <p class="section-tag">journey</p>
+          <h2 class="section-title">The signal through the noise.</h2>
         </div>
 
-        <div class="timeline">
-          <article class="timeline-item reveal">
-            <span class="timeline-year">Early AI wave</span>
-            <h3>AI-Based Playwright Testing</h3>
-            <p>
-              Brought AI-guided Playwright testing into workflows while AI was still early as a productivity tool,
-              accelerating regression coverage and release confidence.
-            </p>
+        <div class="timeline" data-reveal-stagger>
+
+          <article class="timeline-item">
+            <div class="tl-connector" aria-hidden="true">
+              <span class="tl-dot"></span>
+              <span class="tl-line"></span>
+            </div>
+            <div class="tl-content">
+              <span class="tl-date">Early AI Wave</span>
+              <h3 class="tl-heading">AI-Based Playwright Testing</h3>
+              <p class="tl-body">
+                Built AI-guided Playwright testing systems while AI was still early as a productivity
+                layer, proving the technology could handle complex automation — and shipping it into
+                production before most teams were paying attention.
+              </p>
+            </div>
           </article>
 
-          <article class="timeline-item reveal">
-            <span class="timeline-year">2026</span>
-            <h3>Founded Camber Consulting</h3>
-            <p>
-              Launched Camber to help businesses operationalise AI with implementation-first consulting:
-              architecture, automation, integration, and team enablement.
-            </p>
+          <article class="timeline-item">
+            <div class="tl-connector" aria-hidden="true">
+              <span class="tl-dot"></span>
+              <span class="tl-line"></span>
+            </div>
+            <div class="tl-content">
+              <span class="tl-date">2024</span>
+              <h3 class="tl-heading">Founded Camber Co</h3>
+              <p class="tl-body">
+                Turned years of AI engineering into a service for founders and small businesses.
+                Camber Co exists to close the gap between AI potential and working product — fast,
+                pragmatic, no slide decks.
+              </p>
+            </div>
           </article>
 
-          <article class="timeline-item reveal">
-            <span class="timeline-year">Current</span>
-            <h3>From Zero Knowledge to App Store</h3>
-            <p>
-              Consulted with two solo developers with no technical background and guided each from zero knowledge
-              to shipping an app on the App Store.
-            </p>
+          <article class="timeline-item">
+            <div class="tl-connector" aria-hidden="true">
+              <span class="tl-dot"></span>
+            </div>
+            <div class="tl-content">
+              <span class="tl-date">Current</span>
+              <h3 class="tl-heading">From Zero to App Store</h3>
+              <p class="tl-body">
+                Mentored non-technical founders — people with no prior coding experience — and guided
+                each one from first principles to shipping live AI products independently on the App Store.
+              </p>
+            </div>
           </article>
+
         </div>
       </div>
     </section>
 
+    <!-- ===== PROJECTS ===== -->
     <section class="projects" id="projects">
       <div class="container">
-        <div class="section-header reveal">
-          <p class="section-tag">Selected Work</p>
-          <h2 class="section-title">Products and platforms</h2>
+
+        <div class="section-header" data-reveal>
+          <p class="section-tag">projects</p>
+          <h2 class="section-title">What we've shipped.</h2>
         </div>
 
-        <div class="project-grid">
-          <article class="project-card reveal" data-tilt>
-            <h3>Football IQ</h3>
-            <p>
-              Football trivia app with daily challenge loops, multiple game modes,
-              and progression-driven retention.
-            </p>
-            <a href="https://www.football-iq.app/" target="_blank" rel="noopener noreferrer">www.football-iq.app</a>
+        <div class="project-grid" data-reveal-stagger>
+
+          <!-- Football IQ -->
+          <article class="project-card">
+            <div class="card-bar" aria-hidden="true">
+              <span class="card-dot card-dot--red"></span>
+              <span class="card-dot card-dot--yellow"></span>
+              <span class="card-dot card-dot--green"></span>
+              <span class="card-path">camber/football-iq</span>
+            </div>
+            <div class="card-body">
+              <h3 class="card-title">Football IQ</h3>
+              <p class="card-desc">
+                Trivia app with daily challenges, built and shipped to the App Store.
+              </p>
+              <a
+                href="https://www.football-iq.app/"
+                class="card-link"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="Visit Football IQ at www.football-iq.app"
+              >www.football-iq.app</a>
+            </div>
           </article>
 
-          <article class="project-card project-plus reveal" data-tilt>
-            <h3>Plus AI Tools Suite</h3>
-            <p class="project-intro">
-              Grouped platform work across three Plus products, centered on AI-assisted insight,
-              prediction interfaces, and high-clarity user decision flows.
-            </p>
-
-            <div class="plus-grid">
-              <div class="plus-item">
-                <h4>WhoScored Plus</h4>
-                <p>AI-assisted football analysis and conversational insight surfaces.</p>
-                <a href="https://www.whoscored.com/plus" target="_blank" rel="noopener noreferrer">whoscored.com/plus</a>
-              </div>
-              <div class="plus-item">
-                <h4>Oddschecker Plus</h4>
-                <p>Value and trend tooling driven by fast-changing market signals.</p>
-                <a href="https://www.oddschecker.com/plus" target="_blank" rel="noopener noreferrer">oddschecker.com/plus</a>
-              </div>
-              <div class="plus-item">
-                <h4>Gazzetta AI Predictor</h4>
-                <p>Prediction-led football experiences built for intuitive user understanding.</p>
-                <a href="https://ai.predictor.gazzetta.it" target="_blank" rel="noopener noreferrer">ai.predictor.gazzetta.it</a>
+          <!-- Plus AI -->
+          <article class="project-card">
+            <div class="card-bar" aria-hidden="true">
+              <span class="card-dot card-dot--red"></span>
+              <span class="card-dot card-dot--yellow"></span>
+              <span class="card-dot card-dot--green"></span>
+              <span class="card-path">camber/plus-ai</span>
+            </div>
+            <div class="card-body">
+              <h3 class="card-title">Plus AI Tools Suite</h3>
+              <p class="card-desc">
+                WhoScored Plus, Oddschecker Plus, Gazzetta AI Predictor — AI-assisted sports
+                analysis tools built for high-volume audiences.
+              </p>
+              <div class="card-tags">
+                <span class="card-tag">WhoScored Plus</span>
+                <span class="card-tag">Oddschecker Plus</span>
+                <span class="card-tag">Gazzetta AI</span>
               </div>
             </div>
           </article>
 
-          <article class="project-card reveal" data-tilt>
-            <h3>AI-Native QA Systems</h3>
-            <p>
-              Embedded AI in browser automation and test orchestration to reduce manual QA effort,
-              improve reliability, and shorten delivery cycles.
-            </p>
+          <!-- QA Systems -->
+          <article class="project-card">
+            <div class="card-bar" aria-hidden="true">
+              <span class="card-dot card-dot--red"></span>
+              <span class="card-dot card-dot--yellow"></span>
+              <span class="card-dot card-dot--green"></span>
+              <span class="card-path">camber/qa-systems</span>
+            </div>
+            <div class="card-body">
+              <h3 class="card-title">AI-Native QA Systems</h3>
+              <p class="card-desc">
+                Browser automation with AI. Playwright-based testing that understands what
+                it's looking at — not just what it's clicking.
+              </p>
+              <div class="card-tags">
+                <span class="card-tag">Playwright</span>
+                <span class="card-tag">AI Testing</span>
+                <span class="card-tag">Browser Automation</span>
+              </div>
+            </div>
           </article>
 
-          <article class="project-card reveal" data-tilt>
-            <h3>Founder Acceleration</h3>
-            <p>
-              Worked directly with non-technical solo founders, taking them from first principles to shipped products,
-              with reusable build systems and practical AI workflows.
-            </p>
+          <!-- Founder Acceleration -->
+          <article class="project-card">
+            <div class="card-bar" aria-hidden="true">
+              <span class="card-dot card-dot--red"></span>
+              <span class="card-dot card-dot--yellow"></span>
+              <span class="card-dot card-dot--green"></span>
+              <span class="card-path">camber/founder-acceleration</span>
+            </div>
+            <div class="card-body">
+              <h3 class="card-title">Founder Acceleration</h3>
+              <p class="card-desc">
+                Non-technical founder mentorship. From zero knowledge to shipping products —
+                with reusable build systems and practical AI workflows.
+              </p>
+              <div class="card-tags">
+                <span class="card-tag">Mentorship</span>
+                <span class="card-tag">Solo Founders</span>
+                <span class="card-tag">AI Workflows</span>
+              </div>
+            </div>
           </article>
+
         </div>
       </div>
     </section>
 
-    <section class="play" id="play">
+    <!-- ===== CTA ===== -->
+    <section class="cta" id="cta">
       <div class="container">
-        <div class="section-header reveal">
-          <p class="section-tag">Interactive</p>
-          <h2 class="section-title">AI Time Warp Estimator</h2>
-          <p class="section-desc">Turn repetitive monthly tasks into an estimated time-recovered plan.</p>
-        </div>
-
-        <div class="lab-shell reveal">
-          <div class="lab-column">
-            <h3>Input Tasks</h3>
-            <p class="lab-copy">Add repetitive tasks and monthly time spent on each.</p>
-            <div id="taskRows" class="task-rows">
-              <div class="task-row">
-                <input class="task-name" type="text" placeholder="Task name (e.g. Weekly reporting)" maxlength="100" />
-                <input class="task-hours" type="number" min="0.5" max="500" step="0.5" placeholder="Hours / month" />
-                <button class="task-remove" type="button" aria-label="Remove task">x</button>
-              </div>
-            </div>
-            <div class="task-actions">
-              <button id="addTask" class="btn btn-ghost" type="button">Add Task</button>
-              <button id="sampleTasks" class="btn btn-ghost" type="button">Load Example</button>
-            </div>
-          </div>
-
-          <div class="lab-column">
-            <h3>Run Estimate</h3>
-            <p class="lab-copy">Model estimates realistic monthly automation gains.</p>
-            <div class="lab-actions">
-              <button id="runEstimate" class="btn btn-primary" type="button">Estimate Time Saved</button>
-              <button id="clearTasks" class="btn btn-ghost" type="button">Clear</button>
-            </div>
-            <div class="flow-track" id="flowTrack" aria-hidden="true">
-              <span class="flow-dot"></span>
-              <span class="flow-dot"></span>
-              <span class="flow-dot"></span>
-              <span class="flow-dot"></span>
-            </div>
-            <p class="estimator-note" id="estimatorNote">Tip: include monthly repetitive tasks for stronger estimates.</p>
-          </div>
-
-          <div class="lab-column output-column">
-            <h3>Savings Output</h3>
-            <div class="score-grid">
-              <div class="score-card">
-                <p>Monthly Hours</p>
-                <strong id="metricMonthlySaved">0</strong>
-              </div>
-              <div class="score-card">
-                <p>Yearly Hours</p>
-                <strong id="metricYearlySaved">0</strong>
-              </div>
-              <div class="score-card">
-                <p>Workdays / Year</p>
-                <strong id="metricDaysSaved">0</strong>
-              </div>
-            </div>
-            <p class="stack-grade" id="stackGrade">Awaiting estimate...</p>
-            <p class="stack-story" id="stackStory">Run a simulation to see estimated hours you can recover.</p>
-            <div id="taskBreakdown" class="task-breakdown"></div>
-          </div>
+        <div class="cta-card" data-reveal>
+          <h2 class="cta-title">Ready to build?</h2>
+          <p class="cta-desc">
+            Book a free 30-minute audit. We'll look at your operations, identify the highest-impact
+            AI opportunities, and tell you honestly what's worth building. No pitch. No jargon.
+            Just a clear path forward.
+          </p>
+          <a
+            href="https://calendly.com/camber-co/30min"
+            class="btn btn-primary"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Book Free 30-Minute Audit
+          </a>
+          <p class="cta-flags" aria-label="No commitment, no jargon, just signal">
+            <span class="flag">--no-commitment</span>
+            <span class="flag">--no-jargon</span>
+            <span class="flag">--just-signal</span>
+          </p>
         </div>
       </div>
     </section>
 
-    <section class="cta reveal">
-      <div class="container cta-card">
-        <h2>Business-first on the homepage. Builder-first here.</h2>
-        <p>
-          If you want to see how this thinking applies to your company,
-          Camber can design and ship your next AI workflow in production.
-        </p>
-        <a href="https://calendly.com/camber-co/30min" class="btn btn-primary" target="_blank" rel="noopener noreferrer">Book a Call</a>
-      </div>
-    </section>
   </main>
+</Layout>
 
-  <footer class="footer">
-    <p>Charlie Waite · London · Camber Consulting</p>
-  </footer>
-
-  <script>
-    const typeLine = document.getElementById('typeLine');
-    const phrase = '2026: founded Camber Consulting to turn AI potential into working systems.';
-    let charIndex = 0;
-    const typeTick = () => {
-      if (!typeLine || charIndex > phrase.length) return;
-      typeLine.textContent = phrase.slice(0, charIndex);
-      charIndex += 1;
-      setTimeout(typeTick, 20);
-    };
-    typeTick();
-
-    const revealables = document.querySelectorAll('.reveal');
-    const revealObserver = new IntersectionObserver((entries) => {
-      entries.forEach((entry) => {
-        if (entry.isIntersecting) entry.target.classList.add('visible');
-      });
-    }, { threshold: 0.15, rootMargin: '0px 0px -40px 0px' });
-    revealables.forEach((el) => revealObserver.observe(el));
-
-    const tiltCards = document.querySelectorAll('[data-tilt]');
-    tiltCards.forEach((card) => {
-      card.addEventListener('mousemove', (ev) => {
-        const rect = card.getBoundingClientRect();
-        const x = (ev.clientX - rect.left) / rect.width;
-        const y = (ev.clientY - rect.top) / rect.height;
-        const ry = (x - 0.5) * 5;
-        const rx = (0.5 - y) * 4;
-        card.style.transform = `perspective(900px) rotateX(${rx}deg) rotateY(${ry}deg) translateY(-2px)`;
-      });
-      card.addEventListener('mouseleave', () => {
-        card.style.transform = '';
-      });
-    });
-
-    const taskRows = document.getElementById('taskRows');
-    const addTaskBtn = document.getElementById('addTask');
-    const sampleTasksBtn = document.getElementById('sampleTasks');
-    const runEstimateBtn = document.getElementById('runEstimate');
-    const clearTasksBtn = document.getElementById('clearTasks');
-    const flowTrack = document.getElementById('flowTrack');
-    const metricMonthlySaved = document.getElementById('metricMonthlySaved');
-    const metricYearlySaved = document.getElementById('metricYearlySaved');
-    const metricDaysSaved = document.getElementById('metricDaysSaved');
-    const stackGrade = document.getElementById('stackGrade');
-    const stackStory = document.getElementById('stackStory');
-    const estimatorNote = document.getElementById('estimatorNote');
-    const taskBreakdown = document.getElementById('taskBreakdown');
-
-    const createTaskRow = (name = '', hours = '') => {
-      const row = document.createElement('div');
-      row.className = 'task-row';
-      row.innerHTML = `
-        <input class="task-name" type="text" placeholder="Task name (e.g. Weekly reporting)" maxlength="100" />
-        <input class="task-hours" type="number" min="0.5" max="500" step="0.5" placeholder="Hours / month" />
-        <button class="task-remove" type="button" aria-label="Remove task">x</button>
-      `;
-      row.querySelector('.task-name').value = name;
-      row.querySelector('.task-hours').value = hours;
-      row.querySelector('.task-remove').addEventListener('click', () => {
-        if (taskRows.children.length <= 1) {
-          row.querySelector('.task-name').value = '';
-          row.querySelector('.task-hours').value = '';
-          return;
-        }
-        row.remove();
-      });
-      return row;
-    };
-
-    taskRows?.addEventListener('click', (event) => {
-      const target = event.target;
-      if (!(target instanceof HTMLElement)) return;
-      if (!target.classList.contains('task-remove')) return;
-      const row = target.closest('.task-row');
-      if (!row) return;
-      if (taskRows.children.length <= 1) {
-        row.querySelector('.task-name').value = '';
-        row.querySelector('.task-hours').value = '';
-        return;
-      }
-      row.remove();
-    });
-
-    const animateNumber = (element, target) => {
-      const start = Number(element.textContent) || 0;
-      const delta = target - start;
-      const duration = 450;
-      const startTime = performance.now();
-      const tick = (now) => {
-        const progress = Math.min(1, (now - startTime) / duration);
-        element.textContent = String(Math.round((start + delta * progress) * 10) / 10);
-        if (progress < 1) requestAnimationFrame(tick);
-      };
-      requestAnimationFrame(tick);
-    };
-
-    const collectTasks = () => {
-      return [...taskRows.querySelectorAll('.task-row')]
-        .map((row) => {
-          const name = row.querySelector('.task-name')?.value?.trim();
-          const hours = Number(row.querySelector('.task-hours')?.value);
-          return { name, hoursPerMonth: hours };
-        })
-        .filter((task) => task.name && Number.isFinite(task.hoursPerMonth) && task.hoursPerMonth > 0);
-    };
-
-    const setLoadingState = (loading) => {
-      runEstimateBtn.disabled = loading;
-      runEstimateBtn.textContent = loading ? 'Estimating...' : 'Estimate Time Saved';
-      flowTrack?.classList.toggle('running', loading);
-      if (loading) estimatorNote.textContent = 'Running AI estimate...';
-    };
-
-    const renderBreakdown = (tasks) => {
-      if (!tasks.length) {
-        taskBreakdown.innerHTML = '';
-        return;
-      }
-      taskBreakdown.innerHTML = tasks.map((task) => {
-        const width = Math.max(5, task.automationPotentialPercent);
-        return `
-          <div class="breakdown-item">
-            <div class="breakdown-head">
-              <strong>${task.name}</strong>
-              <span>${task.estimatedHoursSavedPerMonth}h / mo</span>
-            </div>
-            <div class="breakdown-bar"><span style="width:${width}%"></span></div>
-          </div>
-        `;
-      }).join('');
-    };
-
-    const showEstimate = (payload) => {
-      animateNumber(metricMonthlySaved, payload.summary.estimatedHoursSavedPerMonth);
-      animateNumber(metricYearlySaved, payload.summary.estimatedHoursSavedPerYear);
-      animateNumber(metricDaysSaved, payload.summary.workingDaysRecoveredPerYear);
-      stackGrade.textContent = `Confidence: ${payload.summary.confidence.toUpperCase()}`;
-      stackStory.textContent = payload.summary.rationale;
-      estimatorNote.textContent = payload.source === 'ai'
-        ? 'AI model estimate complete.'
-        : 'AI key unavailable. Showing heuristic estimate.';
-      renderBreakdown(payload.tasks);
-      flowTrack?.classList.remove('running');
-      void flowTrack?.offsetWidth;
-      flowTrack?.classList.add('running');
-    };
-
-    addTaskBtn?.addEventListener('click', () => {
-      if (taskRows.children.length >= 8) return;
-      taskRows.appendChild(createTaskRow());
-    });
-
-    sampleTasksBtn?.addEventListener('click', () => {
-      taskRows.innerHTML = '';
-      const samples = [
-        ['Weekly reporting prep', '12'],
-        ['Inbox sorting and follow-up', '18'],
-        ['CRM updates and admin logging', '16'],
-        ['Meeting notes and summaries', '10']
-      ];
-      samples.forEach(([name, hours]) => taskRows.appendChild(createTaskRow(name, hours)));
-    });
-
-    clearTasksBtn?.addEventListener('click', () => {
-      taskRows.innerHTML = '';
-      taskRows.appendChild(createTaskRow());
-      animateNumber(metricMonthlySaved, 0);
-      animateNumber(metricYearlySaved, 0);
-      animateNumber(metricDaysSaved, 0);
-      stackGrade.textContent = 'Awaiting estimate...';
-      stackStory.textContent = 'Run a simulation to see estimated hours you can recover.';
-      estimatorNote.textContent = 'Tip: include monthly repetitive tasks for stronger estimates.';
-      taskBreakdown.innerHTML = '';
-      flowTrack?.classList.remove('running');
-    });
-
-    runEstimateBtn?.addEventListener('click', async () => {
-      const tasks = collectTasks();
-      if (!tasks.length) {
-        stackGrade.textContent = 'Add at least one task';
-        stackStory.textContent = 'Enter task names and monthly hours to run the estimate.';
-        return;
-      }
-
-      setLoadingState(true);
-      try {
-        const response = await fetch('/api/estimate-savings', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ tasks })
-        });
-        const payload = await response.json();
-        if (!response.ok) {
-          stackGrade.textContent = 'Estimate unavailable';
-          stackStory.textContent = payload?.error || 'Could not calculate estimate.';
-          setLoadingState(false);
-          return;
-        }
-        showEstimate(payload);
-      } catch {
-        stackGrade.textContent = 'Network error';
-        stackStory.textContent = 'Could not reach estimator endpoint.';
-      } finally {
-        setLoadingState(false);
-      }
-    });
-
-    const lightField = document.getElementById('lightField');
-    const ctx = lightField?.getContext('2d');
-    const particles = [];
-    let width = 0;
-    let height = 0;
-
-    const setupField = () => {
-      if (!lightField) return;
-      width = window.innerWidth;
-      height = window.innerHeight;
-      lightField.width = width;
-      lightField.height = height;
-      particles.length = 0;
-
-      for (let i = 0; i < 65; i += 1) {
-        particles.push({
-          x: Math.random() * width,
-          y: Math.random() * height,
-          vx: (Math.random() - 0.5) * 0.3,
-          vy: (Math.random() - 0.5) * 0.3,
-          r: 1 + Math.random() * 1.8
-        });
-      }
-    };
-
-    const renderField = () => {
-      if (!ctx) return;
-      ctx.clearRect(0, 0, width, height);
-      ctx.fillStyle = 'rgba(148, 163, 184, 0.34)';
-
-      particles.forEach((p) => {
-        p.x += p.vx;
-        p.y += p.vy;
-        if (p.x < 0 || p.x > width) p.vx *= -1;
-        if (p.y < 0 || p.y > height) p.vy *= -1;
-
-        ctx.beginPath();
-        ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
-        ctx.fill();
-      });
-
-      requestAnimationFrame(renderField);
-    };
-
-    setupField();
-    renderField();
-    window.addEventListener('resize', setupField);
-  </script>
-</body>
-</html>
-
-<style is:global>
-  :root {
-    --bg: #ffffff;
-    --surface: #f8fafc;
-    --surface-2: #f1f5f9;
-    --ink: #0f172a;
-    --text: #334155;
-    --muted: #64748b;
-    --line: #e2e8f0;
-    --amber: #f59e0b;
-    --slate: #1e293b;
-  }
-
-  *, *::before, *::after { box-sizing: border-box; }
-
-  html {
-    scroll-behavior: smooth;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-  }
-
-  body {
-    margin: 0;
-    font-family: 'Figtree', -apple-system, sans-serif;
-    color: var(--text);
-    background: radial-gradient(circle at 12% 8%, #f8fafc 0%, #ffffff 42%, #f8fafc 100%);
-    overflow-x: hidden;
-  }
-
-  #lightField {
-    position: fixed;
-    inset: 0;
-    z-index: 0;
-    pointer-events: none;
-    opacity: 0.55;
-  }
-
-  .grain {
-    position: fixed;
-    inset: 0;
-    background-image: linear-gradient(rgba(15, 23, 42, 0.02), rgba(15, 23, 42, 0.02));
-    z-index: 0;
-    pointer-events: none;
-  }
-
-  .nav,
-  main,
-  .footer {
-    position: relative;
-    z-index: 1;
-  }
-
-  .nav {
-    position: sticky;
-    top: 0;
-    z-index: 20;
-    padding: 0 24px;
-    background: rgba(255, 255, 255, 0.86);
-    backdrop-filter: blur(18px);
-    border-bottom: 1px solid var(--line);
-  }
-
-  .nav-inner {
-    max-width: 1140px;
-    margin: 0 auto;
-    min-height: 72px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 16px;
-  }
-
-  .nav-logo { text-decoration: none; }
-
-  .logo-text {
-    font-family: 'Instrument Serif', Georgia, serif;
-    color: var(--ink);
-    font-size: 24px;
-    letter-spacing: -0.02em;
-  }
-
-  .nav-links {
-    display: flex;
-    align-items: center;
-    gap: 26px;
-  }
-
-  .nav-link {
-    text-decoration: none;
-    color: var(--muted);
-    font-size: 15px;
-    font-weight: 500;
-  }
-
-  .nav-link:hover { color: var(--ink); }
-
-  .nav-btn {
-    text-decoration: none;
-    background: var(--ink);
-    color: #fff;
-    font-size: 14px;
-    font-weight: 600;
-    border-radius: 9px;
-    padding: 10px 18px;
-  }
-
-  .nav-btn:hover { background: var(--slate); }
+<style>
+  /* ============================================================
+     Shared Layout
+     ============================================================ */
 
   .container {
-    max-width: 1140px;
+    max-width: 1280px;
     margin: 0 auto;
-    padding: 0 24px;
+    padding: 0 var(--space-8);
   }
+
+  /* ============================================================
+     Hero
+     ============================================================ */
 
   .hero {
-    padding: 116px 0 72px;
+    min-height: 50vh;
+    display: flex;
+    align-items: center;
+    padding: clamp(80px, 12vw, 128px) 0;
+    border-bottom: 1px solid var(--color-border-subtle);
   }
 
-  .hero-grid {
+  .hero-inner {
     display: grid;
-    grid-template-columns: 1.1fr 0.9fr;
-    gap: 26px;
-    align-items: start;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-12);
+    align-items: center;
   }
 
-  .hero-tag,
-  .section-tag {
-    font-size: 13px;
-    text-transform: uppercase;
-    letter-spacing: 0.1em;
-    font-weight: 600;
-    color: #94a3b8;
-    margin: 0 0 14px;
+  .hero-copy {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-6);
   }
 
-  .hero-title,
-  .section-title,
-  .timeline-item h3,
-  .project-card h3,
-  .plus-item h4,
-  .cta-card h2 {
-    font-family: 'Instrument Serif', Georgia, serif;
-    color: var(--ink);
-    line-height: 1.1;
-    letter-spacing: -0.02em;
+  /* Status chip */
+  .status-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    padding: 6px 12px;
+    background: var(--color-surface-01);
+    border: 1px solid var(--color-border-subtle);
+    border-radius: var(--radius-sm);
+    width: fit-content;
+  }
+
+  .status-dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--color-green-500);
+    box-shadow: 0 0 6px var(--color-green-500);
+    animation: status-pulse 2.4s ease-in-out infinite;
+  }
+
+  @keyframes status-pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.4; }
+  }
+
+  .status-label {
+    font-family: var(--font-mono);
+    font-size: var(--type-label);
+    color: var(--color-green-500);
+    letter-spacing: 0.06em;
+  }
+
+  .status-path {
+    font-family: var(--font-mono);
+    font-size: var(--type-label);
+    color: var(--color-text-muted);
+  }
+
+  /* H1 */
+  .hero-title {
+    font-family: var(--font-mono);
+    font-size: var(--type-display);
+    font-weight: 800;
+    line-height: 1;
+    letter-spacing: -0.03em;
+    color: var(--color-text-primary);
     margin: 0;
   }
 
-  .hero-title {
-    font-size: clamp(40px, 5.7vw, 70px);
-    margin-bottom: 20px;
+  /* Sub */
+  .hero-sub {
+    font-family: var(--font-sans);
+    font-size: var(--type-body-lg);
+    color: var(--color-text-secondary);
+    line-height: 1.6;
+    margin: 0;
+    max-width: 48ch;
   }
 
-  .hero-title em {
-    color: #475569;
-    font-style: italic;
-  }
-
-  .hero-subtitle {
-    font-size: 18px;
-    line-height: 1.8;
-    color: var(--muted);
-    max-width: 62ch;
-  }
-
-  .hero-actions {
-    margin-top: 30px;
-    display: flex;
-    flex-wrap: wrap;
-    gap: 14px;
-  }
-
-  .btn {
-    border: none;
-    border-radius: 10px;
-    font-family: inherit;
-    font-size: 16px;
-    font-weight: 600;
-    text-decoration: none;
-    cursor: pointer;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    padding: 13px 24px;
-    transition: all 0.24s ease;
-  }
-
-  .btn-primary {
-    color: #fff;
-    background: var(--ink);
-  }
-
-  .btn-primary:hover {
-    background: var(--slate);
-    transform: translateY(-2px);
-    box-shadow: 0 12px 30px rgba(15, 23, 42, 0.12);
-  }
-
-  .btn-ghost {
-    background: rgba(255, 255, 255, 0.92);
-    color: var(--muted);
-    border: 1.5px solid var(--line);
-  }
-
-  .btn-ghost:hover {
-    color: var(--ink);
-    border-color: #cbd5e1;
-  }
-
-  .hero-panel {
-    display: grid;
-    gap: 14px;
-  }
-
-  .terminal,
-  .nano-art,
-  .timeline-item,
-  .project-card,
-  .lab-shell,
-  .score-card,
-  .cta-card {
-    background: rgba(255, 255, 255, 0.92);
-    border: 1px solid var(--line);
-    border-radius: 16px;
-    box-shadow: 0 18px 45px rgba(15, 23, 42, 0.06);
-  }
-
-  .terminal {
-    padding: 18px;
-  }
-
-  .terminal p {
-    margin: 0 0 7px;
-    color: #334155;
-    font-size: 14px;
-  }
-
-  .prompt { color: var(--amber); }
-
-  .type-line {
-    min-height: 1.2rem;
-    color: #475569;
-    font-weight: 600;
-  }
-
-  .nano-art {
-    min-height: 190px;
-    position: relative;
-    display: grid;
-    place-items: center;
+  /* Terminal panel */
+  .hero-terminal {
+    background: var(--color-surface-01);
+    border: 1px solid var(--color-border-subtle);
+    border-radius: var(--radius-lg);
     overflow: hidden;
   }
 
-  .nano-art p {
-    z-index: 1;
+  .tw-bar {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    padding: 10px var(--space-4);
+    background: var(--color-surface-02);
+    border-bottom: 1px solid var(--color-border-subtle);
+  }
+
+  .tw-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  .tw-dot--red    { background: #ff5f57; }
+  .tw-dot--yellow { background: #ffbd2e; }
+  .tw-dot--green  { background: #28c940; }
+
+  .tw-label {
+    font-family: var(--font-mono);
+    font-size: var(--type-caption);
+    color: var(--color-text-muted);
+    margin-left: var(--space-2);
+  }
+
+  .tw-body {
+    padding: var(--space-6);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+    min-height: 100px;
+  }
+
+  .tw-line {
+    display: flex;
+    align-items: baseline;
+    gap: var(--space-2);
     margin: 0;
-    color: #64748b;
-    text-transform: uppercase;
-    letter-spacing: 0.1em;
-    font-size: 11px;
-    font-weight: 700;
   }
 
-  .ring {
-    position: absolute;
-    border-radius: 999px;
-    border: 1px solid #cbd5e1;
-    animation: pulse 6s ease-in-out infinite;
+  .tw-prompt {
+    font-family: var(--font-mono);
+    font-size: var(--type-body-sm);
+    color: var(--color-green-500);
+    user-select: none;
+    flex-shrink: 0;
   }
 
-  .ring-1 {
-    width: 230px;
-    height: 230px;
-    background: radial-gradient(circle at 25% 30%, rgba(245, 158, 11, 0.12), transparent 58%);
+  .tw-cmd {
+    font-family: var(--font-mono);
+    font-size: var(--type-body-sm);
+    color: var(--color-text-secondary);
   }
 
-  .ring-2 {
-    width: 170px;
-    height: 170px;
-    animation-delay: 900ms;
+  .tw-output {
+    font-family: var(--font-mono);
+    font-size: var(--type-body-sm);
+    color: var(--color-green-400);
+    line-height: 1.6;
+    min-height: 1.4em;
+    padding-left: calc(var(--space-4) + 2px); /* align with cmd */
   }
 
-  .ring-3 {
-    width: 120px;
-    height: 120px;
-    animation-delay: 1700ms;
-  }
-
-  .journey,
-  .projects,
-  .play {
-    padding: 70px 0;
-  }
-
-  .journey {
-    border-top: 1px solid var(--line);
-  }
+  /* ============================================================
+     Section shared
+     ============================================================ */
 
   .section-header {
-    margin-bottom: 28px;
+    margin-bottom: var(--space-12);
+  }
+
+  .section-tag {
+    font-family: var(--font-mono);
+    font-size: var(--type-caption);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--color-green-500);
+    margin: 0 0 var(--space-3);
   }
 
   .section-title {
-    font-size: clamp(34px, 4.2vw, 52px);
-    margin-bottom: 14px;
+    font-family: var(--font-mono);
+    font-size: var(--type-h1);
+    font-weight: 700;
+    letter-spacing: -0.03em;
+    color: var(--color-text-primary);
+    margin: 0;
+    line-height: 1.1;
   }
 
-  .section-desc {
-    color: var(--muted);
-    margin: 0;
-    max-width: 600px;
+  /* ============================================================
+     Journey
+     ============================================================ */
+
+  .journey {
+    padding: clamp(80px, 12vw, 128px) 0;
+    border-bottom: 1px solid var(--color-border-subtle);
   }
 
   .timeline {
-    display: grid;
-    gap: 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 0;
   }
 
   .timeline-item {
-    padding: 22px;
+    display: grid;
+    grid-template-columns: 24px 1fr;
+    gap: var(--space-6);
+    position: relative;
   }
 
-  .timeline-year {
+  .tl-connector {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-top: 4px;
+  }
+
+  .tl-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: var(--color-green-500);
+    box-shadow: 0 0 8px var(--color-green-glow);
+    flex-shrink: 0;
+    z-index: 1;
+    position: relative;
+  }
+
+  .tl-line {
+    width: 1px;
+    flex: 1;
+    min-height: 40px;
+    background: var(--color-border-subtle);
+    margin-top: var(--space-2);
+  }
+
+  .tl-content {
+    padding-bottom: clamp(32px, 5vw, 56px);
+  }
+
+  .tl-date {
     display: inline-block;
-    font-size: 12px;
+    font-family: var(--font-mono);
+    font-size: var(--type-caption);
+    font-weight: 600;
+    letter-spacing: 0.1em;
     text-transform: uppercase;
-    letter-spacing: 0.11em;
+    color: var(--color-green-500);
+    margin-bottom: var(--space-2);
+  }
+
+  .tl-heading {
+    font-family: var(--font-mono);
+    font-size: var(--type-h3);
     font-weight: 700;
-    color: #64748b;
-    margin-bottom: 8px;
+    color: var(--color-text-primary);
+    margin: 0 0 var(--space-3);
+    letter-spacing: -0.01em;
   }
 
-  .timeline-item h3 {
-    font-size: 30px;
-    margin-bottom: 10px;
-  }
-
-  .timeline-item p {
-    margin: 0;
-    color: var(--muted);
+  .tl-body {
+    font-family: var(--font-sans);
+    font-size: var(--type-body);
+    color: var(--color-text-secondary);
     line-height: 1.75;
+    margin: 0;
+    max-width: 60ch;
+  }
+
+  /* ============================================================
+     Projects
+     ============================================================ */
+
+  .projects {
+    padding: clamp(80px, 12vw, 128px) 0;
+    border-bottom: 1px solid var(--color-border-subtle);
   }
 
   .project-grid {
     display: grid;
-    gap: 14px;
     grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--space-6);
   }
 
+  /* Terminal window card */
   .project-card {
-    padding: 22px;
-    transition: transform 180ms ease, box-shadow 180ms ease;
-    transform-style: preserve-3d;
+    background: var(--color-surface-01);
+    border: 1px solid var(--color-border-subtle);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    transition:
+      border-color var(--duration-normal) var(--easing-smooth),
+      box-shadow var(--duration-normal) var(--easing-smooth),
+      transform var(--duration-normal) var(--easing-spring);
     will-change: transform;
   }
 
-  .project-card h3 {
-    font-size: 34px;
-    margin-bottom: 10px;
+  .project-card:hover {
+    border-color: var(--color-border-visible);
+    box-shadow: 0 0 32px rgba(34, 197, 94, 0.06);
+    transform: translateY(-2px);
   }
 
-  .project-card p {
-    margin: 0 0 10px;
-    color: var(--muted);
-    line-height: 1.75;
-  }
-
-  .project-card a {
-    color: #0f172a;
-    font-weight: 600;
-    text-decoration: none;
-    border-bottom: 1px dotted #94a3b8;
-    overflow-wrap: anywhere;
-  }
-
-  .project-card a:hover {
-    color: #475569;
-  }
-
-  .project-plus {
-    grid-column: 1 / -1;
-  }
-
-  .project-intro {
-    max-width: 80ch;
-  }
-
-  .plus-grid {
-    margin-top: 14px;
-    display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 12px;
-  }
-
-  .plus-item {
-    background: var(--surface);
-    border: 1px solid var(--line);
-    border-radius: 12px;
-    padding: 14px;
-  }
-
-  .plus-item h4 {
-    font-size: 24px;
-    margin-bottom: 8px;
-  }
-
-  .plus-item p {
-    font-size: 14px;
-    line-height: 1.65;
-    margin-bottom: 10px;
-  }
-
-  .play {
-    background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%);
-    border-top: 1px solid var(--line);
-    border-bottom: 1px solid var(--line);
-  }
-
-  .lab-shell {
-    padding: 18px;
-    display: grid;
-    gap: 12px;
-    grid-template-columns: 1fr 1fr 1fr;
-  }
-
-  .lab-column {
-    background: var(--surface);
-    border: 1px solid var(--line);
-    border-radius: 14px;
-    padding: 14px;
-  }
-
-  .lab-column h3 {
-    font-family: 'Instrument Serif', Georgia, serif;
-    color: var(--ink);
-    font-size: 28px;
-    margin: 0 0 6px;
-    letter-spacing: -0.02em;
-  }
-
-  .lab-copy {
-    margin: 0 0 10px;
-    font-size: 14px;
-    color: var(--muted);
-  }
-
-  .task-rows {
-    display: grid;
-    gap: 8px;
-  }
-
-  .task-row {
-    display: grid;
-    grid-template-columns: 1.45fr 0.8fr auto;
-    gap: 8px;
+  .card-bar {
+    display: flex;
     align-items: center;
+    gap: var(--space-2);
+    padding: 10px var(--space-4);
+    background: var(--color-surface-02);
+    border-bottom: 1px solid var(--color-border-subtle);
   }
 
-  .task-name,
-  .task-hours {
-    border: 1px solid #dbe4ee;
-    border-radius: 10px;
-    background: #fff;
-    color: #0f172a;
-    min-height: 44px;
-    padding: 10px 12px;
-    font-size: 13px;
-    font-family: inherit;
-  }
-
-  .task-name:focus,
-  .task-hours:focus {
-    outline: 2px solid rgba(15, 23, 42, 0.14);
-    border-color: #94a3b8;
-  }
-
-  .task-remove {
-    min-height: 44px;
-    min-width: 44px;
-    border: 1px solid #dbe4ee;
-    border-radius: 10px;
-    background: #fff;
-    color: #64748b;
-    font-size: 14px;
-    font-weight: 700;
-    cursor: pointer;
-  }
-
-  .task-remove:hover {
-    color: #0f172a;
-    border-color: #94a3b8;
-  }
-
-  .task-actions {
-    margin-top: 10px;
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
-  }
-
-  .lab-actions {
-    display: flex;
-    gap: 8px;
-    margin-top: 10px;
-    flex-wrap: wrap;
-  }
-
-  .flow-track {
-    margin-top: 12px;
-    border: 1px solid #dbe4ee;
-    border-radius: 10px;
-    height: 56px;
-    position: relative;
-    overflow: hidden;
-    background: linear-gradient(90deg, #ffffff, #f8fafc);
-  }
-
-  .flow-track::before {
-    content: '';
-    position: absolute;
-    top: 50%;
-    left: 8px;
-    right: 8px;
-    height: 2px;
-    background: #e2e8f0;
-    transform: translateY(-50%);
-  }
-
-  .flow-dot {
-    position: absolute;
-    top: 50%;
-    left: -10%;
+  .card-dot {
     width: 10px;
     height: 10px;
-    border-radius: 999px;
-    background: linear-gradient(180deg, #f59e0b, #d97706);
-    transform: translateY(-50%);
-    opacity: 0;
+    border-radius: 50%;
+    flex-shrink: 0;
   }
 
-  .flow-track.running .flow-dot {
-    animation: flow-move 1500ms linear infinite;
-    opacity: 1;
+  .card-dot--red    { background: #ff5f57; }
+  .card-dot--yellow { background: #ffbd2e; }
+  .card-dot--green  { background: #28c940; }
+
+  .card-path {
+    font-family: var(--font-mono);
+    font-size: var(--type-caption);
+    color: var(--color-text-muted);
+    margin-left: var(--space-2);
   }
 
-  .flow-track.running .flow-dot:nth-child(2) { animation-delay: 350ms; }
-  .flow-track.running .flow-dot:nth-child(3) { animation-delay: 700ms; }
-  .flow-track.running .flow-dot:nth-child(4) { animation-delay: 1050ms; }
-
-  .estimator-note {
-    margin: 10px 0 0;
-    color: #64748b;
-    font-size: 13px;
-  }
-
-  .score-grid {
-    display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 8px;
-  }
-
-  .score-card {
-    padding: 10px;
-    text-align: center;
-    background: #fff;
-  }
-
-  .score-card p {
-    margin: 0;
-    color: #64748b;
-    font-size: 12px;
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
-    font-weight: 600;
-  }
-
-  .score-card strong {
-    display: block;
-    margin-top: 4px;
-    font-size: 28px;
-    font-family: 'Instrument Serif', Georgia, serif;
-    color: #0f172a;
-    line-height: 1;
-  }
-
-  .stack-grade {
-    margin: 10px 0 8px;
-    font-size: 14px;
-    font-weight: 700;
-    color: #475569;
-    text-transform: uppercase;
-    letter-spacing: 0.06em;
-  }
-
-  .stack-story {
-    margin: 0;
-    color: #64748b;
-    line-height: 1.7;
-    font-size: 14px;
-  }
-
-  .task-breakdown {
-    margin-top: 12px;
-    display: grid;
-    gap: 8px;
-  }
-
-  .breakdown-item {
-    background: #fff;
-    border: 1px solid #e2e8f0;
-    border-radius: 10px;
-    padding: 10px;
-  }
-
-  .breakdown-head {
+  .card-body {
+    padding: var(--space-6);
     display: flex;
-    justify-content: space-between;
-    gap: 10px;
-    align-items: center;
-    margin-bottom: 8px;
+    flex-direction: column;
+    gap: var(--space-4);
   }
 
-  .breakdown-head strong {
-    color: #0f172a;
-    font-size: 13px;
-    font-weight: 600;
+  .card-title {
+    font-family: var(--font-mono);
+    font-size: var(--type-h3);
+    font-weight: 700;
+    color: var(--color-text-primary);
+    margin: 0;
+    letter-spacing: -0.01em;
   }
 
-  .breakdown-head span {
-    color: #64748b;
-    font-size: 12px;
-    font-weight: 600;
+  .card-desc {
+    font-family: var(--font-sans);
+    font-size: var(--type-body-sm);
+    color: var(--color-text-secondary);
+    line-height: 1.7;
+    margin: 0;
   }
 
-  .breakdown-bar {
-    height: 8px;
-    border-radius: 999px;
-    background: #e2e8f0;
-    overflow: hidden;
+  .card-link {
+    font-family: var(--font-mono);
+    font-size: var(--type-body-sm);
+    color: var(--color-green-500);
+    text-decoration: none;
+    border-bottom: 1px solid transparent;
+    transition: border-color var(--duration-quick) var(--easing-smooth);
+    width: fit-content;
   }
 
-  .breakdown-bar span {
-    display: block;
-    height: 100%;
-    border-radius: 999px;
-    background: linear-gradient(90deg, #0f172a, #475569);
+  .card-link:hover {
+    border-bottom-color: var(--color-green-500);
   }
+
+  .card-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+  }
+
+  .card-tag {
+    font-family: var(--font-mono);
+    font-size: var(--type-caption);
+    color: var(--color-text-muted);
+    background: var(--color-surface-02);
+    border: 1px solid var(--color-border-subtle);
+    border-radius: var(--radius-sm);
+    padding: 3px 8px;
+    letter-spacing: 0.04em;
+  }
+
+  /* ============================================================
+     CTA
+     ============================================================ */
 
   .cta {
-    padding: 72px 0 84px;
+    padding: clamp(80px, 12vw, 128px) 0;
   }
 
   .cta-card {
+    background: var(--color-surface-01);
+    border: 1px solid var(--color-border-subtle);
+    border-radius: var(--radius-lg);
+    padding: clamp(40px, 6vw, 72px);
     text-align: center;
-    padding: 32px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--space-6);
   }
 
-  .cta-card h2 {
-    font-size: clamp(34px, 4.3vw, 52px);
-    margin-bottom: 10px;
+  .cta-title {
+    font-family: var(--font-mono);
+    font-size: var(--type-h1);
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    color: var(--color-text-primary);
+    margin: 0;
+    line-height: 1.1;
   }
 
-  .cta-card p {
-    max-width: 66ch;
-    margin: 0 auto 20px;
-    color: var(--muted);
+  .cta-desc {
+    font-family: var(--font-sans);
+    font-size: var(--type-body-lg);
+    color: var(--color-text-secondary);
+    line-height: 1.7;
+    max-width: 56ch;
+    margin: 0;
   }
 
-  .footer {
-    text-align: center;
-    padding: 0 20px 34px;
-    color: #94a3b8;
-    font-size: 14px;
+  /* CTA Button */
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--font-mono);
+    font-size: var(--type-body-sm);
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    text-decoration: none;
+    border-radius: var(--radius-md);
+    padding: 14px 28px;
+    transition:
+      background var(--duration-normal) var(--easing-smooth),
+      box-shadow var(--duration-normal) var(--easing-smooth),
+      transform var(--duration-normal) var(--easing-spring);
+    cursor: pointer;
+    border: none;
   }
 
-  .reveal {
-    opacity: 0;
-    transform: translateY(20px);
-    transition: opacity 0.65s cubic-bezier(0.16, 1, 0.3, 1),
-      transform 0.65s cubic-bezier(0.16, 1, 0.3, 1);
+  .btn-primary {
+    background: var(--color-green-500);
+    color: var(--color-text-inverse);
   }
 
-  .reveal.visible {
-    opacity: 1;
-    transform: translateY(0);
+  .btn-primary:hover {
+    background: var(--color-green-400);
+    box-shadow: 0 0 24px var(--color-green-glow);
+    transform: translateY(-2px);
   }
 
-  @keyframes pulse {
-    0%, 100% { transform: scale(0.95); opacity: 0.75; }
-    50% { transform: scale(1.08); opacity: 1; }
+  .cta-flags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-3);
+    justify-content: center;
+    margin: 0;
   }
 
-  @keyframes flow-move {
-    0% { left: -10%; opacity: 0; }
-    8% { opacity: 1; }
-    92% { opacity: 1; }
-    100% { left: 105%; opacity: 0; }
+  .flag {
+    font-family: var(--font-mono);
+    font-size: var(--type-caption);
+    color: var(--color-text-muted);
+    letter-spacing: 0.04em;
   }
 
-  @media (max-width: 980px) {
-    .hero-grid {
+  /* ============================================================
+     Responsive
+     ============================================================ */
+
+  @media (max-width: 768px) {
+    .hero-inner {
       grid-template-columns: 1fr;
+      gap: var(--space-10);
     }
 
-    .plus-grid {
-      grid-template-columns: 1fr;
-    }
-
-    .lab-shell {
-      grid-template-columns: 1fr;
-    }
-  }
-
-  @media (max-width: 840px) {
-    .nav-links {
-      display: none;
+    .hero-sub {
+      max-width: 100%;
     }
 
     .project-grid {
       grid-template-columns: 1fr;
     }
 
-    .project-plus {
-      grid-column: 1;
+    .cta-card {
+      padding: var(--space-10) var(--space-6);
     }
 
-    .nav-btn {
-      padding: 9px 14px;
-      font-size: 13px;
-    }
-
-    .hero {
-      padding-top: 100px;
-    }
-  }
-
-  @media (max-width: 560px) {
-    .hero-actions {
+    .cta-flags {
       flex-direction: column;
-    }
-
-    .hero-actions .btn {
-      width: 100%;
-    }
-
-    .timeline-item h3,
-    .project-card h3 {
-      font-size: 28px;
-    }
-
-    .score-grid {
-      grid-template-columns: 1fr;
-    }
-
-    .task-row {
-      grid-template-columns: 1fr;
+      align-items: center;
     }
   }
 
-  @media (prefers-reduced-motion: reduce) {
-    .reveal {
-      opacity: 1;
-      transform: none;
-      transition: none;
+  @media (max-width: 480px) {
+    .hero-title {
+      font-size: clamp(40px, 12vw, 64px);
     }
 
-    #lightField {
-      display: none;
-    }
-
-    .flow-dot,
-    .ring {
-      animation: none;
-    }
-
-    html {
-      scroll-behavior: auto;
+    .tl-body {
+      max-width: 100%;
     }
   }
 </style>
+
+<script>
+  import { initTypewriters, TYPEWRITER_CSS } from '../scripts/typewriter.ts';
+  import { initScrollReveal, SCROLL_REVEAL_CSS } from '../scripts/scroll-reveal.ts';
+
+  // Inject animation CSS
+  const style = document.createElement('style');
+  style.textContent = TYPEWRITER_CSS + SCROLL_REVEAL_CSS;
+  document.head.appendChild(style);
+
+  // Boot animations
+  initTypewriters();
+  initScrollReveal();
+</script>

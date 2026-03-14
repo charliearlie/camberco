@@ -1,0 +1,232 @@
+---
+const navLinks = [
+  { label: '~/services', href: '/services' },
+  { label: '~/about', href: '/about' },
+];
+---
+
+<footer>
+  <div class="footer-inner">
+    <!-- Main grid -->
+    <div class="footer-grid">
+
+      <!-- Column 1: Brand -->
+      <div class="col col-brand">
+        <a href="/" class="logotype" aria-label="Camber Co — home">
+          <span class="prompt" aria-hidden="true">$</span>
+          <span class="wordmark">camber</span>
+        </a>
+        <p class="tagline">AI services for founders who move fast.</p>
+      </div>
+
+      <!-- Column 2: Navigation -->
+      <div class="col col-nav">
+        <p class="col-label">Navigation</p>
+        <ul role="list" class="link-list">
+          {navLinks.map((link) => (
+            <li>
+              <a href={link.href} class="footer-link">{link.label}</a>
+            </li>
+          ))}
+        </ul>
+      </div>
+
+      <!-- Column 3: Connect -->
+      <div class="col col-connect">
+        <p class="col-label">Connect</p>
+        <ul role="list" class="link-list">
+          <li>
+            <a href="mailto:hello@camberco.uk" class="footer-link">
+              hello@camberco.uk
+            </a>
+          </li>
+          <li>
+            <a
+              href="https://linkedin.com/company/camber-co"
+              class="footer-link"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              LinkedIn
+            </a>
+          </li>
+          <li>
+            <a
+              href="https://calendly.com/camber-co/30min"
+              class="footer-link footer-link--cta"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Book Free Audit
+            </a>
+          </li>
+        </ul>
+      </div>
+
+    </div>
+
+    <!-- Bottom bar -->
+    <div class="footer-bottom">
+      <p class="version-string">
+        $ camber --version 2.0.0 // London, UK // All systems operational
+      </p>
+      <p class="copyright">&copy; 2026 Camber Co Ltd</p>
+    </div>
+
+  </div>
+</footer>
+
+<style>
+  footer {
+    background: var(--color-base);
+    border-top: 1px solid var(--color-border-subtle);
+  }
+
+  .footer-inner {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: var(--space-16) var(--space-8) var(--space-10);
+  }
+
+  /* ---- Main grid ---- */
+  .footer-grid {
+    display: grid;
+    grid-template-columns: 1.5fr 1fr 1fr;
+    gap: var(--space-12);
+    margin-bottom: var(--space-12);
+  }
+
+  .col {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-4);
+  }
+
+  /* ---- Brand column ---- */
+  .logotype {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-family: var(--font-mono);
+    font-size: 16px;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    text-decoration: none;
+    width: fit-content;
+  }
+
+  .prompt {
+    color: var(--color-green-500);
+  }
+
+  .wordmark {
+    color: var(--color-text-primary);
+  }
+
+  .tagline {
+    font-size: var(--type-body-sm);
+    color: var(--color-text-secondary);
+    line-height: 1.5;
+    margin-top: var(--space-1);
+  }
+
+  /* ---- Column labels ---- */
+  .col-label {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--color-text-muted);
+    margin-bottom: var(--space-2);
+  }
+
+  /* ---- Link lists ---- */
+  .link-list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+  }
+
+  .footer-link {
+    font-family: var(--font-mono);
+    font-size: var(--type-body-sm);
+    color: var(--color-text-secondary);
+    text-decoration: none;
+    transition: color var(--duration-quick) var(--easing-smooth);
+  }
+
+  .footer-link:hover,
+  .footer-link:focus-visible {
+    color: var(--color-green-500);
+    outline: none;
+  }
+
+  .footer-link:focus-visible {
+    outline: 2px solid var(--color-green-500);
+    outline-offset: 3px;
+    border-radius: var(--radius-sm);
+  }
+
+  .footer-link--cta {
+    color: var(--color-green-500);
+    font-weight: 600;
+  }
+
+  .footer-link--cta:hover {
+    color: var(--color-green-400);
+  }
+
+  /* ---- Bottom bar ---- */
+  .footer-bottom {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-4);
+    border-top: 1px solid var(--color-border-subtle);
+    padding-top: var(--space-6);
+  }
+
+  .version-string {
+    font-family: var(--font-mono);
+    font-size: var(--type-caption);
+    color: var(--color-text-muted);
+    line-height: 1.4;
+  }
+
+  .copyright {
+    font-family: var(--font-mono);
+    font-size: var(--type-caption);
+    color: var(--color-text-muted);
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+
+  /* ---- Responsive ---- */
+  @media (max-width: 768px) {
+    .footer-inner {
+      padding: var(--space-12) var(--space-6) var(--space-8);
+    }
+
+    .footer-grid {
+      grid-template-columns: 1fr;
+      gap: var(--space-8);
+    }
+
+    .footer-bottom {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: var(--space-2);
+    }
+
+    .version-string {
+      word-break: break-all;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .footer-inner {
+      padding: var(--space-10) var(--space-4) var(--space-6);
+    }
+  }
+</style>

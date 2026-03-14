@@ -1,0 +1,30 @@
+{
+  "mcpServers": {
+    "supabase": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@supabase/mcp-server-supabase@latest",
+        "--project-ref=cgippqarwcizzrwqfjot"
+      ],
+      "env": {
+        "SUPABASE_ACCESS_TOKEN": "sbp_9790e7e4cedb461a9f330191924256fd18315210"
+      }
+    },
+    "playwright": {
+      "command": "npx",
+      "args": ["@playwright/mcp@latest"]
+    },
+    "n8n-mcp": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "supergateway",
+        "--streamableHttp",
+        "https://cirrhotic-rochelle-sticklike.ngrok-free.dev/mcp-server/http",
+        "--header",
+        "authorization:Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJiYzZlMGVlOS00NGZiLTRhNjYtYjNhMS02MjIwZWMyYjk5YjMiLCJpc3MiOiJuOG4iLCJhdWQiOiJtY3Atc2VydmVyLWFwaSIsImp0aSI6IjM3YmYxMjViLTQ1MDktNDA3ZC05ZGU4LTBhNzliY2Y5ZDdmZCIsImlhdCI6MTc3MzI2NjAxMn0.bEmLhikpCmxcCCi8b4PM34A3-ZbGED-mFfNjzzyJjKI"
+      ]
+    }
+  }
+}

@@ -1,0 +1,408 @@
+---
+// StarfieldHero.astro
+// Full-viewport WebGL warp-speed starfield using Three.js
+// No text content — overlay content goes in the parent page
+---
+
+<canvas id="starfield-canvas"></canvas>
+<div id="scanline-overlay" aria-hidden="true"></div>
+<div id="vignette-overlay" aria-hidden="true"></div>
+
+<style>
+  #starfield-canvas {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: 0;
+    pointer-events: none;
+    display: block;
+  }
+
+  #scanline-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: 1;
+    pointer-events: none;
+    background: repeating-linear-gradient(
+      0deg,
+      rgba(255, 255, 255, 0.015) 0px,
+      rgba(255, 255, 255, 0.015) 1px,
+      transparent 1px,
+      transparent 4px
+    );
+  }
+
+  #vignette-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: 1;
+    pointer-events: none;
+    background: radial-gradient(
+      ellipse at center,
+      transparent 40%,
+      rgba(0, 0, 0, 0.6) 100%
+    );
+  }
+</style>
+
+<script>
+  import * as THREE from 'three';
+
+  (function initStarfield() {
+    // -------------------------------------------------------------------------
+    // Reduced motion check
+    // -------------------------------------------------------------------------
+    const prefersReducedMotion = window.matchMedia(
+      '(prefers-reduced-motion: reduce)'
+    ).matches;
+
+    // -------------------------------------------------------------------------
+    // Particle count — reduce on low-end devices
+    // -------------------------------------------------------------------------
+    const isLowEnd =
+      typeof navigator.hardwareConcurrency === 'number' &&
+      navigator.hardwareConcurrency <= 4;
+
+    const PARTICLE_COUNT = isLowEnd ? 1200 : 3000;
+
+    // -------------------------------------------------------------------------
+    // Constants
+    // -------------------------------------------------------------------------
+    const SPREAD_XY = 800;
+    const Z_NEAR = 0;
+    const Z_FAR = -2000;
+    const CRUISE_SPEED = 14; // units per frame at 60 fps equivalent
+    const BOOT_DURATION_MS = 800;
+
+    // -------------------------------------------------------------------------
+    // Canvas + Renderer
+    // -------------------------------------------------------------------------
+    const canvas = document.getElementById(
+      'starfield-canvas'
+    ) as HTMLCanvasElement;
+
+    const renderer = new THREE.WebGLRenderer({
+      canvas,
+      antialias: false,
+      alpha: false,
+    });
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    renderer.setClearColor(0x000000, 1);
+
+    // -------------------------------------------------------------------------
+    // Scene + Camera
+    // -------------------------------------------------------------------------
+    const scene = new THREE.Scene();
+    const camera = new THREE.PerspectiveCamera(
+      60,
+      window.innerWidth / window.innerHeight,
+      1,
+      3000
+    );
+    camera.position.set(0, 0, 0);
+
+    // -------------------------------------------------------------------------
+    // Particle data arrays
+    // -------------------------------------------------------------------------
+    const positions = new Float32Array(PARTICLE_COUNT * 3);
+    const prevPositions = new Float32Array(PARTICLE_COUNT * 3);
+    const colors = new Float32Array(PARTICLE_COUNT * 3);
+
+    // Color palette
+    const colorWhite = new THREE.Color(0xf0f0f0);
+    const colorGreen = new THREE.Color(0x22c55e);
+    const colorPink = new THREE.Color(0xec4899);
+
+    function randomXY(): [number, number] {
+      return [
+        (Math.random() - 0.5) * 2 * SPREAD_XY,
+        (Math.random() - 0.5) * 2 * SPREAD_XY,
+      ];
+    }
+
+    // Initialise positions, prev positions, and colors
+    for (let i = 0; i < PARTICLE_COUNT; i++) {
+      const [x, y] = randomXY();
+      const z = Math.random() * (Z_NEAR - Z_FAR) + Z_FAR; // -2000 to 0
+
+      const idx = i * 3;
+      positions[idx] = x;
+      positions[idx + 1] = y;
+      positions[idx + 2] = z;
+
+      prevPositions[idx] = x;
+      prevPositions[idx + 1] = y;
+      prevPositions[idx + 2] = z;
+
+      // Assign color
+      const rand = Math.random();
+      let col: THREE.Color;
+      if (rand < 0.80) {
+        col = colorWhite;
+      } else if (rand < 0.95) {
+        col = colorGreen;
+      } else {
+        col = colorPink;
+      }
+      colors[idx] = col.r;
+      colors[idx + 1] = col.g;
+      colors[idx + 2] = col.b;
+    }
+
+    // -------------------------------------------------------------------------
+    // Points geometry + custom shader material
+    // -------------------------------------------------------------------------
+    const pointsGeo = new THREE.BufferGeometry();
+    const posAttr = new THREE.BufferAttribute(positions, 3);
+    posAttr.setUsage(THREE.DynamicDrawUsage);
+    pointsGeo.setAttribute('position', posAttr);
+
+    const colorAttr = new THREE.BufferAttribute(colors, 3);
+    pointsGeo.setAttribute('color', colorAttr);
+
+    const vertexShader = /* glsl */ `
+      attribute vec3 color;
+      varying vec3 vColor;
+
+      void main() {
+        vColor = color;
+        vec4 mvPosition = modelViewMatrix * vec4(position, 1.0);
+
+        // Stars get larger as they approach z = 0 (camera)
+        // depth ranges from ~0 (far) to ~1 (near)
+        float depth = clamp(1.0 + position.z / 2000.0, 0.0, 1.0);
+        float size = mix(0.8, 5.0, depth * depth);
+
+        gl_PointSize = size * (300.0 / -mvPosition.z);
+        gl_Position = projectionMatrix * mvPosition;
+      }
+    `;
+
+    const fragmentShader = /* glsl */ `
+      varying vec3 vColor;
+
+      void main() {
+        // Soft circular point
+        vec2 uv = gl_PointCoord - vec2(0.5);
+        float d = length(uv);
+        if (d > 0.5) discard;
+        float alpha = smoothstep(0.5, 0.1, d);
+        gl_FragColor = vec4(vColor, alpha);
+      }
+    `;
+
+    const pointsMat = new THREE.ShaderMaterial({
+      vertexShader,
+      fragmentShader,
+      vertexColors: false,
+      transparent: true,
+      depthWrite: false,
+      blending: THREE.AdditiveBlending,
+    });
+
+    const points = new THREE.Points(pointsGeo, pointsMat);
+    scene.add(points);
+
+    // -------------------------------------------------------------------------
+    // Line streaks geometry
+    // -------------------------------------------------------------------------
+    // Each star = 2 vertices (prev -> cur)
+    const linePositions = new Float32Array(PARTICLE_COUNT * 6); // 2 points × 3 floats
+    const lineColors = new Float32Array(PARTICLE_COUNT * 6);
+
+    const lineGeo = new THREE.BufferGeometry();
+    const linePosAttr = new THREE.BufferAttribute(linePositions, 3);
+    linePosAttr.setUsage(THREE.DynamicDrawUsage);
+    lineGeo.setAttribute('position', linePosAttr);
+
+    const lineColorAttr = new THREE.BufferAttribute(lineColors, 3);
+    lineColorAttr.setUsage(THREE.DynamicDrawUsage);
+    lineGeo.setAttribute('color', lineColorAttr);
+
+    const lineMat = new THREE.LineBasicMaterial({
+      vertexColors: true,
+      transparent: true,
+      opacity: 0.5,
+      blending: THREE.AdditiveBlending,
+      depthWrite: false,
+    });
+
+    const lineSegments = new THREE.LineSegments(lineGeo, lineMat);
+    scene.add(lineSegments);
+
+    // -------------------------------------------------------------------------
+    // Boot sequence state
+    // -------------------------------------------------------------------------
+    const bootStartTime = performance.now();
+    let currentSpeed = 0;
+    let targetSpeed = CRUISE_SPEED;
+
+    // -------------------------------------------------------------------------
+    // Scroll interaction state
+    // -------------------------------------------------------------------------
+    let scrollY = 0;
+    let smoothScrollFactor = 1.0; // 1.0 = full speed, 0.3 = slow
+
+    window.addEventListener('scroll', () => {
+      scrollY = window.scrollY;
+    }, { passive: true });
+
+    // -------------------------------------------------------------------------
+    // Static starfield for reduced motion
+    // -------------------------------------------------------------------------
+    if (prefersReducedMotion) {
+      canvas.style.opacity = '0.3';
+
+      const scanlines = document.getElementById('scanline-overlay');
+      if (scanlines) scanlines.style.display = 'none';
+
+      // Render a single static frame and stop
+      renderer.render(scene, camera);
+      return;
+    }
+
+    // -------------------------------------------------------------------------
+    // Animation loop
+    // -------------------------------------------------------------------------
+    let rafId: number;
+    let lastTime = performance.now();
+
+    function easeInCubic(t: number): number {
+      return t * t * t;
+    }
+
+    function animate(now: number) {
+      if (document.hidden) {
+        rafId = requestAnimationFrame(animate);
+        return;
+      }
+
+      const delta = Math.min((now - lastTime) / 16.667, 3); // normalise to ~60fps, cap spike
+      lastTime = now;
+
+      // --- Boot speed ramp ---
+      const elapsed = now - bootStartTime;
+      if (elapsed < BOOT_DURATION_MS) {
+        const t = elapsed / BOOT_DURATION_MS;
+        currentSpeed = easeInCubic(t) * CRUISE_SPEED;
+      } else {
+        currentSpeed = CRUISE_SPEED;
+      }
+
+      // --- Scroll factor ---
+      const viewportHeight = window.innerHeight;
+      const scrollRatio = Math.min(scrollY / viewportHeight, 1.0);
+      // At scroll = 0: factor 1.0, at scroll >= 1vh: factor lerp to 0.3
+      const targetScrollFactor = scrollRatio >= 1.0 ? 0.3 : 1.0 - scrollRatio * 0.7;
+      smoothScrollFactor += (targetScrollFactor - smoothScrollFactor) * 0.08;
+
+      // Canvas opacity
+      const targetOpacity = scrollRatio >= 1.0 ? 0.3 : 1.0 - scrollRatio * 0.7;
+      canvas.style.opacity = String(Math.max(0.3, targetOpacity));
+
+      const frameSpeed = currentSpeed * smoothScrollFactor * delta;
+
+      // --- Update particle positions ---
+      for (let i = 0; i < PARTICLE_COUNT; i++) {
+        const idx = i * 3;
+
+        // Save previous position
+        prevPositions[idx] = positions[idx];
+        prevPositions[idx + 1] = positions[idx + 1];
+        prevPositions[idx + 2] = positions[idx + 2];
+
+        // Advance z toward camera
+        positions[idx + 2] += frameSpeed;
+
+        // Reset star when it passes the camera
+        if (positions[idx + 2] > Z_NEAR) {
+          const [x, y] = randomXY();
+          positions[idx] = x;
+          positions[idx + 1] = y;
+          positions[idx + 2] = Z_FAR;
+
+          prevPositions[idx] = x;
+          prevPositions[idx + 1] = y;
+          prevPositions[idx + 2] = Z_FAR;
+        }
+
+        // --- Update line streak ---
+        const lineIdx = i * 6;
+        const curZ = positions[idx + 2];
+
+        // Trail length: longer when star is close (z > -500)
+        const nearness = Math.max(0, (curZ - Z_FAR) / (-Z_FAR)); // 0 far, 1 near
+        const trailScale = nearness > 0.75 ? 2.5 : 1.0;
+
+        // Prev point (tail of streak)
+        const trailZ = prevPositions[idx + 2] - frameSpeed * (trailScale - 1.0);
+        linePositions[lineIdx] = prevPositions[idx];
+        linePositions[lineIdx + 1] = prevPositions[idx + 1];
+        linePositions[lineIdx + 2] = trailZ;
+
+        // Cur point (head of streak)
+        linePositions[lineIdx + 3] = positions[idx];
+        linePositions[lineIdx + 4] = positions[idx + 1];
+        linePositions[lineIdx + 5] = curZ;
+
+        // Line vertex colors (fade tail to transparent by using dim color)
+        const dimFactor = nearness * 0.6;
+        lineColors[lineIdx] = colors[idx] * dimFactor;
+        lineColors[lineIdx + 1] = colors[idx + 1] * dimFactor;
+        lineColors[lineIdx + 2] = colors[idx + 2] * dimFactor;
+
+        lineColors[lineIdx + 3] = colors[idx] * nearness;
+        lineColors[lineIdx + 4] = colors[idx + 1] * nearness;
+        lineColors[lineIdx + 5] = colors[idx + 2] * nearness;
+      }
+
+      posAttr.needsUpdate = true;
+      linePosAttr.needsUpdate = true;
+      lineColorAttr.needsUpdate = true;
+
+      renderer.render(scene, camera);
+
+      rafId = requestAnimationFrame(animate);
+    }
+
+    rafId = requestAnimationFrame(animate);
+
+    // -------------------------------------------------------------------------
+    // Resize handling (debounced)
+    // -------------------------------------------------------------------------
+    let resizeTimer: ReturnType<typeof setTimeout>;
+
+    function onResize() {
+      clearTimeout(resizeTimer);
+      resizeTimer = setTimeout(() => {
+        const w = window.innerWidth;
+        const h = window.innerHeight;
+        camera.aspect = w / h;
+        camera.updateProjectionMatrix();
+        renderer.setSize(w, h);
+      }, 150);
+    }
+
+    window.addEventListener('resize', onResize, { passive: true });
+
+    // -------------------------------------------------------------------------
+    // Visibility change — pause RAF when tab hidden
+    // -------------------------------------------------------------------------
+    // The animate() function already guards with document.hidden check,
+    // but we reset lastTime on visibility restore to avoid a huge delta spike.
+    document.addEventListener('visibilitychange', () => {
+      if (!document.hidden) {
+        lastTime = performance.now();
+      }
+    });
+  })();
+</script>

@@ -1,62 +1,22 @@
 ---
-// Camber Co LTD - Landing Page
----
+import Layout from '../layouts/Layout.astro';
+import StarfieldHero from '../components/StarfieldHero.astro';
+import ChatDrawer from '../components/ChatDrawer.astro';
 
-<html lang="en-GB">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
-  <!-- Canonical URL -->
-  <link rel="canonical" href="https://camberco.uk/" />
-
-  <!-- Favicon -->
-  <link rel="icon" type="image/png" href="/favicon.png" />
-
-  <!-- Primary Meta Tags -->
-  <title>AI Consultancy UK — Camber Co | We Build AI, Not Slide Decks</title>
-  <meta name="description" content="Camber Co is a UK-based AI consultancy that builds and deploys AI automation, chatbots, and workflow tools for businesses. From AI readiness audits to full implementation. Based in England." />
-  <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
-  <meta name="theme-color" content="#0f172a" />
-  <meta name="author" content="Camber Co LTD" />
-  <meta name="geo.region" content="GB" />
-  <meta name="geo.placename" content="United Kingdom" />
-
-  <!-- Open Graph -->
-  <meta property="og:type" content="website" />
-  <meta property="og:url" content="https://camberco.uk/" />
-  <meta property="og:title" content="AI Consultancy UK — Camber Co | We Build AI, Not Slide Decks" />
-  <meta property="og:description" content="UK AI consultancy that actually ships. We build automation, deploy AI tools, and train your team to use them. AI readiness audits from £750." />
-  <meta property="og:image" content="https://camberco.uk/social.png" />
-  <meta property="og:image:alt" content="Camber Co — AI Consultancy UK. We build AI, not slide decks." />
-  <meta property="og:locale" content="en_GB" />
-  <meta property="og:site_name" content="Camber Co" />
-
-  <!-- Twitter / X -->
-  <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:url" content="https://camberco.uk/" />
-  <meta name="twitter:title" content="AI Consultancy UK — Camber Co | We Build AI, Not Slide Decks" />
-  <meta name="twitter:description" content="UK AI consultancy that actually ships. We build automation, deploy AI tools, and train your team to use them. AI readiness audits from £750." />
-  <meta name="twitter:image" content="https://camberco.uk/social.png" />
-  <meta name="twitter:image:alt" content="Camber Co — AI Consultancy UK. We build AI, not slide decks." />
-
-  <!-- Fonts -->
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Figtree:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
-
-  <!-- View Transitions -->
-  <meta name="view-transition" content="same-origin" />
-
-  <!-- Structured Data -->
-  <script type="application/ld+json">
+const schema = JSON.stringify([
   {
     "@context": "https://schema.org",
     "@type": "Organization",
     "@id": "https://camberco.uk/#organization",
-    "name": "Camber Co LTD",
+    "name": "Camber Co Ltd",
     "alternateName": "Camber Co",
     "url": "https://camberco.uk",
+    "foundingDate": "2024",
+    "founder": {
+      "@type": "Person",
+      "name": "Charlie Waite",
+      "url": "https://camberco.uk/about-me"
+    },
     "logo": {
       "@type": "ImageObject",
       "url": "https://camberco.uk/logo.png",
@@ -64,156 +24,129 @@
       "height": 431
     },
     "image": "https://camberco.uk/social.png",
-    "description": "Camber Co is a UK-based AI consultancy that builds and deploys AI automation, chatbots, workflow tools, and internal knowledge assistants for businesses. We don't just advise — we build working AI products and train your team to use them.",
+    "description": "Camber Co is a London-based AI consultancy specialising in AI systems, n8n workflow automation, solo founder coaching, and personal AI assistants for UK founders and small businesses.",
     "email": "hello@camberco.uk",
-    "sameAs": [
-      "https://linkedin.com/company/camberco"
-    ],
+    "sameAs": ["https://linkedin.com/company/camberco"],
     "address": {
       "@type": "PostalAddress",
       "addressLocality": "London",
       "addressCountry": "GB"
     },
-    "legalName": "Camber Co LTD",
-    "areaServed": {
-      "@type": "Country",
-      "name": "United Kingdom"
-    },
-    "knowsAbout": [
-      "Artificial Intelligence",
-      "AI Automation",
-      "AI Chatbots",
-      "Workflow Automation",
-      "Machine Learning",
-      "Business Process Automation",
-      "AI Consulting",
-      "AI Strategy"
+    "legalName": "Camber Co Ltd",
+    "areaServed": [
+      { "@type": "City", "name": "London" },
+      { "@type": "Country", "name": "United Kingdom" }
     ],
-    "slogan": "We build AI. We don't just talk about it."
-  }
-  </script>
-  <script type="application/ld+json">
+    "slogan": "Build faster. Think clearer. Ship smarter."
+  },
   {
     "@context": "https://schema.org",
     "@type": "WebSite",
     "@id": "https://camberco.uk/#website",
     "url": "https://camberco.uk",
     "name": "Camber Co",
-    "description": "UK AI consultancy that builds and deploys AI automation for businesses",
-    "publisher": {
-      "@id": "https://camberco.uk/#organization"
-    },
+    "description": "AI systems, automation, and strategic coaching for UK founders who mean business.",
+    "publisher": { "@id": "https://camberco.uk/#organization" },
     "inLanguage": "en-GB"
-  }
-  </script>
-  <script type="application/ld+json">
+  },
   {
     "@context": "https://schema.org",
     "@type": "WebPage",
     "@id": "https://camberco.uk/#webpage",
     "url": "https://camberco.uk",
-    "name": "AI Consultancy UK — Camber Co | We Build AI, Not Slide Decks",
-    "description": "Camber Co is a UK-based AI consultancy that builds and deploys AI automation, chatbots, and workflow tools for businesses.",
-    "isPartOf": {
-      "@id": "https://camberco.uk/#website"
-    },
-    "about": {
-      "@id": "https://camberco.uk/#organization"
-    },
+    "name": "AI Services for UK Founders — Camber Co",
+    "description": "AI systems, n8n workflow automation, solo founder training, and personal AI assistants for UK founders and small businesses. Based in London.",
+    "isPartOf": { "@id": "https://camberco.uk/#website" },
+    "about": { "@id": "https://camberco.uk/#organization" },
     "inLanguage": "en-GB"
-  }
-  </script>
-  <script type="application/ld+json">
+  },
+  {
+    "@context": "https://schema.org",
+    "@type": ["LocalBusiness", "ProfessionalService"],
+    "@id": "https://camberco.uk/#localbusiness",
+    "name": "Camber Co",
+    "url": "https://camberco.uk",
+    "telephone": "",
+    "email": "hello@camberco.uk",
+    "address": {
+      "@type": "PostalAddress",
+      "addressLocality": "London",
+      "addressCountry": "GB"
+    },
+    "geo": {
+      "@type": "GeoCoordinates",
+      "latitude": 51.5074,
+      "longitude": -0.1278
+    },
+    "areaServed": [
+      { "@type": "City", "name": "London" },
+      { "@type": "Country", "name": "United Kingdom" }
+    ],
+    "priceRange": "££",
+    "openingHoursSpecification": {
+      "@type": "OpeningHoursSpecification",
+      "dayOfWeek": ["Monday","Tuesday","Wednesday","Thursday","Friday"],
+      "opens": "09:00",
+      "closes": "18:00"
+    }
+  },
   {
     "@context": "https://schema.org",
     "@type": "ProfessionalService",
     "@id": "https://camberco.uk/#service",
-    "name": "Camber Co — AI Consultancy Services",
+    "name": "Camber Co — AI Services for Founders",
     "url": "https://camberco.uk",
-    "provider": {
-      "@id": "https://camberco.uk/#organization"
-    },
-    "areaServed": {
-      "@type": "Country",
-      "name": "United Kingdom"
-    },
+    "provider": { "@id": "https://camberco.uk/#organization" },
+    "areaServed": { "@type": "Country", "name": "United Kingdom" },
     "serviceType": "AI Consultancy",
-    "description": "End-to-end AI consultancy services for UK businesses including AI readiness audits, workflow automation, AI chatbots, internal knowledge assistants, fractional CTO services, and team training workshops.",
+    "description": "AI systems, n8n workflow automation, solo founder coaching, and personal AI assistants for UK founders and small businesses.",
     "hasOfferCatalog": {
       "@type": "OfferCatalog",
-      "name": "AI Consultancy Services",
+      "name": "AI Services",
       "itemListElement": [
         {
           "@type": "Offer",
           "itemOffered": {
             "@type": "Service",
-            "name": "AI Readiness Audit",
-            "description": "Half-day assessment of your business. You get a prioritised report showing exactly where AI saves you time and money."
+            "name": "AI Consultations",
+            "description": "60-minute sessions to audit where AI will actually move the needle in your business. Clear decisions, clear next steps."
           },
-          "price": "750",
+          "price": "297",
           "priceCurrency": "GBP"
         },
         {
           "@type": "Offer",
           "itemOffered": {
             "@type": "Service",
-            "name": "Workflow Automation",
-            "description": "We automate your most painful manual processes — invoicing, lead qualification, onboarding, and report generation."
+            "name": "Solo Founder Training",
+            "description": "1:1 coaching sessions for non-technical founders who want to actually use AI in their business."
           },
-          "price": "2000",
+          "price": "197",
           "priceCurrency": "GBP"
         },
         {
           "@type": "Offer",
           "itemOffered": {
             "@type": "Service",
-            "name": "AI Chatbots and Assistants",
-            "description": "Customer service bots for WhatsApp, web, or Messenger. Handle FAQs and bookings 24/7 with warm handoff to your team."
+            "name": "N8n Workflow Automation",
+            "description": "Custom n8n pipelines that connect your tools, eliminate manual steps, and run without babysitting."
           },
-          "price": "3000",
+          "price": "1200",
           "priceCurrency": "GBP"
         },
         {
           "@type": "Offer",
           "itemOffered": {
             "@type": "Service",
-            "name": "Internal Knowledge Assistant",
-            "description": "AI trained on your docs, processes, and SOPs. New starter onboarding drops from weeks to days."
+            "name": "OpenClaw Personal AI",
+            "description": "Pre-configured AI bots for WhatsApp, Telegram, Slack, and Discord. Built on openclaw.ai — local, private, yours."
           },
-          "price": "5000",
-          "priceCurrency": "GBP"
-        },
-        {
-          "@type": "Offer",
-          "itemOffered": {
-            "@type": "Service",
-            "name": "Fractional CTO",
-            "description": "Embedded in your business 1-2 days a week. Strategic AI roadmap, vendor management, and team training."
-          },
-          "price": "3000",
-          "priceCurrency": "GBP",
-          "priceSpecification": {
-            "@type": "UnitPriceSpecification",
-            "price": "3000",
-            "priceCurrency": "GBP",
-            "unitText": "month"
-          }
-        },
-        {
-          "@type": "Offer",
-          "itemOffered": {
-            "@type": "Service",
-            "name": "AI Team Workshops",
-            "description": "Hands-on AI training tailored to your industry and roles. Your team leaves knowing how to use AI effectively in their daily work."
-          },
-          "price": "1500",
+          "price": "497",
           "priceCurrency": "GBP"
         }
       ]
     }
-  }
-  </script>
-  <script type="application/ld+json">
+  },
   {
     "@context": "https://schema.org",
     "@type": "FAQPage",
@@ -224,7 +157,7 @@
         "name": "What does an AI consultancy do?",
         "acceptedAnswer": {
           "@type": "Answer",
-          "text": "An AI consultancy helps businesses identify where artificial intelligence can save time, reduce costs, and improve operations. At Camber Co, we go beyond advising — we build and deploy working AI tools including workflow automation, AI chatbots, internal knowledge assistants, and custom AI-powered software. We then train your team to use everything we build, so you're never dependent on us."
+          "text": "An AI consultancy helps businesses identify where artificial intelligence can save time, reduce costs, and improve operations. At Camber Co, we go beyond advising — we build and deploy working AI tools including workflow automation, personal AI assistants, and AI coaching for founders. We work with solo founders and small businesses across the UK to implement AI that actually gets used."
         }
       },
       {
@@ -232,7 +165,7 @@
         "name": "How much does AI consultancy cost in the UK?",
         "acceptedAnswer": {
           "@type": "Answer",
-          "text": "AI consultancy costs in the UK vary depending on the scope of work. At Camber Co, our AI readiness audit starts from £750 for a half-day assessment with a prioritised report. Workflow automation projects start from £2,000, AI chatbots from £3,000, internal knowledge assistants from £5,000, and our fractional CTO service starts from £3,000 per month. Every engagement begins with a free 30-minute consultation to understand your needs."
+          "text": "Pricing at Camber Co depends on the scope of your project — every business is different. We offer AI consultations, workflow automation, founder training, and personal AI assistants. Every engagement starts with a free 30-minute audit call to understand your needs and recommend the right approach. No commitment required."
         }
       },
       {
@@ -240,7 +173,7 @@
         "name": "What is an AI readiness audit?",
         "acceptedAnswer": {
           "@type": "Answer",
-          "text": "An AI readiness audit is a focused assessment of your business operations, processes, and pain points to identify where AI can deliver the highest return on investment. Our audit takes half a day and produces a prioritised report showing exactly which processes to automate first, estimated time savings, and a clear implementation roadmap."
+          "text": "An AI readiness audit is a focused assessment of your business operations and processes to identify where AI can deliver the highest return on investment. Our free 30-minute audit call and paid consultation sessions are designed to give you clarity on exactly which tasks to automate first and what tools to use — with no jargon and no commitment."
         }
       },
       {
@@ -248,15 +181,7 @@
         "name": "Can AI help small businesses in the UK?",
         "acceptedAnswer": {
           "@type": "Answer",
-          "text": "Absolutely. AI is particularly powerful for small businesses because it can automate the repetitive admin tasks that consume disproportionate amounts of time — invoicing, scheduling, customer enquiries, report generation, and onboarding. Camber Co works with UK businesses of all sizes and has helped sole traders and SMEs compress 120 hours of work into 20 hours using AI-augmented workflows."
-        }
-      },
-      {
-        "@type": "Question",
-        "name": "What is the difference between AI consultancy and traditional IT consultancy?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "Traditional IT consultancy focuses on infrastructure, software selection, and systems integration. AI consultancy specifically focuses on deploying artificial intelligence, machine learning, and automation to transform business processes. At Camber Co, we don't just advise on AI strategy — we build the actual AI tools, deploy them into your workflow, and train your team to use them."
+          "text": "Absolutely. AI is particularly powerful for small businesses because it can automate the repetitive admin tasks that consume disproportionate amounts of time. Camber Co works with UK founders and SMEs to compress hours of manual work into automated workflows. Our approach is practical — we focus on the specific tasks eating your week and build solutions that run without constant supervision."
         }
       },
       {
@@ -264,1336 +189,1083 @@
         "name": "How long does it take to implement AI in a business?",
         "acceptedAnswer": {
           "@type": "Answer",
-          "text": "Implementation timelines depend on complexity. A workflow automation can be built and deployed in 1-2 weeks. An AI chatbot for customer service typically takes 2-4 weeks. A full internal knowledge assistant may take 4-8 weeks. We start every engagement with an AI readiness audit so you get quick wins deployed first while larger projects are in development."
+          "text": "Implementation timelines depend on the scope. An n8n workflow automation can be built and deployed in 1-2 weeks. A personal AI assistant setup typically takes 3-5 days. Consultation and training sessions can start immediately. We prioritise quick wins that deliver value from day one."
         }
       },
       {
         "@type": "Question",
-        "name": "Do I need technical knowledge to use AI tools built by Camber Co?",
+        "name": "Do I need technical knowledge to use the AI tools you build?",
         "acceptedAnswer": {
           "@type": "Answer",
-          "text": "No. Every AI solution we build is designed for non-technical users. We handle all the development, deployment, and integration. Before we hand over, we run training sessions with your team so everyone knows how to use the tools effectively. Our goal is to make your team self-sufficient — you should never be dependent on us."
+          "text": "No. Everything we build is designed for non-technical users. Our Solo Founder Training specifically targets founders without a technical background. We handle development, deployment, and integration, then ensure you understand how to run what we've built. You should never be dependent on us to operate your own systems."
         }
       },
       {
         "@type": "Question",
-        "name": "Why should I hire an AI consultant instead of using ChatGPT myself?",
+        "name": "Why hire an AI consultant instead of just using ChatGPT?",
         "acceptedAnswer": {
           "@type": "Answer",
-          "text": "ChatGPT is a general-purpose tool. An AI consultant builds bespoke solutions tailored to your specific business processes. We integrate AI into your existing workflow, connect it to your data and tools, and automate entire processes end-to-end. The difference is between having a tool and having a system."
+          "text": "ChatGPT is a general-purpose tool. Camber Co builds bespoke solutions tailored to your specific business — connecting AI to your actual tools, data, and workflows. Instead of manually typing queries, we build systems that run automatically: n8n pipelines that handle tasks 24/7, or a personal AI assistant trained on your business context that lives inside WhatsApp or Slack."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Do you work with businesses outside London?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Yes. While Camber Co is based in London, we work with founders and small businesses across the UK. Consultations, training, and strategy sessions are conducted remotely via video call. Automation and AI assistant projects are delivered fully remotely."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "What is n8n workflow automation?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "N8n is an open-source workflow automation platform that connects your business tools — email, CRM, spreadsheets, payment systems — and runs automated tasks between them 24/7. Camber Co builds and deploys custom n8n automations for UK businesses, typically saving 10-30 hours per month on repetitive processes."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "What is a personal AI assistant?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "A personal AI assistant is an AI trained on your business context — your documents, processes, and knowledge — that runs on platforms you already use like WhatsApp, Telegram, or Slack. Unlike generic AI tools like ChatGPT, it knows your business specifically and can handle tasks, answer questions, and automate workflows tailored to your operations. Camber Co deploys these using OpenClaw, an open-source platform that keeps your data private and local."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "What AI training do you offer for non-technical founders?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Our Solo Founder Training is hands-on coaching designed for people who want to use AI in their business but don't have a technical background. We cover practical skills: how to evaluate AI tools, build simple automations, prompt effectively, and ship AI-powered features. Sessions are 1:1 and tailored to your specific business and goals."
         }
       }
     ]
   }
-  </script>
-</head>
+]);
+---
 
-<body>
-  <!-- ===== NAVIGATION ===== -->
-  <nav class="nav" id="nav" role="navigation" aria-label="Main navigation">
-    <div class="nav-inner">
-      <a href="/" class="nav-logo">
-        <span class="logo-text">Camber Co</span>
-      </a>
-      <div class="nav-links">
-        <a href="/about-me" class="nav-link">About Me</a>
-        <a href="#proof" class="nav-link">Results</a>
-        <a href="#services" class="nav-link">Services</a>
-        <a href="#process" class="nav-link">Process</a>
-        <a href="#estimator" class="nav-link">Estimator</a>
-        <a href="#faq" class="nav-link">FAQ</a>
-        <a href="https://calendly.com/camber-co/30min" class="nav-btn" target="_blank" rel="noopener noreferrer">Book Free Audit →</a>
+<Layout
+  title="AI Services for UK Founders — Camber Co"
+  description="AI systems, automation, and strategic coaching for founders who mean business. Based in London, working with founders across the UK."
+  canonicalUrl="https://camberco.uk/"
+  schema={schema}
+>
+  <!-- ===== STARFIELD ===== -->
+  <StarfieldHero />
+
+  <!-- ===== HERO ===== -->
+  <section class="hero">
+    <div class="hero-inner">
+      <div class="status-chip">
+        <span class="status-dot"></span>
+        CAMBER.CO // LONDON // EST. 2026
       </div>
-      <button class="mobile-toggle" aria-label="Menu" id="menuToggle">
-        <span></span>
-        <span></span>
-      </button>
+
+      <h1 class="sr-only">AI Services for UK Founders and Small Businesses</h1>
+
+      <div
+        class="hero-display"
+        data-typewriter
+        data-lines='["Build faster.", "Think clearer.", "Ship smarter."]'
+        data-speed="40"
+      ></div>
+
+      <p class="hero-sub">AI systems, automation, and strategic coaching for founders who mean business. Based in London, working with founders across the UK.</p>
+
+      <div class="hero-ctas">
+        <a href="https://calendly.com/camber-co/30min" class="btn-primary" target="_blank" rel="noopener noreferrer">&gt; Book Free Audit</a>
+        <a href="#services" class="btn-ghost">&gt; See Services</a>
+      </div>
+
+      <div class="scroll-indicator" id="scrollIndicator">scroll to explore ↓</div>
     </div>
-  </nav>
+  </section>
 
-  <!-- Mobile Menu -->
-  <div class="mobile-menu" id="mobileMenu">
-    <a href="/about-me" class="mobile-menu-link">About Me</a>
-    <a href="#proof" class="mobile-menu-link">Results</a>
-    <a href="#services" class="mobile-menu-link">Services</a>
-    <a href="#process" class="mobile-menu-link">Process</a>
-    <a href="#estimator" class="mobile-menu-link">Estimator</a>
-    <a href="#faq" class="mobile-menu-link">FAQ</a>
-    <a href="https://calendly.com/camber-co/30min" class="mobile-menu-link cta" target="_blank" rel="noopener noreferrer">Book Free Audit →</a>
-  </div>
+  <!-- ===== SECTION DIVIDER 01 ===== -->
+  <div class="section-divider">/* 01 — what we build */</div>
 
-  <main>
-    <!-- ===== HERO ===== -->
-    <section class="hero" id="hero">
-      <canvas id="hero-canvas" aria-hidden="true" role="presentation"></canvas>
-      <div class="container">
-        <div class="hero-content">
-          <div class="hero-tag reveal">AI consultancy that ships</div>
-          <h1 class="hero-title reveal">
-            We don't advise on AI.<br />
-            <em>We build it.</em>
-          </h1>
-          <p class="hero-subtitle reveal">
-            Camber Co helps businesses automate manual processes, ship AI-powered
-            tools, and save thousands of hours. No slide decks. Just working products
-            your team can use from day one.
-          </p>
-          <div class="hero-actions reveal">
-            <a href="https://calendly.com/camber-co/30min" class="btn btn-primary" target="_blank" rel="noopener noreferrer">Book Your Free AI Audit</a>
-            <a href="#proof" class="btn btn-ghost">See What We've Built ↓</a>
-          </div>
-        </div>
-        <div class="hero-metric reveal">
-          <div class="metric-grid">
-            <div class="metric">
-              <span class="metric-value">120→20</span>
-              <span class="metric-label">Hours of work compressed using AI</span>
-            </div>
-            <div class="metric">
-              <span class="metric-value">24/7</span>
-              <span class="metric-label">AI automation running for clients</span>
-            </div>
-            <div class="metric">
-              <span class="metric-value">0</span>
-              <span class="metric-label">Slide decks produced. Ever.</span>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- ===== ABOUT ===== -->
-    <section class="about" id="about">
-      <div class="container">
-        <div class="about-content reveal">
-          <h2 class="about-heading">A UK AI consultancy that builds, not just advises</h2>
-          <p class="about-text">
-            Camber Co is an AI consultancy based in London, working with businesses across
-            the UK and remotely. We automate manual processes, build AI-powered tools, and
-            train teams to actually use them. Most consultancies hand you a strategy deck.
-            We hand you working software. Every tool we recommend to clients, we use ourselves.
-          </p>
-        </div>
-      </div>
-    </section>
-
-    <!-- ===== PROOF POINTS ===== -->
-    <section class="proof" id="proof">
-      <div class="container">
-        <div class="section-header reveal">
-          <p class="section-tag">Proof, not promises</p>
-          <h2 class="section-title">How we use AI in our own business</h2>
-          <p class="section-desc">Every tool we recommend, we use ourselves. Here's what powers Camber day-to-day.</p>
-        </div>
-        <div class="proof-grid">
-          <div class="proof-card reveal">
-            <div class="proof-number">01</div>
-            <h3 class="proof-title">AI-Augmented Development</h3>
-            <p class="proof-body">
-              Our primary development environment. Advanced AI assistants connected to
-              specialised context servers for design, databases, external APIs and more — turning
-              multi-hour tasks into minutes.
-            </p>
-            <div class="proof-tag-row">
-              <span class="proof-tag">Development</span>
-              <span class="proof-tag">AI-Augmented</span>
-            </div>
-          </div>
-          <div class="proof-card reveal">
-            <div class="proof-number">02</div>
-            <h3 class="proof-title">Autonomous Cloud Agent</h3>
-            <p class="proof-body">
-              An autonomous AI agent deployed in the cloud, managing this website
-              and coordinating our schedule. Always on, always current, no manual
-              upkeep required.
-            </p>
-            <div class="proof-tag-row">
-              <span class="proof-tag">Autonomous Agent</span>
-              <span class="proof-tag">Cloud</span>
-            </div>
-          </div>
-          <div class="proof-card reveal">
-            <div class="proof-number">03</div>
-            <h3 class="proof-title">Intelligent Workflow Automation</h3>
-            <p class="proof-body">
-              When an audit is requested, an automated workflow picks it up instantly —
-              triaging the enquiry, notifying our team, and kicking off
-              onboarding before we've finished our coffee.
-            </p>
-            <div class="proof-tag-row">
-              <span class="proof-tag">Workflow</span>
-              <span class="proof-tag">Automation</span>
-            </div>
-          </div>
-          <div class="proof-card reveal">
-            <div class="proof-number">04</div>
-            <h3 class="proof-title">AI-Native QA With Playwright</h3>
-            <p class="proof-body">
-              We brought AI-guided Playwright testing into production workflows
-              when AI was still early as a productivity layer, improving release
-              confidence and shrinking regression time.
-            </p>
-            <div class="proof-tag-row">
-              <span class="proof-tag">Quality Engineering</span>
-              <span class="proof-tag">AI Testing</span>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- ===== SERVICES ===== -->
-    <section class="services" id="services">
-      <div class="container">
-        <div class="section-header reveal">
-          <p class="section-tag">What we do</p>
-          <h2 class="section-title">AI consultancy services</h2>
-          <p class="section-desc">Every engagement starts with understanding your business. We build what you actually need, not what's trendy.</p>
-        </div>
-        <div class="services-grid">
-          <div class="service-card reveal">
-            <div class="service-icon">
-              <img src="/svg/01-ai-readiness-audit.svg" alt="AI Readiness Audit icon" width="56" height="56" />
-            </div>
-            <h3>AI Readiness Audit</h3>
-            <p>Half-day assessment of your business. You get a prioritised report showing exactly where AI saves you time and money. No fluff.</p>
-            <span class="service-price">From £750</span>
-          </div>
-          <div class="service-card reveal">
-            <div class="service-icon">
-              <img src="/svg/02-workflow-automation.svg" alt="Workflow Automation icon" width="56" height="56" />
-            </div>
-            <h3>Workflow Automation</h3>
-            <p>We automate your most painful manual processes. Invoicing, lead qualification, onboarding, report generation — built and deployed.</p>
-            <span class="service-price">From £2,000</span>
-          </div>
-          <div class="service-card reveal">
-            <div class="service-icon">
-              <img src="/svg/03-ai-chatbots.svg" alt="AI Chatbot icon" width="56" height="56" />
-            </div>
-            <h3>AI Chatbots &amp; Assistants</h3>
-            <p>Customer service bots for WhatsApp, web, or Messenger. Handle FAQs and bookings 24/7 with warm handoff to your team for complex queries.</p>
-            <span class="service-price">From £3,000</span>
-          </div>
-          <div class="service-card reveal">
-            <div class="service-icon">
-              <img src="/svg/04-knowledge-assistant.svg" alt="Knowledge Assistant icon" width="56" height="56" />
-            </div>
-            <h3>Internal Knowledge Assistant</h3>
-            <p>AI trained on your docs, processes, and SOPs. New starter onboarding drops from weeks to days. Your team's knowledge, available instantly.</p>
-            <span class="service-price">From £5,000</span>
-          </div>
-          <div class="service-card reveal">
-            <div class="service-icon">
-              <img src="/svg/05-fractional-cto.svg" alt="Fractional CTO icon" width="56" height="56" />
-            </div>
-            <h3>Fractional CTO</h3>
-            <p>Embedded in your business 1-2 days a week. Strategic AI roadmap, vendor management, team training. Your technology leader, without the full-time cost.</p>
-            <span class="service-price">From £3,000/mo</span>
-          </div>
-          <div class="service-card reveal">
-            <div class="service-icon">
-              <img src="/svg/06-team-workshops.svg" alt="AI Training Workshop icon" width="56" height="56" />
-            </div>
-            <h3>Team Workshops</h3>
-            <p>Hands-on AI training tailored to your industry and roles. Your team leaves knowing how to use AI effectively in their daily work, not just what AI "could" do.</p>
-            <span class="service-price">From £1,500</span>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- ===== PROCESS ===== -->
-    <section class="process" id="process">
-      <div class="container">
-        <div class="section-header reveal">
-          <p class="section-tag">How it works</p>
-          <h2 class="section-title">How our AI consultancy process works</h2>
-        </div>
-        <div class="process-steps">
-          <div class="step reveal">
-            <div class="step-num">1</div>
-            <div class="step-content">
-              <h3>We audit your business</h3>
-              <p>A focused assessment of your operations, processes, and pain points. You get a clear report showing where AI delivers the highest ROI for your specific business.</p>
-            </div>
-          </div>
-          <div class="step-line reveal"></div>
-          <div class="step reveal">
-            <div class="step-num">2</div>
-            <div class="step-content">
-              <h3>We build the solution</h3>
-              <p>No 90-page strategy document. We build working automation, deploy AI tools, and integrate them into your existing workflow. You see results, not recommendations.</p>
-            </div>
-          </div>
-          <div class="step-line reveal"></div>
-          <div class="step reveal">
-            <div class="step-num">3</div>
-            <div class="step-content">
-              <h3>We train your team</h3>
-              <p>We hand over everything and make sure your people can run it. You're never dependent on us. That's the point.</p>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- ===== ESTIMATOR ===== -->
-    <section class="estimator" id="estimator">
-      <div class="container">
-        <div class="section-header reveal">
-          <p class="section-tag">Interactive ROI Estimator</p>
-          <h2 class="section-title">Estimate how many hours AI could save each month</h2>
-          <p class="section-desc">Add repetitive tasks and monthly hours. We estimate savings using an AI model with a practical fallback heuristic.</p>
-        </div>
-
-        <div class="estimator-shell reveal">
-          <div class="lp-panel">
-            <h3 class="lp-title">Your repetitive tasks</h3>
-            <div id="lpTaskRows" class="lp-task-rows">
-              <div class="lp-task-row">
-                <input class="lp-task-name" type="text" placeholder="Task name (e.g. Weekly reporting)" maxlength="100" />
-                <input class="lp-task-hours" type="number" min="0.5" max="500" step="0.5" placeholder="Hours / month" />
-                <button class="lp-task-remove" type="button" aria-label="Remove task">x</button>
-              </div>
-            </div>
-            <div class="lp-actions">
-              <button id="lpAddTask" class="btn btn-ghost" type="button">Add Task</button>
-              <button id="lpSampleTasks" class="btn btn-ghost" type="button">Load Example</button>
-              <button id="lpClearTasks" class="btn btn-ghost" type="button">Clear</button>
-            </div>
-          </div>
-
-          <div class="lp-panel lp-output">
-            <h3 class="lp-title">Estimated time recovered</h3>
-            <div class="lp-metrics">
-              <div class="lp-metric-card">
-                <p>Hours / Month</p>
-                <strong id="lpMonthlySaved">0</strong>
-              </div>
-              <div class="lp-metric-card">
-                <p>Hours / Year</p>
-                <strong id="lpYearlySaved">0</strong>
-              </div>
-              <div class="lp-metric-card">
-                <p>Workdays / Year</p>
-                <strong id="lpDaysSaved">0</strong>
-              </div>
-            </div>
-
-            <div class="lp-run-row">
-              <button id="lpRunEstimate" class="btn btn-primary" type="button">Estimate Time Saved</button>
-              <span id="lpEstimatorNote" class="lp-note">Confidential: we only process what you enter.</span>
-            </div>
-
-            <div class="lp-flow" id="lpFlow" aria-hidden="true">
-              <span class="lp-flow-dot"></span>
-              <span class="lp-flow-dot"></span>
-              <span class="lp-flow-dot"></span>
-              <span class="lp-flow-dot"></span>
-            </div>
-
-            <p id="lpConfidence" class="lp-confidence">Awaiting estimate...</p>
-            <p id="lpRationale" class="lp-rationale">Run the estimator to see task-level and total projected savings.</p>
-            <div id="lpBreakdown" class="lp-breakdown"></div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- ===== FAQ ===== -->
-    <section class="faq" id="faq">
-      <div class="container">
-        <div class="section-header reveal">
-          <p class="section-tag">Common questions</p>
-          <h2 class="section-title">Frequently asked questions about AI consultancy</h2>
-        </div>
-        <div class="faq-list">
-          <details class="faq-item reveal" open>
-            <summary class="faq-question">
-              <h3>What does an AI consultancy actually do?</h3>
-              <span class="faq-toggle" aria-hidden="true"></span>
-            </summary>
-            <div class="faq-answer">
-              <p>An AI consultancy helps businesses identify where artificial intelligence can save time, reduce costs, and improve operations. At Camber Co, we go beyond advising — we build and deploy working AI tools including workflow automation, AI chatbots, internal knowledge assistants, and custom AI-powered software. We then train your team to use everything we build, so you're never dependent on us.</p>
-            </div>
-          </details>
-
-          <details class="faq-item reveal">
-            <summary class="faq-question">
-              <h3>How much does AI consultancy cost in the UK?</h3>
-              <span class="faq-toggle" aria-hidden="true"></span>
-            </summary>
-            <div class="faq-answer">
-              <p>AI consultancy costs in the UK vary depending on the scope of work. At Camber Co, our AI readiness audit starts from £750 for a half-day assessment with a prioritised report. Workflow automation projects start from £2,000, AI chatbots from £3,000, internal knowledge assistants from £5,000, and our fractional CTO service starts from £3,000 per month. Every engagement begins with a free 30-minute consultation to understand your needs.</p>
-            </div>
-          </details>
-
-          <details class="faq-item reveal">
-            <summary class="faq-question">
-              <h3>What is an AI readiness audit?</h3>
-              <span class="faq-toggle" aria-hidden="true"></span>
-            </summary>
-            <div class="faq-answer">
-              <p>An AI readiness audit is a focused assessment of your business operations, processes, and pain points to identify where AI can deliver the highest return on investment. Our audit takes half a day and produces a prioritised report showing exactly which processes to automate first, estimated time savings, and a clear implementation roadmap. It's designed to give you clarity — not a 90-page strategy document.</p>
-            </div>
-          </details>
-
-          <details class="faq-item reveal">
-            <summary class="faq-question">
-              <h3>Can AI help small businesses in the UK?</h3>
-              <span class="faq-toggle" aria-hidden="true"></span>
-            </summary>
-            <div class="faq-answer">
-              <p>Absolutely. AI is particularly powerful for small businesses because it can automate the repetitive admin tasks that consume disproportionate amounts of time — invoicing, scheduling, customer enquiries, report generation, and onboarding. Camber Co works with UK businesses of all sizes and has helped sole traders and SMEs compress 120 hours of work into 20 hours using AI-augmented workflows. Our AI readiness audit starts from just £750.</p>
-            </div>
-          </details>
-
-          <details class="faq-item reveal">
-            <summary class="faq-question">
-              <h3>How is AI consultancy different from traditional IT consultancy?</h3>
-              <span class="faq-toggle" aria-hidden="true"></span>
-            </summary>
-            <div class="faq-answer">
-              <p>Traditional IT consultancy focuses on infrastructure, software selection, and systems integration. AI consultancy specifically focuses on deploying artificial intelligence, machine learning, and automation to transform business processes. At Camber Co, we take this further — we don't just advise on AI strategy. We build the actual AI tools, deploy them into your workflow, and train your team to use them. Most traditional consultancies produce slide decks. We produce working products.</p>
-            </div>
-          </details>
-
-          <details class="faq-item reveal">
-            <summary class="faq-question">
-              <h3>How long does it take to implement AI in a business?</h3>
-              <span class="faq-toggle" aria-hidden="true"></span>
-            </summary>
-            <div class="faq-answer">
-              <p>Implementation timelines depend on complexity. A workflow automation can be built and deployed in 1-2 weeks. An AI chatbot for customer service typically takes 2-4 weeks. A full internal knowledge assistant may take 4-8 weeks. We start every engagement with an AI readiness audit so you get quick wins deployed first while larger projects are in development.</p>
-            </div>
-          </details>
-
-          <details class="faq-item reveal">
-            <summary class="faq-question">
-              <h3>Do I need technical knowledge to use the AI tools you build?</h3>
-              <span class="faq-toggle" aria-hidden="true"></span>
-            </summary>
-            <div class="faq-answer">
-              <p>No. Every AI solution we build is designed for non-technical users. We handle all the development, deployment, and integration. Before we hand over, we run training sessions with your team so everyone knows how to use the tools effectively. We also provide documentation and ongoing support. Our goal is to make your team self-sufficient — you should never be dependent on us to run what we've built.</p>
-            </div>
-          </details>
-
-          <details class="faq-item reveal">
-            <summary class="faq-question">
-              <h3>Why hire an AI consultant instead of just using ChatGPT?</h3>
-              <span class="faq-toggle" aria-hidden="true"></span>
-            </summary>
-            <div class="faq-answer">
-              <p>ChatGPT is a general-purpose tool. An AI consultant builds bespoke solutions tailored to your specific business processes. We integrate AI into your existing workflow, connect it to your data and tools, and automate entire processes end-to-end. Rather than manually typing queries into ChatGPT, we build AI assistants that automatically handle customer enquiries on WhatsApp 24/7, or AI-powered workflows that generate reports from your CRM data without human intervention. The difference is between having a tool and having a system.</p>
-            </div>
-          </details>
-        </div>
-      </div>
-    </section>
-
-    <!-- ===== FINAL CTA ===== -->
-    <section class="final-cta" id="cta">
-      <div class="container">
-        <div class="cta-content reveal">
-          <h2 class="cta-title">Find out what AI can<br /><em>actually</em> do for your business</h2>
-          <p class="cta-desc">
-            Book a free AI readiness audit. We'll assess your operations, identify
-            the highest-impact opportunities, and show you exactly what's possible.
-            No commitment. No sales pitch. Just clarity.
-          </p>
-          <a href="https://calendly.com/camber-co/30min" class="btn btn-primary btn-large" target="_blank" rel="noopener noreferrer">
-            Book Your Free AI Audit
-          </a>
-          <p class="cta-note">30-minute call. We'll tell you honestly if AI is right for your business.</p>
-        </div>
-      </div>
-    </section>
-  </main>
-
-  <!-- ===== FOOTER ===== -->
-  <footer class="footer" role="contentinfo">
-    <div class="container footer-inner">
-      <div class="footer-left">
-        <span class="logo-text">Camber Co</span>
-        <p class="footer-tagline">AI consultancy that builds.</p>
-        <p class="footer-about">Camber Co LTD is an AI consultancy registered in England and Wales. We build AI automation, chatbots, and workflow tools for UK businesses.</p>
-      </div>
-      <div class="footer-middle">
-        <h4 class="footer-heading">Services</h4>
-        <ul class="footer-list">
-          <li><a href="#services">AI Readiness Audit</a></li>
-          <li><a href="#services">Workflow Automation</a></li>
-          <li><a href="#services">AI Chatbots</a></li>
-          <li><a href="#services">Knowledge Assistants</a></li>
-          <li><a href="#services">Fractional CTO</a></li>
-          <li><a href="#services">Team Workshops</a></li>
-        </ul>
-      </div>
-      <div class="footer-right">
-        <h4 class="footer-heading">Contact</h4>
-        <a href="mailto:hello@camberco.uk" class="footer-link">hello@camberco.uk</a>
-        <a href="https://linkedin.com/company/camberco" target="_blank" rel="noopener noreferrer" class="footer-link">LinkedIn</a>
-        <a href="https://calendly.com/camber-co/30min" target="_blank" rel="noopener noreferrer" class="footer-link">Book a Free Consultation</a>
-      </div>
-    </div>
+  <!-- ===== SERVICES ===== -->
+  <section class="services" id="services">
     <div class="container">
-      <div class="built-badge">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-          <circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>
-        </svg>
-        <span>This site was designed, built, and deployed in 30 minutes using AI-augmented workflows. That's the Camber Co difference.</span>
+      <div class="section-header" data-reveal>
+        <span class="section-tag">services</span>
+        <h2>The stack we build on.</h2>
+        <p>Not retainer engagements. Not vague strategy. Specific tools, specific outcomes.</p>
       </div>
-      <p class="footer-legal">&copy; 2025 Camber Co LTD. Registered in England and Wales. AI consultancy services across the United Kingdom.</p>
+      <div class="service-grid" data-reveal-stagger>
+
+        <!-- Card 1: AI Consultations -->
+        <div class="terminal-card">
+          <div class="terminal-titlebar">
+            <span class="dot dot-red"></span>
+            <span class="dot dot-yellow"></span>
+            <span class="dot dot-green-tc"></span>
+            <span class="terminal-title">camber/consultations</span>
+            <span class="terminal-status"><span class="status-dot"></span> ACTIVE</span>
+          </div>
+          <div class="terminal-body">
+            <span class="terminal-comment">// strategic guidance</span>
+            <h3>A roadmap for AI in your business.</h3>
+            <p>60-minute sessions to audit where AI will actually move the needle. No fluff. Clear decisions, clear next steps.</p>
+            <div class="terminal-footer">
+              <button class="terminal-link" data-chat-open="consultations">→ explore</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Card 2: N8n Workflow Automation -->
+        <div class="terminal-card">
+          <div class="terminal-titlebar">
+            <span class="dot dot-red"></span>
+            <span class="dot dot-yellow"></span>
+            <span class="dot dot-green-tc"></span>
+            <span class="terminal-title">camber/automation</span>
+            <span class="terminal-status"><span class="status-dot"></span> ACTIVE</span>
+          </div>
+          <div class="terminal-body">
+            <span class="terminal-comment">// workflow engineering</span>
+            <h3>Automate the work that's eating your week.</h3>
+            <p>Custom n8n pipelines that connect your tools, eliminate manual steps, and run without babysitting.</p>
+            <div class="terminal-footer">
+              <button class="terminal-link" data-chat-open="automation">→ explore</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Card 3: Solo Founder Training -->
+        <div class="terminal-card">
+          <div class="terminal-titlebar">
+            <span class="dot dot-red"></span>
+            <span class="dot dot-yellow"></span>
+            <span class="dot dot-green-tc"></span>
+            <span class="terminal-title">camber/training</span>
+            <span class="terminal-status terminal-status--available"><span class="status-dot status-dot--muted"></span> AVAILABLE</span>
+          </div>
+          <div class="terminal-body">
+            <span class="terminal-comment">// founder coaching</span>
+            <h3>Hands-on AI skills, no CS degree required.</h3>
+            <p>Coaching sessions for non-technical founders who want to actually use AI, not just read about it.</p>
+            <div class="terminal-footer">
+              <button class="terminal-link" data-chat-open="training">→ explore</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Card 4: OpenClaw Personal AI -->
+        <div class="terminal-card">
+          <div class="terminal-titlebar">
+            <span class="dot dot-red"></span>
+            <span class="dot dot-yellow"></span>
+            <span class="dot dot-green-tc"></span>
+            <span class="terminal-title">camber/openclaw</span>
+            <span class="terminal-status terminal-status--available"><span class="status-dot status-dot--muted"></span> AVAILABLE</span>
+          </div>
+          <div class="terminal-body">
+            <span class="terminal-comment">// personal AI</span>
+            <h3>Your business. Running on a private AI assistant.</h3>
+            <p>Pre-configured AI bots for WhatsApp, Telegram, Slack, and Discord. Built on openclaw.ai — local, private, yours.</p>
+            <div class="terminal-footer">
+              <button class="terminal-link" data-chat-open="personal-ai">→ explore</button>
+            </div>
+          </div>
+        </div>
+
+      </div>
     </div>
-  </footer>
-</body>
-</html>
+  </section>
 
-<style is:global>
-  /* ================================
-     RESET & BASE
-     ================================ */
-  *, *::before, *::after {
-    margin: 0;
+  <!-- ===== WHO WE WORK WITH ===== -->
+  <section class="audience">
+    <div class="container">
+      <div class="audience-grid" data-reveal-stagger>
+        <div class="audience-card">
+          <h3>Solo founders &amp; indie hackers</h3>
+          <p>AI is your force multiplier as a one-person business. We build the automation stack that lets you operate at a scale previously only possible with a team.</p>
+        </div>
+        <div class="audience-card">
+          <h3>UK small business owners</h3>
+          <p>Manual processes, admin overload, and tool sprawl are eating your time. We identify exactly which tasks AI can eliminate and build the systems to do it.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== SECTION DIVIDER 02 ===== -->
+  <div class="section-divider">/* 02 — the signal */</div>
+
+  <!-- ===== ABOUT / PROOF ===== -->
+  <section class="about-section" id="about">
+    <div class="container">
+      <div class="about-grid">
+        <div class="about-left" data-reveal>
+          <span class="section-tag">about</span>
+          <h2>Built by someone who's done it.</h2>
+          <p class="about-p">I'm Charlie. I've been building software for 12 years and using AI tools in production since before they were mainstream. Camber Co exists because I got tired of watching founders waste months on AI experiments that never shipped anything real.</p>
+          <p class="about-p">I work with a small number of founders at a time — directly, hands-on. No account managers, no juniors. You get me, and you get results you can point at.</p>
+          <div class="stat-row">
+            <div class="stat-block">
+              <span class="stat-number" data-count-to="40" data-count-suffix="+">0+</span>
+              <span class="stat-label">automations shipped</span>
+            </div>
+            <div class="stat-block">
+              <span class="stat-number" data-count-to="12">0</span>
+              <span class="stat-label">years building software</span>
+            </div>
+            <div class="stat-block">
+              <span class="stat-number" data-count-to="2023">0</span>
+              <span class="stat-label">building with AI</span>
+            </div>
+          </div>
+        </div>
+        <div class="about-right" data-reveal>
+          <div class="terminal-readout" id="interactiveTerminal">
+            <div class="terminal-titlebar">
+              <span class="dot dot-red"></span>
+              <span class="dot dot-yellow"></span>
+              <span class="dot dot-green-tc"></span>
+              <span class="terminal-title">camber/terminal</span>
+            </div>
+            <div class="terminal-body terminal-body--interactive" role="log" aria-label="Interactive terminal. Type help for available commands." aria-live="polite">
+              <div class="terminal-output" id="terminalOutput"></div>
+              <div class="terminal-input-line">
+                <span class="terminal-prompt" aria-hidden="true">$</span>
+                <div class="terminal-input-wrap">
+                  <span class="terminal-ghost" id="terminalGhost" aria-hidden="true"></span>
+                  <input
+                    type="text"
+                    id="terminalInput"
+                    class="terminal-input"
+                    autocomplete="off"
+                    autocorrect="off"
+                    autocapitalize="off"
+                    spellcheck="false"
+                    placeholder="type a command..."
+                    aria-label="Terminal command input"
+                  />
+                </div>
+                <span class="terminal-tab-hint" aria-hidden="true">tab</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== FAQ ===== -->
+  <section class="faq" id="faq">
+    <div class="container">
+      <div class="section-header" data-reveal>
+        <span class="section-tag">common questions</span>
+        <h2>Frequently asked questions.</h2>
+      </div>
+      <div class="faq-list" data-reveal>
+
+        <details class="faq-item" open>
+          <summary class="faq-question">
+            <span class="faq-arrow">&gt;</span>
+            <span class="faq-q-text">What does an AI consultancy actually do?</span>
+          </summary>
+          <div class="faq-answer">
+            <p>An AI consultancy helps businesses identify where artificial intelligence can save time, reduce costs, and improve operations. At Camber Co, we go beyond advising — we build and deploy working AI tools including n8n workflow automation, personal AI assistants for WhatsApp and Slack, and run hands-on coaching for non-technical founders. We work with a small number of clients at a time to ensure every engagement delivers something real.</p>
+          </div>
+        </details>
+
+        <details class="faq-item">
+          <summary class="faq-question">
+            <span class="faq-arrow">&gt;</span>
+            <span class="faq-q-text">How much does AI consultancy cost in the UK?</span>
+          </summary>
+          <div class="faq-answer">
+            <p>Pricing depends on what you need — every business is different. At Camber Co, every engagement starts with a free 30-minute audit call where we understand your situation and recommend the right approach. Click "explore" on any service to chat with our AI and get a personalised recommendation, or book a call directly. No commitment required.</p>
+          </div>
+        </details>
+
+        <details class="faq-item">
+          <summary class="faq-question">
+            <span class="faq-arrow">&gt;</span>
+            <span class="faq-q-text">What is an AI readiness audit?</span>
+          </summary>
+          <div class="faq-answer">
+            <p>An AI readiness audit is a focused assessment of your business operations and processes to identify where AI can deliver the highest return on investment. Our free 30-minute audit call and paid AI consultation sessions are designed to give you clarity on exactly which tasks to automate first and what tools to use — with no jargon and no commitment. You'll walk away with a clear, prioritised action list.</p>
+          </div>
+        </details>
+
+        <details class="faq-item">
+          <summary class="faq-question">
+            <span class="faq-arrow">&gt;</span>
+            <span class="faq-q-text">Can AI help small businesses in the UK?</span>
+          </summary>
+          <div class="faq-answer">
+            <p>Absolutely. AI is particularly powerful for small businesses because it can automate the repetitive admin tasks that consume disproportionate amounts of time. Camber Co works with UK founders and SMEs to compress hours of manual work into automated workflows. Our approach is practical — we focus on the specific tasks eating your week and build solutions that run without constant supervision.</p>
+          </div>
+        </details>
+
+        <details class="faq-item">
+          <summary class="faq-question">
+            <span class="faq-arrow">&gt;</span>
+            <span class="faq-q-text">How long does it take to implement AI in a business?</span>
+          </summary>
+          <div class="faq-answer">
+            <p>Implementation timelines depend on scope. An n8n workflow automation can be built and deployed in 1-2 weeks. A personal AI assistant setup typically takes 3-5 days. Consultation and training sessions can start immediately. We prioritise quick wins that deliver value from day one, so you see results before larger projects complete.</p>
+          </div>
+        </details>
+
+        <details class="faq-item">
+          <summary class="faq-question">
+            <span class="faq-arrow">&gt;</span>
+            <span class="faq-q-text">Do I need technical knowledge to use the AI tools you build?</span>
+          </summary>
+          <div class="faq-answer">
+            <p>No. Everything we build is designed for non-technical users. Our Solo Founder Training specifically targets founders without a technical background. We handle development, deployment, and integration, then ensure you understand how to run what we've built. You should never be dependent on us to operate your own systems — that's the whole point.</p>
+          </div>
+        </details>
+
+        <details class="faq-item">
+          <summary class="faq-question">
+            <span class="faq-arrow">&gt;</span>
+            <span class="faq-q-text">Why hire an AI consultant instead of just using ChatGPT?</span>
+          </summary>
+          <div class="faq-answer">
+            <p>ChatGPT is a general-purpose tool. Camber Co builds bespoke solutions tailored to your specific business — connecting AI to your actual tools, data, and workflows. Instead of manually typing queries, we build systems that run automatically: n8n pipelines that handle tasks 24/7, or a personal AI assistant trained on your business context that lives inside WhatsApp or Slack. The difference is between having a tool and having a system.</p>
+          </div>
+        </details>
+
+        <details class="faq-item">
+          <summary class="faq-question">
+            <span class="faq-arrow">&gt;</span>
+            <span class="faq-q-text">Do you work with businesses outside London?</span>
+          </summary>
+          <div class="faq-answer">
+            <p>Yes. While Camber Co is based in London, we work with founders and small businesses across the UK. Consultations, training, and strategy sessions are conducted remotely via video call. Automation and AI assistant projects are delivered fully remotely — geography is not a barrier.</p>
+          </div>
+        </details>
+
+        <details class="faq-item">
+          <summary class="faq-question">
+            <span class="faq-arrow">&gt;</span>
+            <span class="faq-q-text">What is n8n workflow automation?</span>
+          </summary>
+          <div class="faq-answer">
+            <p>N8n is an open-source workflow automation platform that connects your business tools — email, CRM, spreadsheets, payment systems — and runs automated tasks between them 24/7. Camber Co builds and deploys custom n8n automations for UK businesses, typically saving 10-30 hours per month on repetitive processes.</p>
+          </div>
+        </details>
+
+        <details class="faq-item">
+          <summary class="faq-question">
+            <span class="faq-arrow">&gt;</span>
+            <span class="faq-q-text">What is a personal AI assistant?</span>
+          </summary>
+          <div class="faq-answer">
+            <p>A personal AI assistant is an AI trained on your business context — your documents, processes, and knowledge — that runs on platforms you already use like WhatsApp, Telegram, or Slack. Unlike generic AI tools like ChatGPT, it knows your business specifically and can handle tasks, answer questions, and automate workflows tailored to your operations. Camber Co deploys these using OpenClaw, an open-source platform that keeps your data private and local.</p>
+          </div>
+        </details>
+
+        <details class="faq-item">
+          <summary class="faq-question">
+            <span class="faq-arrow">&gt;</span>
+            <span class="faq-q-text">What AI training do you offer for non-technical founders?</span>
+          </summary>
+          <div class="faq-answer">
+            <p>Our Solo Founder Training is hands-on coaching designed for people who want to use AI in their business but don't have a technical background. We cover practical skills: how to evaluate AI tools, build simple automations, prompt effectively, and ship AI-powered features. Sessions are 1:1 and tailored to your specific business and goals.</p>
+          </div>
+        </details>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== SECTION DIVIDER 04 ===== -->
+  <div class="section-divider">/* 04 — next steps */</div>
+
+  <!-- ===== FINAL CTA ===== -->
+  <section class="final-cta">
+    <div class="container final-cta-inner">
+      <span class="section-tag">ready to start</span>
+      <h2 class="cta-heading">Let's build something that works.</h2>
+      <p class="cta-sub">30 minutes. No pitch. Just clarity on where AI can make the biggest difference in your business.</p>
+      <a href="https://calendly.com/camber-co/30min" class="btn-primary btn-large" target="_blank" rel="noopener noreferrer">&gt; Book Free Audit</a>
+      <p class="cta-flags">--no-commitment --no-jargon --just-signal</p>
+    </div>
+  </section>
+
+  <ChatDrawer />
+</Layout>
+
+<style>
+  /* ============================================================
+     UTILITIES
+     ============================================================ */
+  .sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
     padding: 0;
-    box-sizing: border-box;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border-width: 0;
   }
 
-  html {
-    scroll-behavior: smooth;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-  }
-
-  body {
-    font-family: 'Figtree', -apple-system, sans-serif;
-    font-weight: 400;
-    font-size: 17px;
-    line-height: 1.7;
-    color: #334155;
-    background: #ffffff;
-    overflow-x: hidden;
-  }
-
-  /* ================================
-     TYPOGRAPHY
-     ================================ */
-  h1, h2, h3 {
-    font-family: 'Instrument Serif', Georgia, serif;
-    color: #0f172a;
-    line-height: 1.15;
-    font-weight: 400;
-  }
-
-  em {
-    font-family: 'Instrument Serif', Georgia, serif;
-    font-style: italic;
-  }
-
-  a {
-    color: inherit;
-    text-decoration: none;
-  }
-
-  /* ================================
-     LAYOUT
-     ================================ */
   .container {
-    max-width: 1140px;
+    max-width: 1280px;
     margin: 0 auto;
-    padding: 0 24px;
+    padding: 0 var(--space-8);
   }
 
-  /* ================================
-     NAVIGATION
-     ================================ */
-  .nav {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    z-index: 100;
-    padding: 0 24px;
-    transition: all 0.3s ease;
-    background: rgba(255, 255, 255, 0.85);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
-    border-bottom: 1px solid transparent;
+  /* ============================================================
+     SECTION DIVIDER
+     ============================================================ */
+  /* Lift all content below the hero above the fixed starfield overlays (z-index: 1) */
+  .section-divider,
+  .services,
+  .audience,
+  .about-section,
+  .faq,
+  .final-cta {
+    position: relative;
+    z-index: 2;
   }
 
-  .nav.scrolled {
-    border-bottom-color: #e2e8f0;
-  }
-
-  .nav-inner {
-    max-width: 1140px;
+  .section-divider {
+    font-family: var(--font-mono);
+    font-size: var(--type-caption);
+    color: var(--color-text-muted);
+    padding: var(--space-12) var(--space-8) var(--space-8);
+    user-select: none;
+    max-width: 1280px;
     margin: 0 auto;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    height: 72px;
   }
 
-  .nav-logo {
-    display: flex;
-    align-items: center;
-    gap: 10px;
+  /* ============================================================
+     SECTION HEADER
+     ============================================================ */
+  .section-header {
+    margin-bottom: var(--space-12);
   }
 
-  .logo-text {
-    font-family: 'Instrument Serif', Georgia, serif;
-    font-size: 24px;
-    color: #0f172a;
-    letter-spacing: -0.02em;
-  }
-
-  .nav-links {
-    display: flex;
-    align-items: center;
-    gap: 36px;
-  }
-
-  .nav-link {
-    font-size: 15px;
-    font-weight: 500;
-    color: #64748b;
-    transition: color 0.2s;
-    letter-spacing: -0.01em;
-  }
-
-  .nav-link:hover {
-    color: #0f172a;
-  }
-
-  .nav-btn {
-    font-size: 14px;
-    font-weight: 600;
-    color: #ffffff;
-    background: #0f172a;
-    padding: 10px 22px;
-    border-radius: 8px;
-    transition: all 0.2s;
-    letter-spacing: -0.01em;
-  }
-
-  .nav-btn:hover {
-    background: #1e293b;
-    transform: translateY(-1px);
-  }
-
-  .mobile-toggle {
-    display: none;
-    flex-direction: column;
-    gap: 6px;
-    background: none;
-    border: none;
-    cursor: pointer;
-    padding: 8px;
-  }
-
-  .mobile-toggle span {
+  .section-tag {
     display: block;
-    width: 24px;
-    height: 2px;
-    background: #0f172a;
-    border-radius: 2px;
-    transition: all 0.3s;
+    font-family: var(--font-mono);
+    font-size: var(--type-caption);
+    color: var(--color-text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    margin-bottom: var(--space-3);
   }
 
-  .mobile-menu {
-    display: none;
-    position: fixed;
-    top: 72px;
-    left: 0;
-    right: 0;
-    background: #ffffff;
-    border-bottom: 1px solid #e2e8f0;
-    padding: 24px;
-    z-index: 99;
-    flex-direction: column;
-    gap: 20px;
-  }
-
-  .mobile-menu.active {
-    display: flex;
-  }
-
-  .mobile-menu-link {
-    font-size: 18px;
-    font-weight: 500;
-    color: #334155;
-    padding: 8px 0;
-  }
-
-  .mobile-menu-link.cta {
-    color: #0f172a;
+  .section-header h2 {
+    font-family: var(--font-mono);
+    font-size: var(--type-h2);
     font-weight: 700;
+    color: var(--color-text-primary);
+    letter-spacing: -0.02em;
+    margin-bottom: var(--space-3);
   }
 
-  /* ================================
-     BUTTONS
-     ================================ */
-  .btn {
+  .section-header p {
+    font-family: var(--font-sans);
+    font-size: var(--type-body-lg);
+    color: var(--color-text-secondary);
+    max-width: 520px;
+    line-height: 1.65;
+  }
+
+  /* ============================================================
+     HERO
+     ============================================================ */
+  .hero {
+    position: relative;
+    z-index: 10;
+    min-height: 100svh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  .hero-inner {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 0 var(--space-8);
+    width: 100%;
+  }
+
+  .status-chip {
     display: inline-flex;
     align-items: center;
-    gap: 8px;
-    font-family: 'Figtree', sans-serif;
-    font-weight: 600;
-    font-size: 16px;
-    padding: 14px 28px;
-    border-radius: 10px;
-    transition: all 0.25s ease;
-    cursor: pointer;
-    border: none;
-    letter-spacing: -0.01em;
+    gap: var(--space-2);
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    color: var(--color-text-muted);
+    margin-bottom: var(--space-8);
   }
 
+  .status-dot {
+    display: inline-block;
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--color-green-500);
+    box-shadow: 0 0 0 0 var(--color-green-glow);
+    animation: pulse-dot 2s ease-in-out infinite;
+    flex-shrink: 0;
+  }
+
+  @keyframes pulse-dot {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.4); }
+    50% { box-shadow: 0 0 0 5px rgba(34, 197, 94, 0); }
+  }
+
+  .hero-display {
+    font-family: var(--font-mono);
+    font-size: var(--type-display);
+    letter-spacing: -0.03em;
+    line-height: 1.1;
+    margin-bottom: var(--space-8);
+    min-height: calc(var(--type-display) * 3.4);
+  }
+
+  /* Style each typewriter line differently */
+  .hero-display > div:nth-child(1) {
+    font-weight: 400;
+    color: var(--color-text-primary);
+  }
+
+  .hero-display > div:nth-child(2) {
+    font-weight: 700;
+    color: var(--color-text-primary);
+  }
+
+  .hero-display > div:nth-child(3) {
+    font-weight: 700;
+    font-style: italic;
+    color: var(--color-green-500);
+  }
+
+  .hero-sub {
+    font-family: var(--font-sans);
+    font-size: 18px;
+    color: var(--color-text-secondary);
+    max-width: 640px;
+    line-height: 1.65;
+    margin-bottom: var(--space-10);
+  }
+
+  .hero-ctas {
+    display: flex;
+    gap: var(--space-4);
+    flex-wrap: wrap;
+    margin-bottom: var(--space-16);
+  }
+
+  /* Primary button */
   .btn-primary {
-    background: #0f172a;
-    color: #ffffff;
+    display: inline-flex;
+    align-items: center;
+    font-family: var(--font-mono);
+    font-size: var(--type-label);
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    padding: 14px 28px;
+    background: var(--color-green-500);
+    color: #000;
+    border: none;
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    text-decoration: none;
+    transition:
+      transform var(--duration-quick) var(--easing-spring),
+      box-shadow var(--duration-quick) var(--easing-spring);
   }
 
   .btn-primary:hover {
-    background: #1e293b;
-    transform: translateY(-2px);
-    box-shadow: 0 8px 30px rgba(15, 23, 42, 0.15);
+    transform: translateY(-1px);
+    box-shadow: 0 0 20px rgba(34, 197, 94, 0.35), 0 4px 12px rgba(34, 197, 94, 0.2);
   }
 
+  .btn-primary.btn-large {
+    padding: 16px 40px;
+    font-size: 14px;
+  }
+
+  /* Ghost button */
   .btn-ghost {
-    background: rgba(255, 255, 255, 0.9);
-    color: #64748b;
-    border: 1.5px solid #e2e8f0;
-    backdrop-filter: blur(4px);
-    -webkit-backdrop-filter: blur(4px);
+    display: inline-flex;
+    align-items: center;
+    font-family: var(--font-mono);
+    font-size: var(--type-label);
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    padding: 14px 28px;
+    background: transparent;
+    color: var(--color-text-secondary);
+    border: 1px solid var(--color-border-muted);
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    text-decoration: none;
+    transition:
+      border-color var(--duration-quick) var(--easing-smooth),
+      background var(--duration-quick) var(--easing-smooth),
+      color var(--duration-quick) var(--easing-smooth);
   }
 
   .btn-ghost:hover {
-    color: #0f172a;
-    border-color: #cbd5e1;
-    background: #ffffff;
+    border-color: var(--color-border-visible);
+    background: var(--color-surface-02);
+    color: var(--color-text-primary);
   }
 
-  .btn-large {
-    padding: 18px 36px;
+  .btn-sm {
+    padding: 8px 16px;
+    font-size: 11px;
+  }
+
+  .scroll-indicator {
+    position: absolute;
+    bottom: 40px;
+    left: clamp(var(--space-8), 6vw, 96px);
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--color-text-muted);
+    animation: scroll-bounce 2s ease-in-out infinite;
+    transition: opacity var(--duration-slow) var(--easing-smooth);
+  }
+
+  .scroll-indicator.hidden {
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  @keyframes scroll-bounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(5px); }
+  }
+
+  /* ============================================================
+     SERVICES SECTION
+     ============================================================ */
+  .services {
+    padding: clamp(80px, 12vw, 128px) 0;
+  }
+
+  .service-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+  }
+
+  /* Terminal card */
+  .terminal-card {
+    background: var(--color-surface-00);
+    border: 1px solid var(--color-border-subtle);
+    border-radius: var(--radius-md);
+    overflow: hidden;
+    transition:
+      border-color var(--duration-normal) var(--easing-smooth),
+      box-shadow var(--duration-normal) var(--easing-smooth);
+  }
+
+  .terminal-card:hover {
+    border-color: rgba(34, 197, 94, 0.4);
+    box-shadow: 0 0 24px rgba(34, 197, 94, 0.06), 0 4px 16px rgba(0, 0, 0, 0.3);
+  }
+
+  .terminal-titlebar {
+    display: flex;
+    align-items: center;
+    height: 38px;
+    padding: 0 12px;
+    background: var(--color-surface-01);
+    border-bottom: 1px solid var(--color-border-subtle);
+    gap: 0;
+  }
+
+  .dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  .dot + .dot {
+    margin-left: 6px;
+  }
+
+  .dot-red { background: #ff5f57; }
+  .dot-yellow { background: #febc2e; }
+  .dot-green-tc { background: #28c840; }
+
+  .terminal-title {
+    font-family: var(--font-mono);
+    font-size: 9px;
+    color: var(--color-text-muted);
+    margin-left: 10px;
+    flex: 1;
+  }
+
+  .terminal-status {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    font-family: var(--font-mono);
+    font-size: 10px;
+    color: var(--color-green-500);
+    margin-left: auto;
+  }
+
+  .terminal-status--available {
+    color: var(--color-text-muted);
+  }
+
+  .status-dot--muted {
+    background: var(--color-text-muted);
+    animation: none;
+  }
+
+  .terminal-body {
+    padding: 24px;
+  }
+
+  .terminal-comment {
+    display: block;
+    font-family: var(--font-mono);
+    font-size: 10px;
+    color: var(--color-text-muted);
+    margin-bottom: var(--space-2);
+  }
+
+  .terminal-body h3 {
+    font-family: var(--font-mono);
     font-size: 18px;
-    border-radius: 12px;
+    font-weight: 600;
+    color: var(--color-text-primary);
+    margin-top: var(--space-2);
+    line-height: 1.3;
   }
 
-  /* ================================
-     HERO
-     ================================ */
-  .hero {
-    padding: 160px 0 80px;
-    position: relative;
+  .terminal-body p {
+    font-family: var(--font-sans);
+    font-size: var(--type-body-sm);
+    color: var(--color-text-secondary);
+    line-height: 1.55;
+    margin-top: var(--space-2);
+  }
+
+  .terminal-footer {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    margin-top: 20px;
+    padding-top: 16px;
+    border-top: 1px solid var(--color-border-subtle);
+  }
+
+  .terminal-link {
+    font-family: var(--font-mono);
+    font-size: var(--type-caption);
+    color: var(--color-green-500);
+    text-decoration: none;
+    background: none;
+    border: 1px solid var(--color-green-500);
+    padding: 6px 16px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all var(--duration-quick) var(--easing-smooth);
+  }
+
+  .terminal-link:hover {
+    background: var(--color-green-500);
+    color: #000;
+  }
+
+  /* ============================================================
+     AUDIENCE SECTION
+     ============================================================ */
+  .audience {
+    padding: clamp(80px, 12vw, 128px) 0;
+    padding-top: clamp(40px, 6vw, 64px);
+  }
+
+  .audience-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+  }
+
+  .audience-card {
+    padding: var(--space-8);
+    background: var(--color-surface-00);
+    border-left: 2px solid var(--color-green-500);
+    border-radius: 0 var(--radius-md) var(--radius-md) 0;
+  }
+
+  .audience-card h3 {
+    font-family: var(--font-mono);
+    font-size: var(--type-body);
+    font-weight: 600;
+    color: var(--color-text-primary);
+    margin-bottom: var(--space-3);
+  }
+
+  .audience-card p {
+    font-family: var(--font-sans);
+    font-size: var(--type-body-sm);
+    color: var(--color-text-secondary);
+    line-height: 1.65;
+    margin: 0;
+  }
+
+  /* ============================================================
+     ABOUT / PROOF SECTION
+     ============================================================ */
+  .about-section {
+    padding: clamp(80px, 12vw, 128px) 0;
+  }
+
+  .about-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: clamp(var(--space-8), 5vw, 80px);
+    align-items: start;
+  }
+
+  .about-left .section-tag {
+    margin-bottom: var(--space-3);
+  }
+
+  .about-left h2 {
+    font-family: var(--font-mono);
+    font-size: var(--type-h2);
+    font-weight: 700;
+    color: var(--color-text-primary);
+    letter-spacing: -0.02em;
+    margin-bottom: var(--space-6);
+    line-height: 1.2;
+  }
+
+  .about-p {
+    font-family: var(--font-sans);
+    font-size: var(--type-body);
+    color: var(--color-text-secondary);
+    line-height: 1.75;
+    margin-bottom: var(--space-4);
+  }
+
+  .stat-row {
+    display: flex;
+    gap: var(--space-8);
+    margin-top: var(--space-8);
+    flex-wrap: wrap;
+  }
+
+  .stat-block {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-1);
+  }
+
+  .stat-number {
+    font-family: var(--font-mono);
+    font-size: 48px;
+    font-weight: 800;
+    color: var(--color-text-primary);
+    line-height: 1;
+    letter-spacing: -0.04em;
+  }
+
+  .stat-label {
+    font-family: var(--font-mono);
+    font-size: var(--type-caption);
+    color: var(--color-text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+  }
+
+  /* Terminal readout */
+  .terminal-readout {
+    background: var(--color-surface-00);
+    border: 1px solid var(--color-border-subtle);
+    border-radius: var(--radius-md);
     overflow: hidden;
   }
 
-  .hero::before {
-    content: '';
-    position: absolute;
-    top: -200px;
-    right: -200px;
-    width: 600px;
-    height: 600px;
-    background: radial-gradient(circle, rgba(15, 23, 42, 0.03) 0%, transparent 70%);
-    border-radius: 50%;
-    pointer-events: none;
+  /* ── Interactive terminal ───────────────────────────────────── */
+  .terminal-body--interactive {
+    display: flex;
+    flex-direction: column;
+    height: 420px;
+    padding: 0;
+    font-family: var(--font-mono);
+    font-size: 13px;
+    line-height: 1.7;
+    color: var(--color-text-secondary);
   }
 
-  #hero-canvas {
+  .terminal-output {
+    flex: 1;
+    overflow-y: auto;
+    padding: 16px 20px 8px;
+    scrollbar-width: thin;
+    scrollbar-color: var(--color-border-subtle) transparent;
+  }
+
+  .terminal-output::-webkit-scrollbar { width: 4px; }
+  .terminal-output::-webkit-scrollbar-thumb {
+    background: var(--color-border-subtle);
+    border-radius: 2px;
+  }
+
+  /* Each output line */
+  .tl {
+    min-height: 1.7em;
+    white-space: pre;
+    overflow-x: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .tl-fadein {
+    animation: tl-fade 60ms ease-out both;
+  }
+
+  @keyframes tl-fade {
+    from { opacity: 0.4; }
+    to   { opacity: 1; }
+  }
+
+  /* Command echo */
+  .tl-cmd {
+    color: var(--color-text-primary);
+    margin-top: 2px;
+  }
+
+  .t-prompt {
+    color: var(--color-green-500);
+    user-select: none;
+  }
+
+  /* Output block */
+  .tl-block {
+    margin: 2px 0 0;
+  }
+
+  .tl-spacer {
+    height: 8px;
+  }
+
+  /* Boot sequence */
+  .tl-boot {
+    color: var(--color-text-muted);
+  }
+
+  /* Inline colors */
+  .t-green { color: var(--color-green-500); }
+  .t-pink  { color: var(--color-pink-500); }
+  .t-muted { color: var(--color-text-muted); }
+
+  /* ── Input line ───────────────────────────────────────────── */
+  .terminal-input-line {
+    display: flex;
+    align-items: center;
+    padding: 10px 20px 14px;
+    border-top: 1px solid var(--color-border-subtle);
+    background: var(--color-surface-00);
+    flex-shrink: 0;
+    gap: 8px;
+  }
+
+  .terminal-prompt {
+    color: var(--color-green-500);
+    font-family: var(--font-mono);
+    font-size: 13px;
+    user-select: none;
+    flex-shrink: 0;
+  }
+
+  .terminal-input-wrap {
+    flex: 1;
+    position: relative;
+    min-width: 0;
+  }
+
+  .terminal-ghost {
     position: absolute;
     top: 0;
     left: 0;
-    width: 100%;
-    height: 100%;
+    font-family: var(--font-mono);
+    font-size: 13px;
+    line-height: 1.7;
+    color: var(--color-text-muted);
+    opacity: 0.4;
     pointer-events: none;
-    z-index: 0;
-    display: block;
+    white-space: nowrap;
   }
 
-  .hero > .container {
+  .terminal-input {
+    width: 100%;
+    background: none;
+    border: none;
+    outline: none;
+    color: var(--color-text-primary);
+    font-family: var(--font-mono);
+    font-size: 13px;
+    line-height: 1.7;
+    caret-color: var(--color-green-500);
+    padding: 0;
     position: relative;
     z-index: 1;
   }
 
-  .hero-content {
-    max-width: 720px;
+  .terminal-input::placeholder {
+    color: var(--color-text-muted);
+    opacity: 0.5;
   }
 
-  .hero-tag {
-    font-size: 14px;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.1em;
-    color: #94a3b8;
-    margin-bottom: 24px;
-  }
-
-  .hero-title {
-    font-size: clamp(42px, 6vw, 72px);
-    letter-spacing: -0.03em;
-    margin-bottom: 28px;
-    line-height: 1.05;
-  }
-
-  .hero-title em {
-    color: #475569;
-  }
-
-  .hero-subtitle {
-    font-size: 19px;
-    line-height: 1.7;
-    color: #64748b;
-    max-width: 580px;
-    margin-bottom: 40px;
-  }
-
-  .hero-actions {
-    display: flex;
-    gap: 16px;
-    flex-wrap: wrap;
-  }
-
-  .hero-metric {
-    margin-top: 80px;
-    padding-top: 48px;
-    border-top: 1px solid #e2e8f0;
-  }
-
-  .metric-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 48px;
-  }
-
-  .metric-value {
-    display: block;
-    font-family: 'Instrument Serif', Georgia, serif;
-    font-size: 36px;
-    color: #0f172a;
-    letter-spacing: -0.03em;
-    margin-bottom: 6px;
-  }
-
-  .metric-label {
-    font-size: 14px;
-    color: #94a3b8;
-    line-height: 1.5;
-  }
-
-  /* ================================
-     SECTION HEADERS
-     ================================ */
-  .section-tag {
-    font-size: 13px;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.1em;
-    color: #94a3b8;
-    margin-bottom: 16px;
-  }
-
-  .section-title {
-    font-size: clamp(32px, 4vw, 52px);
-    letter-spacing: -0.03em;
-    margin-bottom: 20px;
-  }
-
-  .section-desc {
-    font-size: 18px;
-    color: #64748b;
-    max-width: 560px;
-    line-height: 1.7;
-  }
-
-  /* ================================
-     ABOUT SECTION
-     ================================ */
-  .about {
-    padding: 80px 0;
-    border-bottom: 1px solid #e2e8f0;
-  }
-
-  .about-content {
-    max-width: 760px;
-    margin: 0 auto;
-    text-align: center;
-  }
-
-  .about-heading {
-    font-size: clamp(28px, 3.5vw, 40px);
-    letter-spacing: -0.03em;
-    margin-bottom: 24px;
-  }
-
-  .about-text {
-    font-size: 18px;
-    line-height: 1.8;
-    color: #64748b;
-  }
-
-  /* ================================
-     PROOF SECTION
-     ================================ */
-  .proof {
-    padding: 100px 0;
-    background: #fafaf8;
-  }
-
-  .proof-grid {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 28px;
-    margin-top: 56px;
-  }
-
-  .proof-card {
-    padding: 40px 36px;
-    border: 1px solid #e2e8f0;
-    border-radius: 16px;
-    transition: all 0.3s ease;
-    position: relative;
-  }
-
-  .proof-card:hover {
-    border-color: #cbd5e1;
-    transform: translateY(-4px);
-    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.06);
-  }
-
-  .proof-number {
-    font-family: 'Instrument Serif', Georgia, serif;
-    font-size: 48px;
-    color: #e2e8f0;
-    letter-spacing: -0.04em;
-    margin-bottom: 20px;
-    line-height: 1;
-  }
-
-  .proof-title {
-    font-family: 'Figtree', sans-serif;
-    font-size: 20px;
-    font-weight: 700;
-    margin-bottom: 14px;
-    letter-spacing: -0.02em;
-  }
-
-  .proof-body {
-    font-size: 15px;
-    line-height: 1.7;
-    color: #64748b;
-    margin-bottom: 20px;
-  }
-
-  .proof-tag-row {
-    display: flex;
-    gap: 8px;
-    flex-wrap: wrap;
-  }
-
-  .proof-tag {
-    font-size: 12px;
-    font-weight: 600;
-    padding: 5px 12px;
-    border-radius: 100px;
-    background: #f1f5f9;
-    color: #64748b;
-    letter-spacing: 0.01em;
-  }
-
-  /* ================================
-     SERVICES SECTION
-     ================================ */
-  .services {
-    padding: 100px 0;
-  }
-
-  .services-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 24px;
-    margin-top: 56px;
-  }
-
-  .service-card {
-    padding: 36px 32px;
-    border-radius: 16px;
-    background: #ffffff;
-    border: 1px solid #e8e8e4;
-    transition: all 0.3s ease;
-  }
-
-  .service-card:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.05);
-    border-color: #d4d4cf;
-  }
-
-  .service-icon {
-    width: 56px;
-    height: 56px;
-    margin-bottom: 24px;
-  }
-
-  .service-icon img {
-    width: 56px;
-    height: 56px;
-    display: block;
-  }
-
-  .service-card h3 {
-    font-family: 'Figtree', sans-serif;
-    font-size: 18px;
-    font-weight: 700;
-    margin-bottom: 10px;
-    letter-spacing: -0.02em;
-  }
-
-  .service-card p {
-    font-size: 15px;
-    line-height: 1.65;
-    color: #64748b;
-    margin-bottom: 16px;
-  }
-
-  .service-price {
-    font-size: 14px;
-    font-weight: 700;
-    color: #0f172a;
-    letter-spacing: -0.01em;
-  }
-
-  /* ================================
-     PROCESS SECTION
-     ================================ */
-  .process {
-    padding: 100px 0;
-    background: #fafaf8;
-  }
-
-  .process-steps {
-    max-width: 640px;
-    margin: 56px auto 0;
-    display: flex;
-    flex-direction: column;
-    align-items: stretch;
-  }
-
-  .step {
-    display: flex;
-    gap: 32px;
-    align-items: flex-start;
-  }
-
-  .step-num {
+  .terminal-tab-hint {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    color: var(--color-text-muted);
+    opacity: 0.5;
+    background: var(--color-surface-01);
+    border: 1px solid var(--color-border-subtle);
+    border-radius: 3px;
+    padding: 1px 6px;
     flex-shrink: 0;
-    width: 56px;
-    height: 56px;
-    border-radius: 50%;
-    background: #0f172a;
-    color: #ffffff;
-    font-family: 'Instrument Serif', Georgia, serif;
-    font-size: 24px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-
-  .step-content h3 {
-    font-family: 'Figtree', sans-serif;
-    font-size: 20px;
-    font-weight: 700;
-    margin-bottom: 8px;
-    letter-spacing: -0.02em;
-    padding-top: 2px;
-  }
-
-  .step-content p {
-    font-size: 16px;
-    color: #64748b;
-    line-height: 1.7;
-  }
-
-  .step-line {
-    width: 2px;
-    height: 40px;
-    background: #e2e8f0;
-    margin-left: 27px;
-  }
-
-  /* ================================
-     ESTIMATOR SECTION
-     ================================ */
-  .estimator {
-    padding: 100px 0;
-    background: #ffffff;
-    border-top: 1px solid #e2e8f0;
-    border-bottom: 1px solid #e2e8f0;
-  }
-
-  .estimator-shell {
-    margin-top: 48px;
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 20px;
-  }
-
-  .lp-panel {
-    background: #f8fafc;
-    border: 1px solid #e2e8f0;
-    border-radius: 16px;
-    padding: 18px;
-  }
-
-  .lp-title {
-    font-family: 'Figtree', sans-serif;
-    font-size: 20px;
-    font-weight: 700;
-    letter-spacing: -0.02em;
-    margin-bottom: 12px;
-  }
-
-  .lp-task-rows {
-    display: grid;
-    gap: 8px;
-  }
-
-  .lp-task-row {
-    display: grid;
-    grid-template-columns: 1.35fr 0.82fr auto;
-    gap: 8px;
-  }
-
-  .lp-task-name,
-  .lp-task-hours {
-    border: 1px solid #dbe4ee;
-    border-radius: 10px;
-    background: #ffffff;
-    min-height: 44px;
-    padding: 10px 12px;
-    font-size: 13px;
-    font-family: inherit;
-    color: #0f172a;
-  }
-
-  .lp-task-name:focus,
-  .lp-task-hours:focus {
-    outline: 2px solid rgba(15, 23, 42, 0.14);
-    border-color: #94a3b8;
-  }
-
-  .lp-task-remove {
-    min-height: 44px;
-    min-width: 44px;
-    border: 1px solid #dbe4ee;
-    border-radius: 10px;
-    background: #ffffff;
-    color: #64748b;
-    font-size: 14px;
-    font-weight: 700;
-    cursor: pointer;
-  }
-
-  .lp-task-remove:hover {
-    color: #0f172a;
-    border-color: #94a3b8;
-  }
-
-  .lp-actions {
-    margin-top: 10px;
-    display: flex;
-    gap: 8px;
-    flex-wrap: wrap;
-  }
-
-  .lp-metrics {
-    display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 8px;
-    margin-bottom: 12px;
-  }
-
-  .lp-metric-card {
-    background: #ffffff;
-    border: 1px solid #e2e8f0;
-    border-radius: 12px;
-    padding: 10px;
-    text-align: center;
-  }
-
-  .lp-metric-card p {
-    margin: 0;
-    font-size: 12px;
-    color: #64748b;
+    user-select: none;
     text-transform: uppercase;
-    letter-spacing: 0.08em;
-    font-weight: 600;
+    letter-spacing: 0.05em;
   }
 
-  .lp-metric-card strong {
-    display: block;
-    margin-top: 4px;
-    font-family: 'Instrument Serif', Georgia, serif;
-    font-size: 30px;
-    line-height: 1;
-    color: #0f172a;
-  }
-
-  .lp-run-row {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    flex-wrap: wrap;
-  }
-
-  .lp-note {
-    font-size: 13px;
-    color: #64748b;
-  }
-
-  .lp-flow {
-    margin-top: 12px;
-    border: 1px solid #dbe4ee;
-    border-radius: 10px;
-    height: 56px;
-    position: relative;
-    overflow: hidden;
-    background: linear-gradient(90deg, #ffffff, #f8fafc);
-  }
-
-  .lp-flow::before {
-    content: '';
-    position: absolute;
-    top: 50%;
-    left: 8px;
-    right: 8px;
-    height: 2px;
-    background: #e2e8f0;
-    transform: translateY(-50%);
-  }
-
-  .lp-flow-dot {
-    position: absolute;
-    top: 50%;
-    left: -10%;
-    width: 10px;
-    height: 10px;
-    border-radius: 999px;
-    transform: translateY(-50%);
-    background: linear-gradient(180deg, #0f172a, #475569);
-    opacity: 0;
-  }
-
-  .lp-flow.running .lp-flow-dot {
-    animation: lp-flow-move 1500ms linear infinite;
-    opacity: 1;
-  }
-
-  .lp-flow.running .lp-flow-dot:nth-child(2) { animation-delay: 350ms; }
-  .lp-flow.running .lp-flow-dot:nth-child(3) { animation-delay: 700ms; }
-  .lp-flow.running .lp-flow-dot:nth-child(4) { animation-delay: 1050ms; }
-
-  .lp-confidence {
-    margin: 12px 0 8px;
-    font-size: 13px;
-    font-weight: 700;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    color: #475569;
-  }
-
-  .lp-rationale {
-    margin: 0;
-    font-size: 14px;
-    line-height: 1.7;
-    color: #64748b;
-  }
-
-  .lp-breakdown {
-    margin-top: 12px;
-    display: grid;
-    gap: 8px;
-  }
-
-  .lp-breakdown-item {
-    background: #ffffff;
-    border: 1px solid #e2e8f0;
-    border-radius: 10px;
-    padding: 10px;
-  }
-
-  .lp-breakdown-head {
-    display: flex;
-    justify-content: space-between;
-    gap: 8px;
-    margin-bottom: 8px;
-    align-items: center;
-  }
-
-  .lp-breakdown-head strong {
-    font-size: 13px;
-    font-weight: 600;
-    color: #0f172a;
-  }
-
-  .lp-breakdown-head span {
-    font-size: 12px;
-    color: #64748b;
-    font-weight: 600;
-  }
-
-  .lp-breakdown-bar {
-    height: 8px;
-    background: #e2e8f0;
-    border-radius: 999px;
-    overflow: hidden;
-  }
-
-  .lp-breakdown-bar span {
-    display: block;
-    height: 100%;
-    border-radius: 999px;
-    background: linear-gradient(90deg, #0f172a, #475569);
-  }
-
-  @keyframes lp-flow-move {
-    0% { left: -10%; opacity: 0; }
-    8% { opacity: 1; }
-    92% { opacity: 1; }
-    100% { left: 105%; opacity: 0; }
-  }
-
-  /* ================================
+  /* ============================================================
      FAQ SECTION
-     ================================ */
+     ============================================================ */
   .faq {
-    padding: 100px 0;
-    background: #fafaf8;
+    padding: clamp(80px, 12vw, 128px) 0;
   }
 
   .faq-list {
     max-width: 760px;
-    margin: 56px auto 0;
-    display: flex;
-    flex-direction: column;
-    gap: 0;
+    margin-top: var(--space-8);
   }
 
   .faq-item {
-    border-bottom: 1px solid #e2e8f0;
+    border-bottom: 1px solid var(--color-border-subtle);
   }
 
   .faq-item:first-child {
-    border-top: 1px solid #e2e8f0;
+    border-top: 1px solid var(--color-border-subtle);
   }
 
   .faq-question {
     display: flex;
-    align-items: center;
-    justify-content: space-between;
+    align-items: flex-start;
+    gap: var(--space-3);
     cursor: pointer;
-    padding: 28px 0;
+    padding: var(--space-6) 0;
     list-style: none;
   }
 
@@ -1601,338 +1273,184 @@
     display: none;
   }
 
-  .faq-question h3 {
-    font-family: 'Figtree', sans-serif;
-    font-size: 18px;
-    font-weight: 600;
-    letter-spacing: -0.02em;
-    color: #0f172a;
-    padding-right: 24px;
-  }
-
-  .faq-toggle {
+  .faq-arrow {
+    font-family: var(--font-mono);
+    font-size: var(--type-body);
+    color: var(--color-green-500);
     flex-shrink: 0;
-    width: 24px;
-    height: 24px;
-    position: relative;
+    margin-top: 1px;
+    transition: transform var(--duration-quick) var(--easing-smooth);
   }
 
-  .faq-toggle::before,
-  .faq-toggle::after {
-    content: '';
-    position: absolute;
-    background: #94a3b8;
-    border-radius: 2px;
-    transition: transform 0.3s ease;
+  details[open] .faq-arrow {
+    transform: rotate(90deg);
   }
 
-  .faq-toggle::before {
-    width: 16px;
-    height: 2px;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-  }
-
-  .faq-toggle::after {
-    width: 2px;
-    height: 16px;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-  }
-
-  details[open] .faq-toggle::after {
-    transform: translate(-50%, -50%) rotate(90deg);
-    opacity: 0;
+  .faq-q-text {
+    font-family: var(--font-sans);
+    font-size: var(--type-body);
+    font-weight: 600;
+    color: var(--color-text-primary);
+    line-height: 1.4;
   }
 
   .faq-answer {
-    padding-bottom: 28px;
+    padding: 0 0 var(--space-6) calc(var(--space-3) + 14px);
   }
 
   .faq-answer p {
-    font-size: 16px;
-    line-height: 1.7;
-    color: #64748b;
-    max-width: 680px;
+    font-family: var(--font-sans);
+    font-size: var(--type-body-sm);
+    color: var(--color-text-secondary);
+    line-height: 1.75;
+    margin: 0;
   }
 
-  /* ================================
+  /* ============================================================
      FINAL CTA
-     ================================ */
+     ============================================================ */
   .final-cta {
-    padding: 120px 0;
-    text-align: center;
-    position: relative;
-    overflow: hidden;
-  }
-
-  .final-cta::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background: radial-gradient(ellipse at center, rgba(15, 23, 42, 0.02), transparent 70%);
-    pointer-events: none;
-  }
-
-  .cta-content {
-    max-width: 600px;
-    margin: 0 auto;
-    position: relative;
-  }
-
-  .cta-title {
-    font-size: clamp(36px, 5vw, 56px);
-    letter-spacing: -0.03em;
-    margin-bottom: 24px;
-  }
-
-  .cta-title em {
-    color: #475569;
-  }
-
-  .cta-desc {
-    font-size: 18px;
-    color: #64748b;
-    line-height: 1.7;
-    margin-bottom: 40px;
-  }
-
-  .cta-note {
-    margin-top: 20px;
-    font-size: 14px;
-    color: #94a3b8;
-  }
-
-  /* ================================
-     FOOTER
-     ================================ */
-  .footer {
-    padding: 48px 0 32px;
-    border-top: 1px solid #e2e8f0;
-  }
-
-  .footer-inner {
-    display: grid;
-    grid-template-columns: 1.5fr 1fr 1fr;
-    gap: 40px;
-    margin-bottom: 24px;
-  }
-
-  .footer-tagline {
-    font-size: 14px;
-    color: #94a3b8;
-    margin-top: 4px;
-  }
-
-  .footer-about {
-    font-size: 13px;
-    color: #94a3b8;
-    margin-top: 12px;
-    line-height: 1.6;
-  }
-
-  .footer-heading {
-    font-family: 'Figtree', sans-serif;
-    font-size: 14px;
-    font-weight: 600;
-    color: #0f172a;
-    margin-bottom: 12px;
-    letter-spacing: -0.01em;
-  }
-
-  .footer-list {
-    list-style: none;
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-  }
-
-  .footer-list a {
-    font-size: 14px;
-    color: #64748b;
-    transition: color 0.2s;
-  }
-
-  .footer-list a:hover {
-    color: #0f172a;
-  }
-
-  .footer-right {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-  }
-
-  .footer-link {
-    font-size: 14px;
-    font-weight: 500;
-    color: #64748b;
-    transition: color 0.2s;
-  }
-
-  .footer-link:hover {
-    color: #0f172a;
-  }
-
-  .built-badge {
+    min-height: 100vh;
     display: flex;
     align-items: center;
-    gap: 10px;
-    padding: 14px 20px;
-    margin-bottom: 24px;
-    background: #f8fafc;
-    border: 1px solid #e2e8f0;
-    border-radius: 10px;
-    font-size: 13px;
-    font-weight: 500;
-    color: #64748b;
-    line-height: 1.5;
+    justify-content: center;
+    padding: clamp(80px, 12vw, 128px) 0;
   }
 
-  .built-badge svg {
-    flex-shrink: 0;
-    color: #94a3b8;
+  .final-cta-inner {
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0;
   }
 
-  .footer-legal {
-    font-size: 13px;
-    color: #cbd5e1;
+  .final-cta-inner .section-tag {
+    text-align: center;
+    margin-bottom: var(--space-4);
   }
 
-  /* ================================
-     SCROLL ANIMATIONS
-     ================================ */
-  .reveal {
-    opacity: 0;
-    transform: translateY(24px);
-    transition: opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1),
-                transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+  .cta-heading {
+    font-family: var(--font-mono);
+    font-size: var(--type-h1);
+    font-weight: 700;
+    color: var(--color-text-primary);
+    letter-spacing: -0.02em;
+    margin-bottom: var(--space-6);
+    line-height: 1.15;
   }
 
-  .reveal.visible {
-    opacity: 1;
-    transform: translateY(0);
+  .cta-sub {
+    font-family: var(--font-sans);
+    font-size: 18px;
+    color: var(--color-text-secondary);
+    max-width: 520px;
+    line-height: 1.65;
+    margin-bottom: var(--space-10);
   }
 
-  /* Stagger children in grids */
-  .proof-grid .reveal:nth-child(2) { transition-delay: 0.1s; }
-  .proof-grid .reveal:nth-child(3) { transition-delay: 0.2s; }
-  .proof-grid .reveal:nth-child(4) { transition-delay: 0.3s; }
+  .cta-flags {
+    font-family: var(--font-mono);
+    font-size: var(--type-caption);
+    color: var(--color-text-muted);
+    margin-top: var(--space-4);
+  }
 
-  .services-grid .reveal:nth-child(2) { transition-delay: 0.08s; }
-  .services-grid .reveal:nth-child(3) { transition-delay: 0.16s; }
-  .services-grid .reveal:nth-child(4) { transition-delay: 0.24s; }
-  .services-grid .reveal:nth-child(5) { transition-delay: 0.32s; }
-  .services-grid .reveal:nth-child(6) { transition-delay: 0.40s; }
-
-  .metric-grid .metric:nth-child(2) { transition-delay: 0.1s; }
-  .metric-grid .metric:nth-child(3) { transition-delay: 0.2s; }
-
-  /* ================================
+  /* ============================================================
      RESPONSIVE
-     ================================ */
+     ============================================================ */
   @media (max-width: 900px) {
-    .nav-links { display: none; }
-    .mobile-toggle { display: flex; }
-
-    .proof-grid { grid-template-columns: 1fr; }
-    .services-grid { grid-template-columns: 1fr 1fr; }
-    .metric-grid { grid-template-columns: 1fr; gap: 28px; }
-    .estimator-shell { grid-template-columns: 1fr; }
-
-    .hero { padding: 130px 0 60px; }
-    .hero-metric { margin-top: 56px; padding-top: 36px; }
-
-    .proof, .services, .process, .estimator, .final-cta, .faq {
-      padding: 72px 0;
-    }
-
-    .footer-inner {
+    .service-grid {
       grid-template-columns: 1fr;
-      gap: 32px;
     }
 
+    .audience-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .about-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .stat-row {
+      gap: var(--space-6);
+    }
   }
 
   @media (max-width: 600px) {
-    body { font-size: 16px; }
-    .services-grid { grid-template-columns: 1fr; }
-    .hero-actions { flex-direction: column; }
-    .hero-actions .btn { width: 100%; justify-content: center; }
-    .lp-task-row { grid-template-columns: 1fr; }
-    .lp-metrics { grid-template-columns: 1fr; }
-    .footer-inner { flex-direction: column; gap: 16px; text-align: center; }
-    .footer-right { justify-content: center; }
-    .built-badge { text-align: left; }
-    .step { gap: 20px; }
-    .step-num { width: 44px; height: 44px; font-size: 20px; }
+    .hero-ctas {
+      flex-direction: column;
+    }
+
+    .hero-ctas .btn-primary,
+    .hero-ctas .btn-ghost {
+      width: 100%;
+      justify-content: center;
+    }
+
+    .btn-primary.btn-large {
+      width: 100%;
+      justify-content: center;
+    }
+
+    .stat-row {
+      flex-direction: column;
+      gap: var(--space-6);
+    }
+
+    .terminal-body--interactive {
+      height: 320px;
+      font-size: 12px;
+    }
+
+    .tl { white-space: pre-wrap; }
+    .terminal-output { padding: 12px 14px 0; }
+    .terminal-input-line { padding: 8px 14px 12px; }
+    .terminal-input { font-size: 16px; } /* prevents iOS zoom on focus */
+    .terminal-tab-hint { display: none; }
   }
 
-  /* ================================
+  /* ============================================================
      REDUCED MOTION
-     ================================ */
+     ============================================================ */
   @media (prefers-reduced-motion: reduce) {
-    .reveal {
-      opacity: 1;
-      transform: none;
-      transition: none;
-    }
-    #hero-canvas { display: none; }
-    .lp-flow-dot { animation: none !important; }
-    html { scroll-behavior: auto; }
+    .status-dot { animation: none; }
+    .scroll-indicator { animation: none; }
+    .tl-fadein { animation: none; }
   }
 </style>
 
-<script type="module">
-  // We use a module script to cleanly import Three.js while keeping your existing code running
+<script>
+  import { initTypewriters } from '../scripts/typewriter.ts';
+  import { initScrollReveal, initCounters } from '../scripts/scroll-reveal.ts';
+  import { initTerminal } from '../scripts/terminal.ts';
+  import { initChatDrawer } from '../scripts/chat-drawer.ts';
 
-  // --- 1. EXISTING UI LOGIC ---
+  // ── Init animations ──────────────────────────────────────────
+  initTypewriters();
+  initScrollReveal();
+  initCounters();
+  initTerminal();
+  initChatDrawer();
 
-  // Scroll reveal animation
-  const observer = new IntersectionObserver(
-    (entries) => {
-      entries.forEach((entry) => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add('visible');
-        }
-      });
-    },
-    { threshold: 0.1, rootMargin: '0px 0px -40px 0px' }
-  );
-  document.querySelectorAll('.reveal').forEach((el) => observer.observe(el));
-
-  // Nav scroll effect
-  const nav = document.getElementById('nav');
-  window.addEventListener('scroll', () => {
-    if (window.scrollY > 20) {
-      nav?.classList.add('scrolled');
-    } else {
-      nav?.classList.remove('scrolled');
-    }
-  });
-
-  // Mobile menu
-  const menuToggle = document.getElementById('menuToggle');
-  const mobileMenu = document.getElementById('mobileMenu');
-  menuToggle?.addEventListener('click', () => {
-    mobileMenu?.classList.toggle('active');
-  });
-
-  // Close mobile menu on link click
-  document.querySelectorAll('.mobile-menu-link').forEach((link) => {
-    link.addEventListener('click', () => {
-      mobileMenu?.classList.remove('active');
+  // ── Wire "explore" buttons on service cards to chat drawer ──
+  document.querySelectorAll('[data-chat-open]').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const service = (btn as HTMLElement).dataset.chatOpen;
+      if (service && window.__openChatDrawer) {
+        window.__openChatDrawer(service as any);
+      }
     });
   });
 
-  // Smooth anchor scrolling with offset for fixed nav
-  document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-    anchor.addEventListener('click', function (e) {
-      e.preventDefault();
-      const target = document.querySelector(this.getAttribute('href'));
+  // ── Smooth anchor scrolling with 80px offset ─────────────────
+  document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
+    anchor.addEventListener('click', (e) => {
+      const href = (anchor as HTMLAnchorElement).getAttribute('href');
+      if (!href) return;
+      const target = document.querySelector(href);
       if (target) {
+        e.preventDefault();
         const offset = 80;
         const pos = target.getBoundingClientRect().top + window.scrollY - offset;
         window.scrollTo({ top: pos, behavior: 'smooth' });
@@ -1940,483 +1458,17 @@
     });
   });
 
-  // Landing page interactive estimator
-  const lpTaskRows = document.getElementById('lpTaskRows');
-  const lpAddTask = document.getElementById('lpAddTask');
-  const lpSampleTasks = document.getElementById('lpSampleTasks');
-  const lpClearTasks = document.getElementById('lpClearTasks');
-  const lpRunEstimate = document.getElementById('lpRunEstimate');
-  const lpFlow = document.getElementById('lpFlow');
-  const lpMonthlySaved = document.getElementById('lpMonthlySaved');
-  const lpYearlySaved = document.getElementById('lpYearlySaved');
-  const lpDaysSaved = document.getElementById('lpDaysSaved');
-  const lpConfidence = document.getElementById('lpConfidence');
-  const lpRationale = document.getElementById('lpRationale');
-  const lpEstimatorNote = document.getElementById('lpEstimatorNote');
-  const lpBreakdown = document.getElementById('lpBreakdown');
+  // ── Scroll indicator auto-hide ────────────────────────────────
+  const scrollIndicator = document.getElementById('scrollIndicator');
+  let scrollIndicatorHidden = false;
 
-  if (lpTaskRows && lpRunEstimate) {
-    const createLpTaskRow = (name = '', hours = '') => {
-      const row = document.createElement('div');
-      row.className = 'lp-task-row';
-      row.innerHTML = `
-        <input class="lp-task-name" type="text" placeholder="Task name (e.g. Weekly reporting)" maxlength="100" />
-        <input class="lp-task-hours" type="number" min="0.5" max="500" step="0.5" placeholder="Hours / month" />
-        <button class="lp-task-remove" type="button" aria-label="Remove task">x</button>
-      `;
-      row.querySelector('.lp-task-name').value = name;
-      row.querySelector('.lp-task-hours').value = hours;
-      return row;
-    };
-
-    const animateLpNumber = (element, target) => {
-      const start = Number(element.textContent) || 0;
-      const delta = target - start;
-      const duration = 420;
-      const startTime = performance.now();
-      const tick = (now) => {
-        const progress = Math.min(1, (now - startTime) / duration);
-        element.textContent = String(Math.round((start + delta * progress) * 10) / 10);
-        if (progress < 1) requestAnimationFrame(tick);
-      };
-      requestAnimationFrame(tick);
-    };
-
-    const collectLpTasks = () =>
-      [...lpTaskRows.querySelectorAll('.lp-task-row')]
-        .map((row) => {
-          const name = row.querySelector('.lp-task-name')?.value?.trim() || '';
-          const hours = Number(row.querySelector('.lp-task-hours')?.value);
-          return { name, hoursPerMonth: hours };
-        })
-        .filter((task) => task.name && Number.isFinite(task.hoursPerMonth) && task.hoursPerMonth > 0);
-
-    const setLpLoading = (loading) => {
-      lpRunEstimate.disabled = loading;
-      lpRunEstimate.textContent = loading ? 'Estimating...' : 'Estimate Time Saved';
-      lpFlow?.classList.toggle('running', loading);
-      if (loading && lpEstimatorNote) lpEstimatorNote.textContent = 'Running AI estimate...';
-    };
-
-    const renderLpBreakdown = (tasks) => {
-      if (!lpBreakdown) return;
-      if (!Array.isArray(tasks) || tasks.length === 0) {
-        lpBreakdown.innerHTML = '';
-        return;
+  if (scrollIndicator) {
+    window.addEventListener('scroll', () => {
+      if (!scrollIndicatorHidden && window.scrollY > 60) {
+        scrollIndicatorHidden = true;
+        scrollIndicator.classList.add('hidden');
       }
-      lpBreakdown.innerHTML = tasks.map((task) => {
-        const name = String(task.name || 'Task');
-        const saved = Number(task.estimatedHoursSavedPerMonth) || 0;
-        const potential = Math.max(5, Math.min(100, Number(task.automationPotentialPercent) || 0));
-        return `
-          <div class="lp-breakdown-item">
-            <div class="lp-breakdown-head">
-              <strong>${name}</strong>
-              <span>${saved}h / mo</span>
-            </div>
-            <div class="lp-breakdown-bar"><span style="width:${potential}%"></span></div>
-          </div>
-        `;
-      }).join('');
-    };
-
-    const resetLpOutputs = () => {
-      animateLpNumber(lpMonthlySaved, 0);
-      animateLpNumber(lpYearlySaved, 0);
-      animateLpNumber(lpDaysSaved, 0);
-      lpConfidence.textContent = 'Awaiting estimate...';
-      lpRationale.textContent = 'Run the estimator to see task-level and total projected savings.';
-      if (lpEstimatorNote) lpEstimatorNote.textContent = 'Confidential: we only process what you enter.';
-      lpBreakdown.innerHTML = '';
-      lpFlow?.classList.remove('running');
-    };
-
-    lpTaskRows.addEventListener('click', (event) => {
-      const target = event.target;
-      if (!(target instanceof HTMLElement) || !target.classList.contains('lp-task-remove')) return;
-      const row = target.closest('.lp-task-row');
-      if (!row) return;
-      if (lpTaskRows.children.length <= 1) {
-        row.querySelector('.lp-task-name').value = '';
-        row.querySelector('.lp-task-hours').value = '';
-        return;
-      }
-      row.remove();
-    });
-
-    lpAddTask?.addEventListener('click', () => {
-      if (lpTaskRows.children.length >= 8) return;
-      lpTaskRows.appendChild(createLpTaskRow());
-    });
-
-    lpSampleTasks?.addEventListener('click', () => {
-      const examples = [
-        ['Weekly reporting prep', '12'],
-        ['Inbox sorting and follow-up', '18'],
-        ['CRM updates and admin logging', '16'],
-        ['Meeting notes and summaries', '10']
-      ];
-      lpTaskRows.innerHTML = '';
-      examples.forEach(([name, hours]) => lpTaskRows.appendChild(createLpTaskRow(name, hours)));
-    });
-
-    lpClearTasks?.addEventListener('click', () => {
-      lpTaskRows.innerHTML = '';
-      lpTaskRows.appendChild(createLpTaskRow());
-      resetLpOutputs();
-    });
-
-    lpRunEstimate.addEventListener('click', async () => {
-      const tasks = collectLpTasks();
-      if (!tasks.length) {
-        lpConfidence.textContent = 'Add at least one task';
-        lpRationale.textContent = 'Enter repetitive tasks and monthly hours before running the estimate.';
-        return;
-      }
-
-      setLpLoading(true);
-      try {
-        const response = await fetch('/api/estimate-savings', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ tasks })
-        });
-        const payload = await response.json();
-        if (!response.ok) {
-          lpConfidence.textContent = 'Estimate unavailable';
-          lpRationale.textContent = payload?.error || 'Could not calculate estimate right now.';
-          return;
-        }
-
-        animateLpNumber(lpMonthlySaved, Number(payload?.summary?.estimatedHoursSavedPerMonth) || 0);
-        animateLpNumber(lpYearlySaved, Number(payload?.summary?.estimatedHoursSavedPerYear) || 0);
-        animateLpNumber(lpDaysSaved, Number(payload?.summary?.workingDaysRecoveredPerYear) || 0);
-        lpConfidence.textContent = `Confidence: ${String(payload?.summary?.confidence || 'medium').toUpperCase()}`;
-        lpRationale.textContent = String(payload?.summary?.rationale || 'Estimated from task structure and automation potential.');
-        if (lpEstimatorNote) {
-          lpEstimatorNote.textContent = payload?.source === 'ai'
-            ? 'AI model estimate complete.'
-            : 'AI key unavailable. Showing heuristic estimate.';
-        }
-        renderLpBreakdown(payload?.tasks || []);
-        lpFlow?.classList.remove('running');
-        void lpFlow?.offsetWidth;
-        lpFlow?.classList.add('running');
-      } catch {
-        lpConfidence.textContent = 'Network error';
-        lpRationale.textContent = 'Could not reach the estimator endpoint.';
-      } finally {
-        setLpLoading(false);
-      }
-    });
+    }, { passive: true });
   }
 
-
-  // --- 2. WEBGL HERO ANIMATION (THREE.JS) ---
-
-  import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js';
-
-  if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-    const canvas = document.getElementById('hero-canvas');
-    
-    if (canvas) {
-      const parent = canvas.parentElement;
-      const scene = new THREE.Scene();
-      
-      const camera = new THREE.PerspectiveCamera(60, parent.clientWidth / parent.clientHeight, 0.1, 1000);
-      const renderer = new THREE.WebGLRenderer({ canvas: canvas, alpha: true, antialias: true });
-      
-      renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-      
-      // CRITICAL FIX: Pass 'false' as 3rd parameter to prevent Astro Layout thrashing / flicker
-      renderer.setSize(parent.clientWidth, parent.clientHeight, false);
-
-      const networkGroup = new THREE.Group();
-      scene.add(networkGroup);
-
-      // --- 1. GENERATE THE AI ROUTING MATRIX (NODES) ---
-      const nodeCount = 120;
-      const radius = 6;
-      const nodes = [];
-      const nodeSizes = new Float32Array(nodeCount);
-      const isHubAttr = new Float32Array(nodeCount);
-      
-      // 6 Core Hubs (The AI Engines)
-      for(let i=0; i<6; i++) {
-         const theta = Math.random() * Math.PI * 2;
-         const phi = Math.acos(2 * Math.random() - 1);
-         const r = radius * 0.4; // Clustered near center
-         nodes.push(new THREE.Vector3(
-             r * Math.sin(phi) * Math.cos(theta),
-             r * Math.sin(phi) * Math.sin(theta),
-             r * Math.cos(phi)
-         ));
-         nodeSizes[i] = 14.0;
-         isHubAttr[i] = 1.0;
-      }
-
-      // 114 Endpoints (Data Sources)
-      for(let i=6; i<nodeCount; i++) {
-         const theta = Math.random() * Math.PI * 2;
-         const phi = Math.acos(2 * Math.random() - 1);
-         const r = radius * (0.7 + Math.random() * 0.3); // Outer shell
-         nodes.push(new THREE.Vector3(
-             r * Math.sin(phi) * Math.cos(theta),
-             r * Math.sin(phi) * Math.sin(theta),
-             r * Math.cos(phi)
-         ));
-         nodeSizes[i] = 4.0;
-         isHubAttr[i] = 0.0;
-      }
-
-      const pointsGeo = new THREE.BufferGeometry().setFromPoints(nodes);
-      pointsGeo.setAttribute('size', new THREE.BufferAttribute(nodeSizes, 1));
-      pointsGeo.setAttribute('isHub', new THREE.BufferAttribute(isHubAttr, 1));
-
-      // Custom Shader for soft, branded nodes
-      const pointsMat = new THREE.ShaderMaterial({
-          vertexShader: `
-              attribute float size;
-              attribute float isHub;
-              varying float vIsHub;
-              void main() {
-                  vIsHub = isHub;
-                  vec4 mvPosition = modelViewMatrix * vec4(position, 1.0);
-                  gl_PointSize = size * (10.0 / -mvPosition.z);
-                  gl_Position = projectionMatrix * mvPosition;
-              }
-          `,
-          fragmentShader: `
-              varying float vIsHub;
-              void main() {
-                  float d = length(gl_PointCoord - vec2(0.5));
-                  if (d > 0.5) discard;
-                  float alpha = smoothstep(0.5, 0.4, d);
-                  
-                  // UPDATED: Softer Navy (Slate 600ish) for Hubs and lighter for endpoints
-                  vec3 hubColor = vec3(0.28, 0.33, 0.41); // Softer slate/navy (#475569ish)
-                  vec3 endColor = vec3(0.48, 0.54, 0.62); // Lighter slate
-                  vec3 color = mix(endColor, hubColor, vIsHub);
-                  
-                  gl_FragColor = vec4(color, alpha * (0.5 + vIsHub * 0.5));
-              }
-          `,
-          transparent: true,
-          depthWrite: false
-      });
-      networkGroup.add(new THREE.Points(pointsGeo, pointsMat));
-
-      // --- 2. GENERATE WORKFLOW CONNECTIONS (CURVED PATHS) ---
-      const maxDist = 4.0;
-      const curvePoints = [];
-      const curveUvs = [];
-      const curveSeeds = [];
-      let connectionCount = 0;
-
-      for (let i = 0; i < nodeCount; i++) {
-        for (let j = i + 1; j < nodeCount; j++) {
-          // Bias connections towards hubs to create a realistic network topology
-          const isHubConnection = isHubAttr[i] === 1.0 || isHubAttr[j] === 1.0;
-          const threshold = isHubConnection ? maxDist * 1.5 : maxDist;
-
-          if (nodes[i].distanceTo(nodes[j]) < threshold && connectionCount < 300) {
-            const start = nodes[i];
-            const end = nodes[j];
-            
-            // Push control point outward from center to create beautiful organic arcs
-            const mid = new THREE.Vector3().addVectors(start, end).multiplyScalar(0.5);
-            const distFromCenter = mid.length();
-            mid.normalize().multiplyScalar(distFromCenter + 1.0 + Math.random() * 0.5);
-
-            const curve = new THREE.QuadraticBezierCurve3(start, mid, end);
-            const segments = 15;
-            const points = curve.getPoints(segments);
-            
-            const seed = Math.random() * 100.0;
-            
-            for (let k = 0; k < points.length - 1; k++) {
-              curvePoints.push(points[k].x, points[k].y, points[k].z);
-              curvePoints.push(points[k+1].x, points[k+1].y, points[k+1].z);
-              
-              // Map UVs across the entire length of the curved path
-              curveUvs.push(k / segments, 0);
-              curveUvs.push((k + 1) / segments, 0);
-              
-              curveSeeds.push(seed, seed);
-            }
-            connectionCount++;
-          }
-        }
-      }
-
-      const linesGeo = new THREE.BufferGeometry();
-      linesGeo.setAttribute('position', new THREE.Float32BufferAttribute(curvePoints, 3));
-      linesGeo.setAttribute('uv', new THREE.Float32BufferAttribute(curveUvs, 2));
-      linesGeo.setAttribute('seed', new THREE.Float32BufferAttribute(curveSeeds, 1));
-
-      // Shader to animate high-speed data packets along the workflow curves
-      const linesMat = new THREE.ShaderMaterial({
-          uniforms: {
-              time: { value: 0 },
-              baseColor: { value: new THREE.Color('#e2e8f0') }, // Much lighter background path
-              pulseColor: { value: new THREE.Color('#475569') } // UPDATED: Softer slate pulse instead of harsh navy
-          },
-          vertexShader: `
-              attribute float seed;
-              varying vec2 vUv;
-              varying float vSeed;
-              void main() {
-                  vUv = uv;
-                  vSeed = seed;
-                  gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
-              }
-          `,
-          fragmentShader: `
-              uniform float time;
-              uniform vec3 baseColor;
-              uniform vec3 pulseColor;
-              
-              varying vec2 vUv;
-              varying float vSeed;
-              
-              void main() {
-                  float speed = 0.15 + fract(vSeed * 1.234) * 0.25; 
-                  float pulse = fract(time * speed + vSeed);
-                  
-                  // Calculate distance behind the pulse head
-                  float dist = pulse - vUv.x;
-                  if (dist < 0.0) dist += 1.0; // Wrap tail over edge
-                  
-                  // Only activate ~40% of the network pathways
-                  float isActive = step(0.6, fract(vSeed * 7.89)); 
-                  
-                  float intensity = 0.0;
-                  if (isActive > 0.5) {
-                      float trail = 1.0 - smoothstep(0.0, 0.25, dist);
-                      float head = 1.0 - smoothstep(0.0, 0.015, dist);
-                      intensity = trail * 0.5 + head * 1.5; // Sharp, leading pulse
-                  }
-                  
-                  vec3 finalColor = mix(baseColor, pulseColor, clamp(intensity, 0.0, 1.0));
-                  float alpha = 0.2 + intensity; // Reveal faint path underneath
-                  
-                  gl_FragColor = vec4(finalColor, clamp(alpha, 0.0, 1.0));
-              }
-          `,
-          transparent: true,
-          depthWrite: false,
-          blending: THREE.NormalBlending
-      });
-
-      const networkLines = new THREE.LineSegments(linesGeo, linesMat);
-      networkGroup.add(networkLines);
-
-      // --- 3. RAW DATA DUST (BACKGROUND CHAOS) ---
-      const dustCount = 800;
-      const dustPos = new Float32Array(dustCount * 3);
-      for(let i=0; i<dustCount * 3; i++) {
-         dustPos[i] = (Math.random() - 0.5) * 25; 
-      }
-      const dustGeo = new THREE.BufferGeometry();
-      dustGeo.setAttribute('position', new THREE.BufferAttribute(dustPos, 3));
-      const dustMat = new THREE.PointsMaterial({
-         color: 0x94a3b8, // Lighter Slate 400
-         size: 0.06,
-         transparent: true,
-         opacity: 0.25
-      });
-      const dust = new THREE.Points(dustGeo, dustMat);
-      scene.add(dust);
-
-      // --- 4. ANIMATION & INTERACTION ---
-      camera.position.z = 10;
-      camera.position.y = 2;
-
-      let mouseX = 0;
-      let mouseY = 0;
-      let targetX = 0;
-      let targetY = 0;
-      const hasFineMouse = window.matchMedia('(pointer: fine)').matches;
-
-      if (hasFineMouse) {
-          document.addEventListener('mousemove', (event) => {
-              mouseX = (event.clientX - window.innerWidth / 2) * 0.001;
-              mouseY = (event.clientY - window.innerHeight / 2) * 0.001;
-          });
-      }
-
-      let time = 0;
-      let animId = 0;
-      let isVisible = true;
-
-      function animate() {
-          if (!isVisible) return;
-          animId = requestAnimationFrame(animate);
-          time += 0.016; // Stable delta time
-
-          linesMat.uniforms.time.value = time;
-
-          // UPDATED: Smooth majestic rotation deeply influenced by mouse position
-          networkGroup.rotation.y = time * 0.08 + mouseX * 2.0;
-          networkGroup.rotation.x = mouseY * 1.5;
-          networkGroup.rotation.z = time * 0.04 - mouseX * 0.5;
-          dust.rotation.y = -time * 0.05 + mouseX * 0.5; // Counter-rotating raw data
-
-          // Mouse Parallax Engine for Camera
-          targetX = mouseX * 4.0; // Increased responsiveness multiplier
-          targetY = mouseY * 4.0;
-          camera.position.x += (targetX - camera.position.x) * 0.05;
-          camera.position.y += (-targetY + 2.0 - camera.position.y) * 0.05; // Base Y offset
-          camera.lookAt(scene.position);
-
-          renderer.render(scene, camera);
-      }
-
-      animate();
-
-      // --- 5. CLEANUP & PERFORMANCE ---
-      let resizeTimer;
-      const onResize = () => {
-          clearTimeout(resizeTimer);
-          resizeTimer = setTimeout(() => {
-              const w = parent.clientWidth;
-              const h = parent.clientHeight;
-              camera.aspect = w / h;
-              camera.updateProjectionMatrix();
-              // CRITICAL FIX: Ensure 'false' is passed during debounced resize too
-              renderer.setSize(w, h, false);
-          }, 200);
-      };
-      window.addEventListener('resize', onResize);
-
-      // Halt calculations when user scrolls past the hero
-      const heroSection = document.getElementById('hero');
-      if (heroSection) {
-          const heroObserver = new IntersectionObserver(([entry]) => {
-              if (entry.isIntersecting && !isVisible) {
-                  isVisible = true;
-                  animate();
-              } else if (!entry.isIntersecting) {
-                  isVisible = false;
-                  cancelAnimationFrame(animId);
-              }
-          }, { threshold: 0 });
-          heroObserver.observe(heroSection);
-      }
-
-      const cleanup = () => {
-          cancelAnimationFrame(animId);
-          window.removeEventListener('resize', onResize);
-          renderer.dispose();
-          linesGeo.dispose();
-          linesMat.dispose();
-          pointsGeo.dispose();
-          pointsMat.dispose();
-          dustGeo.dispose();
-          dustMat.dispose();
-      };
-      document.addEventListener('astro:before-swap', cleanup, { once: true });
-      window.addEventListener('pagehide', cleanup);
-    }
-  }
 </script>

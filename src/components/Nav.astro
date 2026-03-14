@@ -1,0 +1,402 @@
+---
+const navLinks = [
+  { label: 'Services', href: '/services' },
+  { label: 'About', href: '/about' },
+];
+---
+
+<nav
+  id="site-nav"
+  role="navigation"
+  aria-label="Main navigation"
+>
+  <div class="nav-inner">
+    <!-- Logotype -->
+    <a href="/" class="logotype" aria-label="Camber Co — home">
+      <span class="prompt" aria-hidden="true">$</span>
+      <span class="wordmark">camber</span>
+    </a>
+
+    <!-- Desktop links -->
+    <ul class="nav-links" role="list">
+      {navLinks.map((link) => (
+        <li>
+          <a href={link.href} class="nav-link">{link.label}</a>
+        </li>
+      ))}
+    </ul>
+
+    <!-- CTA -->
+    <a
+      href="https://calendly.com/camber-co/30min"
+      class="cta-button"
+      target="_blank"
+      rel="noopener noreferrer"
+    >
+      &gt;&nbsp;Book Free Audit
+    </a>
+
+    <!-- Mobile menu toggle -->
+    <button
+      class="mobile-toggle"
+      id="mobile-toggle"
+      aria-label="Open menu"
+      aria-expanded="false"
+      aria-controls="mobile-overlay"
+    >
+      <span class="toggle-prompt" aria-hidden="true">&gt;</span>
+    </button>
+  </div>
+</nav>
+
+<!-- Mobile full-screen overlay -->
+<div
+  class="mobile-overlay"
+  id="mobile-overlay"
+  role="dialog"
+  aria-modal="true"
+  aria-label="Navigation menu"
+  hidden
+>
+  <button
+    class="overlay-close"
+    id="overlay-close"
+    aria-label="Close menu"
+  >
+    <span aria-hidden="true">&#x2715;</span>
+  </button>
+
+  <ul class="overlay-links" role="list">
+    {navLinks.map((link) => (
+      <li>
+        <a href={link.href} class="overlay-link">
+          <span class="overlay-cmd" aria-hidden="true">$ camber </span>
+          <span class="overlay-section">{link.label.toLowerCase()}</span>
+        </a>
+      </li>
+    ))}
+    <li>
+      <a
+        href="https://calendly.com/camber-co/30min"
+        class="overlay-link overlay-cta"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        <span class="overlay-cmd" aria-hidden="true">$ camber </span>
+        <span class="overlay-section">book-audit</span>
+      </a>
+    </li>
+  </ul>
+</div>
+
+<script>
+  // Scroll-based nav styling
+  const nav = document.getElementById('site-nav');
+  if (nav) {
+    const onScroll = () => {
+      if (window.scrollY > 20) {
+        nav.classList.add('scrolled');
+      } else {
+        nav.classList.remove('scrolled');
+      }
+    };
+    window.addEventListener('scroll', onScroll, { passive: true });
+    onScroll(); // run once on load in case page is already scrolled
+  }
+
+  // Mobile overlay toggle
+  const toggle = document.getElementById('mobile-toggle');
+  const overlay = document.getElementById('mobile-overlay');
+  const closeBtn = document.getElementById('overlay-close');
+
+  function openOverlay() {
+    if (!overlay || !toggle) return;
+    overlay.hidden = false;
+    toggle.setAttribute('aria-expanded', 'true');
+    document.body.style.overflow = 'hidden';
+    closeBtn?.focus();
+  }
+
+  function closeOverlay() {
+    if (!overlay || !toggle) return;
+    overlay.hidden = true;
+    toggle.setAttribute('aria-expanded', 'false');
+    document.body.style.overflow = '';
+    toggle.focus();
+  }
+
+  toggle?.addEventListener('click', openOverlay);
+  closeBtn?.addEventListener('click', closeOverlay);
+
+  // Close when a link inside the overlay is clicked
+  overlay?.querySelectorAll('a').forEach((link) => {
+    link.addEventListener('click', closeOverlay);
+  });
+
+  // Close on Escape key
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && overlay && !overlay.hidden) {
+      closeOverlay();
+    }
+  });
+</script>
+
+<style>
+  /* ---- Nav shell ---- */
+  nav {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 56px;
+    z-index: 100;
+    background: transparent;
+    border-bottom: 1px solid transparent;
+    transition:
+      background var(--duration-normal) var(--easing-smooth),
+      border-color var(--duration-normal) var(--easing-smooth),
+      backdrop-filter var(--duration-normal) var(--easing-smooth);
+  }
+
+  nav.scrolled {
+    background: rgba(0, 0, 0, 0.85);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-bottom-color: var(--color-border-subtle);
+  }
+
+  .nav-inner {
+    display: flex;
+    align-items: center;
+    height: 100%;
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 0 var(--space-8);
+    gap: var(--space-8);
+  }
+
+  /* ---- Logotype ---- */
+  .logotype {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-family: var(--font-mono);
+    font-size: 16px;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    text-decoration: none;
+    flex-shrink: 0;
+  }
+
+  .prompt {
+    color: var(--color-green-500);
+  }
+
+  .wordmark {
+    color: var(--color-text-primary);
+  }
+
+  /* ---- Desktop nav links ---- */
+  .nav-links {
+    display: flex;
+    align-items: center;
+    gap: var(--space-8);
+    margin-left: auto;
+  }
+
+  .nav-link {
+    font-family: var(--font-mono);
+    font-size: var(--type-label);
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--color-text-secondary);
+    text-decoration: none;
+    transition: color var(--duration-quick) var(--easing-smooth);
+  }
+
+  .nav-link:hover,
+  .nav-link:focus-visible {
+    color: var(--color-text-primary);
+    outline: none;
+  }
+
+  .nav-link:focus-visible {
+    outline: 2px solid var(--color-green-500);
+    outline-offset: 4px;
+    border-radius: var(--radius-sm);
+  }
+
+  /* ---- CTA button ---- */
+  .cta-button {
+    display: inline-flex;
+    align-items: center;
+    gap: 2px;
+    background: var(--color-green-500);
+    color: #000;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    padding: 8px 20px;
+    border-radius: var(--radius-sm);
+    text-decoration: none;
+    white-space: nowrap;
+    flex-shrink: 0;
+    transition:
+      background var(--duration-quick) var(--easing-smooth),
+      transform var(--duration-quick) var(--easing-spring);
+  }
+
+  .cta-button:hover {
+    background: var(--color-green-400);
+    transform: translateY(-1px);
+  }
+
+  .cta-button:focus-visible {
+    outline: 2px solid var(--color-green-500);
+    outline-offset: 3px;
+  }
+
+  .cta-button:active {
+    transform: translateY(0);
+  }
+
+  /* ---- Mobile toggle ---- */
+  .mobile-toggle {
+    display: none;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    margin-left: auto;
+    color: var(--color-green-500);
+    font-family: var(--font-mono);
+    font-size: 22px;
+    font-weight: 700;
+    border-radius: var(--radius-sm);
+    transition: background var(--duration-quick) var(--easing-smooth);
+  }
+
+  .mobile-toggle:hover {
+    background: var(--color-green-glow);
+  }
+
+  .mobile-toggle:focus-visible {
+    outline: 2px solid var(--color-green-500);
+    outline-offset: 2px;
+  }
+
+  .toggle-prompt {
+    line-height: 1;
+  }
+
+  /* ---- Mobile overlay ---- */
+  .mobile-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 200;
+    background: var(--color-base);
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: center;
+    padding: var(--space-12) var(--space-8);
+  }
+
+  .mobile-overlay[hidden] {
+    display: none;
+  }
+
+  .overlay-close {
+    position: absolute;
+    top: var(--space-4);
+    right: var(--space-6);
+    width: 44px;
+    height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--color-text-secondary);
+    font-size: 20px;
+    border-radius: var(--radius-sm);
+    transition: color var(--duration-quick) var(--easing-smooth);
+  }
+
+  .overlay-close:hover {
+    color: var(--color-text-primary);
+  }
+
+  .overlay-close:focus-visible {
+    outline: 2px solid var(--color-green-500);
+    outline-offset: 2px;
+  }
+
+  .overlay-links {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-6);
+    width: 100%;
+  }
+
+  .overlay-link {
+    display: flex;
+    align-items: baseline;
+    gap: 0;
+    font-family: var(--font-mono);
+    font-size: clamp(22px, 6vw, 36px);
+    font-weight: 600;
+    text-decoration: none;
+    color: var(--color-text-secondary);
+    transition: color var(--duration-quick) var(--easing-smooth);
+  }
+
+  .overlay-link:hover,
+  .overlay-link:focus-visible {
+    color: var(--color-text-primary);
+    outline: none;
+  }
+
+  .overlay-link:focus-visible {
+    outline: 2px solid var(--color-green-500);
+    outline-offset: 4px;
+    border-radius: var(--radius-sm);
+  }
+
+  .overlay-cmd {
+    color: var(--color-text-muted);
+    font-size: 0.5em;
+    align-self: center;
+    white-space: pre;
+  }
+
+  .overlay-section {
+    color: var(--color-text-primary);
+  }
+
+  .overlay-cta .overlay-section {
+    color: var(--color-green-500);
+  }
+
+  /* ---- Responsive ---- */
+  @media (max-width: 768px) {
+    .nav-links {
+      display: none;
+    }
+
+    .cta-button {
+      display: none;
+    }
+
+    .mobile-toggle {
+      display: flex;
+    }
+  }
+
+  @media (min-width: 769px) {
+    .mobile-overlay {
+      display: none !important;
+    }
+  }
+</style>
