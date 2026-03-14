@@ -22,10 +22,6 @@
 		{
 			"src": "^/api/chat/?$",
 			"dest": "_render"
-		},
-		{
-			"src": "^/api/estimate-savings/?$",
-			"dest": "_render"
 		}
 	]
 }
