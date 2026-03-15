@@ -1,0 +1,30 @@
+---
+import AdminLayout from '../../components/admin/AdminLayout.astro';
+import EditorApp from '../../components/admin/editor/EditorApp';
+
+const supabaseUrl = import.meta.env.PUBLIC_SUPABASE_URL ?? '';
+const supabaseAnonKey = import.meta.env.PUBLIC_SUPABASE_ANON_KEY ?? '';
+---
+
+<AdminLayout title="Editor">
+  <EditorApp
+    supabaseUrl={supabaseUrl}
+    supabaseAnonKey={supabaseAnonKey}
+    client:only="react"
+  />
+</AdminLayout>
+
+<style>
+  /* Allow editor to take remaining height below the admin topbar */
+  :global(body) {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    overflow: hidden;
+  }
+
+  :global(.editor-container) {
+    flex: 1;
+    min-height: 0;
+  }
+</style>

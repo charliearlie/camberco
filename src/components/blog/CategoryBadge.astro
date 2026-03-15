@@ -1,0 +1,56 @@
+---
+interface Props {
+  category: string;
+  small?: boolean;
+}
+
+const { category, small = false } = Astro.props;
+
+const labelMap: Record<string, string> = {
+  'ai-strategy': 'AI Strategy',
+  'automation': 'Automation',
+  'case-study': 'Case Study',
+  'tools-and-workflows': 'Tools & Workflows',
+  'founder-journey': 'Founder Journey',
+  'industry-trends': 'Industry Trends',
+};
+
+const label = labelMap[category] ?? category;
+---
+
+<span class:list={['category-badge', { small }]}>
+  {label}
+</span>
+
+<style>
+  .category-badge {
+    display: inline-flex;
+    align-items: center;
+    font-family: var(--font-mono);
+    font-size: 10px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--color-text-muted);
+    background: var(--color-surface-02);
+    border: 1px solid var(--color-border-muted);
+    border-radius: var(--radius-sm);
+    padding: 3px 8px;
+    white-space: nowrap;
+    transition:
+      background var(--duration-quick) var(--easing-smooth),
+      border-color var(--duration-quick) var(--easing-smooth),
+      color var(--duration-quick) var(--easing-smooth);
+  }
+
+  .category-badge:hover {
+    background: var(--color-green-glow);
+    border-color: var(--color-green-500);
+    color: var(--color-green-400);
+  }
+
+  .category-badge.small {
+    font-size: 9px;
+    padding: 2px 6px;
+  }
+</style>

@@ -1,0 +1,131 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import CategoryBadge from './CategoryBadge.astro';
+
+interface Props {
+  currentSlug: string;
+  category: string;
+  posts: CollectionEntry<'blog'>[];
+}
+
+const { currentSlug, category, posts } = Astro.props;
+
+const related = posts
+  .filter((p) => p.slug !== currentSlug && p.data.category === category && !p.data.draft)
+  .slice(0, 3);
+---
+
+{related.length > 0 && (
+  <section class="related-posts">
+    <p class="related-label"><span class="comment" aria-hidden="true">// </span>Related posts</p>
+    <ul class="related-grid" role="list">
+      {related.map((post) => {
+        const formattedDate = post.data.publishedAt.toLocaleDateString('en-GB', {
+          day: 'numeric',
+          month: 'short',
+          year: 'numeric',
+        });
+        return (
+          <li class="related-card">
+            <a href={`/blog/${post.slug}/`} class="related-link">
+              <div class="related-meta">
+                <CategoryBadge category={post.data.category} small />
+                <time datetime={post.data.publishedAt.toISOString()} class="related-date">
+                  {formattedDate}
+                </time>
+              </div>
+              <p class="related-title">{post.data.title}</p>
+            </a>
+          </li>
+        );
+      })}
+    </ul>
+  </section>
+)}
+
+<style>
+  .related-posts {
+    margin-top: var(--space-12);
+    padding-top: var(--space-8);
+    border-top: 1px solid var(--color-border-subtle);
+  }
+
+  .related-label {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--color-text-muted);
+    margin-bottom: var(--space-6);
+  }
+
+  .comment {
+    color: var(--color-green-500);
+  }
+
+  .related-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: var(--space-4);
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  .related-card {
+    background: var(--color-surface-01);
+    border: 1px solid var(--color-border-subtle);
+    border-radius: var(--radius-md);
+    overflow: hidden;
+    transition:
+      border-color var(--duration-normal) var(--easing-smooth),
+      transform var(--duration-normal) var(--easing-spring);
+  }
+
+  .related-card:hover {
+    border-color: var(--color-green-500);
+    transform: translateY(-2px);
+  }
+
+  .related-link {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+    padding: var(--space-5);
+    text-decoration: none;
+  }
+
+  .related-meta {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    flex-wrap: wrap;
+  }
+
+  .related-date {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    color: var(--color-text-muted);
+  }
+
+  .related-title {
+    font-family: var(--font-mono);
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--color-text-primary);
+    line-height: 1.4;
+    margin: 0;
+    transition: color var(--duration-quick) var(--easing-smooth);
+  }
+
+  .related-card:hover .related-title {
+    color: var(--color-green-400);
+  }
+
+  @media (max-width: 640px) {
+    .related-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

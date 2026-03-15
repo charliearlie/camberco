@@ -1,0 +1,58 @@
+---
+export const prerender = false;
+import AdminLayout from '../../../components/admin/AdminLayout.astro';
+---
+
+<AdminLayout title="Signing in">
+  <main
+    style="
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: calc(100vh - 48px);
+      padding: var(--space-6);
+    "
+  >
+    <div
+      style="
+        text-align: center;
+        font-family: var(--font-mono);
+        font-size: 14px;
+        color: var(--color-green-500);
+      "
+    >
+      <p id="callback-status">Signing in…</p>
+    </div>
+  </main>
+</AdminLayout>
+
+<script>
+  import { createClient } from '@supabase/supabase-js';
+
+  const supabase = createClient(
+    import.meta.env.PUBLIC_SUPABASE_URL,
+    import.meta.env.PUBLIC_SUPABASE_ANON_KEY,
+  );
+
+  async function handleCallback() {
+    const statusEl = document.getElementById('callback-status') as HTMLParagraphElement;
+
+    try {
+      const { data, error } = await supabase.auth.getSession();
+
+      if (error) throw error;
+
+      if (data.session) {
+        window.location.href = '/admin';
+      } else {
+        statusEl.textContent = 'No session found. Redirecting to login…';
+        setTimeout(() => { window.location.href = '/admin/login'; }, 2000);
+      }
+    } catch (err) {
+      statusEl.textContent = `Error: ${(err as Error).message}`;
+      setTimeout(() => { window.location.href = '/admin/login'; }, 3000);
+    }
+  }
+
+  handleCallback();
+</script>

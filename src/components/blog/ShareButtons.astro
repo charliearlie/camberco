@@ -1,0 +1,139 @@
+---
+interface Props {
+  title: string;
+  url: string;
+}
+
+const { title, url } = Astro.props;
+
+const encodedTitle = encodeURIComponent(title);
+const encodedUrl = encodeURIComponent(url);
+
+const twitterUrl = `https://twitter.com/intent/tweet?text=${encodedTitle}&url=${encodedUrl}`;
+const linkedInUrl = `https://www.linkedin.com/sharing/share-offsite/?url=${encodedUrl}`;
+---
+
+<div class="share-buttons">
+  <p class="share-label"><span class="comment" aria-hidden="true">// </span>Share this post</p>
+  <div class="buttons">
+    <button class="share-btn" id="copy-link-btn" data-url={url} aria-label="Copy link to clipboard">
+      <span class="btn-icon" aria-hidden="true">⎘</span>
+      <span class="btn-text">Copy Link</span>
+    </button>
+
+    <a
+      href={twitterUrl}
+      class="share-btn"
+      target="_blank"
+      rel="noopener noreferrer"
+      aria-label="Share on X / Twitter"
+    >
+      <span class="btn-icon" aria-hidden="true">𝕏</span>
+      <span class="btn-text">Share on X</span>
+    </a>
+
+    <a
+      href={linkedInUrl}
+      class="share-btn"
+      target="_blank"
+      rel="noopener noreferrer"
+      aria-label="Share on LinkedIn"
+    >
+      <span class="btn-icon" aria-hidden="true">in</span>
+      <span class="btn-text">LinkedIn</span>
+    </a>
+  </div>
+</div>
+
+<script>
+  const copyBtn = document.getElementById('copy-link-btn') as HTMLButtonElement | null;
+  if (copyBtn) {
+    copyBtn.addEventListener('click', async () => {
+      const url = copyBtn.dataset.url ?? window.location.href;
+      try {
+        await navigator.clipboard.writeText(url);
+        const textEl = copyBtn.querySelector('.btn-text');
+        if (textEl) {
+          const original = textEl.textContent;
+          textEl.textContent = 'Copied!';
+          copyBtn.classList.add('copied');
+          setTimeout(() => {
+            textEl.textContent = original;
+            copyBtn.classList.remove('copied');
+          }, 2000);
+        }
+      } catch {
+        // fallback: select text
+        const textarea = document.createElement('textarea');
+        textarea.value = url;
+        textarea.style.position = 'fixed';
+        textarea.style.opacity = '0';
+        document.body.appendChild(textarea);
+        textarea.select();
+        document.execCommand('copy');
+        document.body.removeChild(textarea);
+      }
+    });
+  }
+</script>
+
+<style>
+  .share-buttons {
+    margin-top: var(--space-10);
+    padding-top: var(--space-8);
+    border-top: 1px solid var(--color-border-subtle);
+  }
+
+  .share-label {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--color-text-muted);
+    margin-bottom: var(--space-4);
+  }
+
+  .comment {
+    color: var(--color-green-500);
+  }
+
+  .buttons {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    flex-wrap: wrap;
+  }
+
+  .share-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-family: var(--font-mono);
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--color-text-secondary);
+    background: var(--color-surface-02);
+    border: 1px solid var(--color-border-muted);
+    border-radius: var(--radius-sm);
+    padding: 7px 14px;
+    text-decoration: none;
+    cursor: pointer;
+    transition:
+      color var(--duration-quick) var(--easing-smooth),
+      background var(--duration-quick) var(--easing-smooth),
+      border-color var(--duration-quick) var(--easing-smooth);
+  }
+
+  .share-btn:hover,
+  .share-btn.copied {
+    color: var(--color-green-400);
+    background: var(--color-green-glow);
+    border-color: var(--color-green-500);
+  }
+
+  .btn-icon {
+    font-size: 14px;
+    line-height: 1;
+  }
+</style>

@@ -1,0 +1,86 @@
+---
+import { getCollection } from 'astro:content';
+import Layout from '../../layouts/Layout.astro';
+import BlogCard from '../../components/blog/BlogCard.astro';
+import '../../styles/blog.css';
+
+const isDev = import.meta.env.DEV;
+
+const allPosts = await getCollection('blog', ({ data }) => isDev || !data.draft);
+
+const posts = allPosts.sort(
+  (a, b) => b.data.publishedAt.valueOf() - a.data.publishedAt.valueOf()
+);
+
+const featuredPost = posts.find((p) => p.data.featured);
+const regularPosts = posts.filter((p) => !p.data.featured);
+
+const categories = [
+  { value: 'all', label: 'All Posts' },
+  { value: 'ai-strategy', label: 'AI Strategy' },
+  { value: 'automation', label: 'Automation' },
+  { value: 'case-study', label: 'Case Study' },
+  { value: 'tools-and-workflows', label: 'Tools & Workflows' },
+  { value: 'founder-journey', label: 'Founder Journey' },
+  { value: 'industry-trends', label: 'Industry Trends' },
+];
+---
+
+<Layout
+  title="Blog | Camber Co"
+  description="AI strategy, automation, and insights for founders and small teams building in 2026."
+  canonicalUrl="https://camberco.uk/blog/"
+>
+  <main class="blog-page">
+    <!-- Header -->
+    <header class="blog-header">
+      <h1 class="blog-title">
+        <span class="prompt">$</span>
+        <span class="cmd"> camber </span>
+        <span class="cmd">blog</span>
+        <span class="flag"> --list</span>
+      </h1>
+      <p class="blog-subtitle">
+        AI strategy, automation, and the founder journey — written for people building real things.
+      </p>
+    </header>
+
+    <!-- Category filter -->
+    <nav class="category-filter" aria-label="Filter posts by category">
+      {categories.map((cat) => (
+        <a
+          href={cat.value === 'all' ? '/blog/' : `/blog/category/${cat.value}/`}
+          class:list={['filter-chip', { active: cat.value === 'all' }]}
+        >
+          {cat.label}
+        </a>
+      ))}
+    </nav>
+
+    <!-- Featured post -->
+    {featuredPost && (
+      <section class="featured-section" aria-label="Featured post">
+        <p class="featured-label">Featured</p>
+        <BlogCard post={featuredPost} featured />
+      </section>
+    )}
+
+    <!-- Post grid -->
+    {regularPosts.length > 0 && (
+      <section aria-label="All posts">
+        <p class="grid-label">All Posts</p>
+        <div class="blog-grid">
+          {regularPosts.map((post) => (
+            <BlogCard post={post} />
+          ))}
+        </div>
+      </section>
+    )}
+
+    {posts.length === 0 && (
+      <div class="blog-grid">
+        <p class="no-posts">No posts yet. Check back soon.</p>
+      </div>
+    )}
+  </main>
+</Layout>

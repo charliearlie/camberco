@@ -1,0 +1,97 @@
+---
+import { getCollection } from 'astro:content';
+import Layout from '../../../layouts/Layout.astro';
+import BlogCard from '../../../components/blog/BlogCard.astro';
+import '../../../styles/blog.css';
+
+export async function getStaticPaths() {
+  const categories = [
+    'ai-strategy',
+    'automation',
+    'case-study',
+    'tools-and-workflows',
+    'founder-journey',
+    'industry-trends',
+  ] as const;
+
+  return categories.map((cat) => ({
+    params: { category: cat },
+  }));
+}
+
+const { category } = Astro.params;
+
+const categoryLabels: Record<string, string> = {
+  'ai-strategy': 'AI Strategy',
+  'automation': 'Automation',
+  'case-study': 'Case Study',
+  'tools-and-workflows': 'Tools & Workflows',
+  'founder-journey': 'Founder Journey',
+  'industry-trends': 'Industry Trends',
+};
+
+const isDev = import.meta.env.DEV;
+
+const allPosts = await getCollection('blog', ({ data }) =>
+  (isDev || !data.draft) && data.category === category
+);
+
+const posts = allPosts.sort(
+  (a, b) => b.data.publishedAt.valueOf() - a.data.publishedAt.valueOf()
+);
+
+const categoryLabel = categoryLabels[category] ?? category;
+
+const allCategories = [
+  { value: 'all', label: 'All Posts' },
+  { value: 'ai-strategy', label: 'AI Strategy' },
+  { value: 'automation', label: 'Automation' },
+  { value: 'case-study', label: 'Case Study' },
+  { value: 'tools-and-workflows', label: 'Tools & Workflows' },
+  { value: 'founder-journey', label: 'Founder Journey' },
+  { value: 'industry-trends', label: 'Industry Trends' },
+];
+---
+
+<Layout
+  title={`${categoryLabel} | Blog | Camber Co`}
+  description={`Read all posts about ${categoryLabel} from the Camber Co blog.`}
+  canonicalUrl={`https://camberco.uk/blog/category/${category}/`}
+>
+  <main class="blog-page">
+    <header class="blog-header">
+      <h1 class="blog-title">
+        <span class="prompt">$</span>
+        <span class="cmd"> camber blog </span>
+        <span class="flag">--category={category}</span>
+      </h1>
+      <p class="blog-subtitle">
+        {posts.length} post{posts.length !== 1 ? 's' : ''} in <strong>{categoryLabel}</strong>
+      </p>
+    </header>
+
+    <!-- Category filter -->
+    <nav class="category-filter" aria-label="Filter posts by category">
+      {allCategories.map((cat) => (
+        <a
+          href={cat.value === 'all' ? '/blog/' : `/blog/category/${cat.value}/`}
+          class:list={['filter-chip', { active: cat.value === category }]}
+        >
+          {cat.label}
+        </a>
+      ))}
+    </nav>
+
+    {posts.length > 0 ? (
+      <div class="blog-grid">
+        {posts.map((post) => (
+          <BlogCard post={post} />
+        ))}
+      </div>
+    ) : (
+      <div class="blog-grid">
+        <p class="no-posts">No posts in this category yet. Check back soon.</p>
+      </div>
+    )}
+  </main>
+</Layout>

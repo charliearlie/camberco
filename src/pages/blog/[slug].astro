@@ -1,0 +1,346 @@
+---
+import { getCollection } from 'astro:content';
+import Layout from '../../layouts/Layout.astro';
+import CategoryBadge from '../../components/blog/CategoryBadge.astro';
+import TableOfContents from '../../components/blog/TableOfContents.astro';
+import AuthorBio from '../../components/blog/AuthorBio.astro';
+import ShareButtons from '../../components/blog/ShareButtons.astro';
+import RelatedPosts from '../../components/blog/RelatedPosts.astro';
+import { getReadingTime } from '../../lib/reading-time';
+import '../../styles/prose.css';
+
+export async function getStaticPaths() {
+  const posts = await getCollection('blog');
+  return posts.map((post) => ({
+    params: { slug: post.slug },
+    props: { post },
+  }));
+}
+
+const { post } = Astro.props;
+const { Content, headings } = await post.render();
+
+const allPosts = await getCollection('blog');
+
+const {
+  title,
+  description,
+  publishedAt,
+  updatedAt,
+  author,
+  category,
+  tags,
+  coverImage,
+  coverImageAlt,
+} = post.data;
+
+const readingTime = getReadingTime(post.body);
+
+const formattedDate = publishedAt.toLocaleDateString('en-GB', {
+  day: 'numeric',
+  month: 'long',
+  year: 'numeric',
+});
+
+const canonicalUrl = `https://camberco.uk/blog/${post.slug}/`;
+
+const categoryLabels: Record<string, string> = {
+  'ai-strategy': 'AI Strategy',
+  'automation': 'Automation',
+  'case-study': 'Case Study',
+  'tools-and-workflows': 'Tools & Workflows',
+  'founder-journey': 'Founder Journey',
+  'industry-trends': 'Industry Trends',
+};
+
+const categoryLabel = categoryLabels[category] ?? category;
+
+// JSON-LD Article schema
+const schema = JSON.stringify({
+  '@context': 'https://schema.org',
+  '@type': 'Article',
+  headline: title,
+  description,
+  datePublished: publishedAt.toISOString(),
+  dateModified: (updatedAt ?? publishedAt).toISOString(),
+  author: {
+    '@type': 'Person',
+    name: author,
+    url: 'https://camberco.uk/about/',
+  },
+  publisher: {
+    '@type': 'Organization',
+    name: 'Camber Co',
+    url: 'https://camberco.uk',
+    logo: {
+      '@type': 'ImageObject',
+      url: 'https://camberco.uk/social.png',
+    },
+  },
+  wordCount: post.body.trim().split(/\s+/).length,
+  articleSection: categoryLabel,
+  keywords: tags.join(', '),
+  mainEntityOfPage: {
+    '@type': 'WebPage',
+    '@id': canonicalUrl,
+  },
+  ...(coverImage ? { image: coverImage } : {}),
+});
+
+const articleMeta = {
+  publishedTime: publishedAt.toISOString(),
+  modifiedTime: updatedAt?.toISOString(),
+  author,
+  section: categoryLabel,
+  tags,
+};
+---
+
+<Layout
+  title={`${title} | Camber Co`}
+  description={description}
+  canonicalUrl={canonicalUrl}
+  schema={schema}
+  ogType="article"
+  ogImage={coverImage}
+  articleMeta={articleMeta}
+>
+  <main class="post-page">
+    <!-- Article header -->
+    <header class="post-header">
+      <div class="post-header-inner">
+        <!-- Breadcrumb -->
+        <nav class="breadcrumb" aria-label="Breadcrumb">
+          <a href="/" class="bc-link">~</a>
+          <span class="bc-sep" aria-hidden="true"> / </span>
+          <a href="/blog/" class="bc-link">blog</a>
+          <span class="bc-sep" aria-hidden="true"> / </span>
+          <a href={`/blog/category/${category}/`} class="bc-link">{category}</a>
+          <span class="bc-sep" aria-hidden="true"> / </span>
+          <span class="bc-current" aria-current="page">{title}</span>
+        </nav>
+
+        <div class="post-meta-top">
+          <CategoryBadge category={category} />
+        </div>
+
+        <h1 class="post-title">{title}</h1>
+        <p class="post-description">{description}</p>
+
+        <div class="post-meta-bottom">
+          <span class="meta-author">
+            <span class="meta-label">by</span> {author}
+          </span>
+          <span class="meta-sep" aria-hidden="true">·</span>
+          <time datetime={publishedAt.toISOString()} class="meta-date">{formattedDate}</time>
+          <span class="meta-sep" aria-hidden="true">·</span>
+          <span class="meta-reading">{readingTime} min read</span>
+        </div>
+
+        {coverImage && (
+          <div class="post-cover">
+            <img src={coverImage} alt={coverImageAlt ?? title} loading="eager" decoding="async" />
+          </div>
+        )}
+      </div>
+    </header>
+
+    <!-- Article body -->
+    <div class="post-body">
+      <div class="post-body-inner">
+        <!-- Table of Contents sidebar -->
+        {headings.length > 0 && (
+          <aside class="toc-sidebar" aria-label="Table of contents">
+            <TableOfContents headings={headings} />
+          </aside>
+        )}
+
+        <!-- Main content -->
+        <article class="post-content prose">
+          <Content />
+          <ShareButtons title={title} url={canonicalUrl} />
+          <AuthorBio />
+          <RelatedPosts currentSlug={post.slug} category={category} posts={allPosts} />
+        </article>
+      </div>
+    </div>
+  </main>
+</Layout>
+
+<style>
+  /* ---- Page shell ---- */
+  .post-page {
+    padding-bottom: var(--space-16);
+  }
+
+  /* ---- Header ---- */
+  .post-header {
+    background: var(--color-surface-00);
+    border-bottom: 1px solid var(--color-border-subtle);
+    padding: 120px 0 var(--space-12);
+  }
+
+  .post-header-inner {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 0 var(--space-8);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-4);
+  }
+
+  /* Breadcrumb */
+  .breadcrumb {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    color: var(--color-text-muted);
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 0;
+    margin-bottom: var(--space-2);
+  }
+
+  .bc-link {
+    color: var(--color-text-muted);
+    text-decoration: none;
+    transition: color var(--duration-quick) var(--easing-smooth);
+  }
+
+  .bc-link:hover {
+    color: var(--color-green-500);
+  }
+
+  .bc-sep {
+    color: var(--color-border-visible);
+    padding: 0 2px;
+  }
+
+  .bc-current {
+    color: var(--color-text-secondary);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 280px;
+  }
+
+  .post-meta-top {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+  }
+
+  .post-title {
+    font-family: var(--font-mono);
+    font-size: clamp(26px, 5vw, 44px);
+    font-weight: 800;
+    line-height: 1.15;
+    letter-spacing: -0.03em;
+    color: var(--color-text-primary);
+    margin: 0;
+  }
+
+  .post-description {
+    font-family: var(--font-sans);
+    font-size: 18px;
+    line-height: 1.6;
+    color: var(--color-text-muted);
+    margin: 0;
+  }
+
+  .post-meta-bottom {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    flex-wrap: wrap;
+    font-family: var(--font-mono);
+    font-size: 12px;
+    color: var(--color-text-muted);
+  }
+
+  .meta-label {
+    color: var(--color-text-muted);
+  }
+
+  .meta-author,
+  .meta-date,
+  .meta-reading {
+    color: var(--color-text-secondary);
+  }
+
+  .meta-sep {
+    color: var(--color-border-visible);
+  }
+
+  .post-cover {
+    margin-top: var(--space-4);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    border: 1px solid var(--color-border-muted);
+  }
+
+  .post-cover img {
+    width: 100%;
+    height: auto;
+    display: block;
+    max-height: 480px;
+    object-fit: cover;
+  }
+
+  /* ---- Body layout ---- */
+  .post-body {
+    padding-top: var(--space-12);
+  }
+
+  .post-body-inner {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 0 var(--space-8);
+    display: grid;
+    grid-template-columns: 1fr 260px;
+    gap: var(--space-12);
+    align-items: start;
+  }
+
+  .post-content {
+    min-width: 0;
+    order: -1;
+  }
+
+  .toc-sidebar {
+    order: 1;
+  }
+
+  /* ---- Responsive ---- */
+  @media (max-width: 1024px) {
+    .post-body-inner {
+      grid-template-columns: 1fr;
+    }
+
+    .toc-sidebar {
+      display: none;
+    }
+  }
+
+  @media (max-width: 768px) {
+    .post-header {
+      padding-top: 90px;
+    }
+
+    .post-header-inner,
+    .post-body-inner {
+      padding: 0 var(--space-6);
+    }
+
+    .bc-current {
+      max-width: 180px;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .post-header-inner,
+    .post-body-inner {
+      padding: 0 var(--space-4);
+    }
+  }
+</style>

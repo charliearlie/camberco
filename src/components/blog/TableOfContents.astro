@@ -1,0 +1,150 @@
+---
+interface Heading {
+  depth: number;
+  slug: string;
+  text: string;
+}
+
+interface Props {
+  headings: Heading[];
+}
+
+const { headings } = Astro.props;
+
+// Only h2 and h3
+const filtered = headings.filter((h) => h.depth === 2 || h.depth === 3);
+---
+
+{filtered.length > 0 && (
+  <nav class="toc" aria-label="Table of contents">
+    <p class="toc-header"><span class="toc-comment" aria-hidden="true">// </span>Table of Contents</p>
+    <ol class="toc-list" role="list">
+      {filtered.map((heading) => (
+        <li class:list={['toc-item', { 'toc-h3': heading.depth === 3 }]}>
+          <a href={`#${heading.slug}`} class="toc-link">
+            {heading.text}
+          </a>
+        </li>
+      ))}
+    </ol>
+  </nav>
+)}
+
+<style>
+  .toc {
+    position: sticky;
+    top: 80px;
+    max-height: calc(100vh - 100px);
+    overflow-y: auto;
+    padding: var(--space-5);
+    background: var(--color-surface-01);
+    border: 1px solid var(--color-border-subtle);
+    border-radius: var(--radius-md);
+    scrollbar-width: thin;
+    scrollbar-color: var(--color-border-muted) transparent;
+  }
+
+  .toc::-webkit-scrollbar {
+    width: 4px;
+  }
+
+  .toc::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  .toc::-webkit-scrollbar-thumb {
+    background: var(--color-border-muted);
+    border-radius: 2px;
+  }
+
+  .toc-header {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--color-text-muted);
+    margin-bottom: var(--space-4);
+  }
+
+  .toc-comment {
+    color: var(--color-green-500);
+  }
+
+  .toc-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  .toc-item {
+    padding: 0;
+  }
+
+  .toc-h3 {
+    padding-left: var(--space-4);
+  }
+
+  .toc-link {
+    display: block;
+    font-family: var(--font-mono);
+    font-size: 12px;
+    line-height: 1.4;
+    color: var(--color-text-muted);
+    text-decoration: none;
+    padding: 4px 6px;
+    border-radius: var(--radius-sm);
+    border-left: 2px solid transparent;
+    transition:
+      color var(--duration-quick) var(--easing-smooth),
+      border-color var(--duration-quick) var(--easing-smooth),
+      background var(--duration-quick) var(--easing-smooth);
+  }
+
+  .toc-link:hover {
+    color: var(--color-green-400);
+    border-left-color: var(--color-green-500);
+    background: var(--color-green-glow);
+  }
+
+  .toc-link.active {
+    color: var(--color-green-500);
+    border-left-color: var(--color-green-500);
+  }
+</style>
+
+<script>
+  // Highlight the active heading as user scrolls
+  const tocLinks = document.querySelectorAll('.toc-link');
+  const headingEls = Array.from(tocLinks)
+    .map((link) => {
+      const href = link.getAttribute('href');
+      if (!href) return null;
+      return document.querySelector(href);
+    })
+    .filter(Boolean) as Element[];
+
+  if (headingEls.length > 0) {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            tocLinks.forEach((l) => l.classList.remove('active'));
+            const id = entry.target.id;
+            const activeLink = document.querySelector(`.toc-link[href="#${id}"]`);
+            activeLink?.classList.add('active');
+          }
+        });
+      },
+      {
+        rootMargin: '-80px 0px -70% 0px',
+        threshold: 0,
+      }
+    );
+
+    headingEls.forEach((el) => observer.observe(el));
+  }
+</script>

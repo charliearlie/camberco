@@ -1,0 +1,149 @@
+---
+// AuthorBio.astro — author card for bottom of posts
+---
+
+<div class="author-bio">
+  <div class="author-avatar" aria-hidden="true">
+    <span class="avatar-initials">C</span>
+  </div>
+  <div class="author-content">
+    <div class="author-header">
+      <p class="author-name">Charlie</p>
+      <p class="author-role">Founder, Camber Co</p>
+    </div>
+    <p class="author-blurb">
+      I help founders and small teams ship AI-powered products. If you found this useful,
+      let's talk about what AI can do for your business.
+    </p>
+    <div class="author-actions">
+      <a href="/about" class="author-link">About me →</a>
+      <a
+        href="https://calendly.com/camber-co/30min"
+        class="author-cta"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        &gt; Book Free Audit
+      </a>
+    </div>
+  </div>
+</div>
+
+<style>
+  .author-bio {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--space-6);
+    background: var(--color-surface-01);
+    border: 1px solid var(--color-border-muted);
+    border-radius: var(--radius-lg);
+    padding: var(--space-8);
+    margin-top: var(--space-12);
+  }
+
+  .author-avatar {
+    flex-shrink: 0;
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    background: var(--color-green-900);
+    border: 2px solid var(--color-green-500);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .avatar-initials {
+    font-family: var(--font-mono);
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--color-green-500);
+  }
+
+  .author-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+  }
+
+  .author-header {
+    display: flex;
+    align-items: baseline;
+    gap: var(--space-3);
+    flex-wrap: wrap;
+  }
+
+  .author-name {
+    font-family: var(--font-mono);
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--color-text-primary);
+    margin: 0;
+  }
+
+  .author-role {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    color: var(--color-text-muted);
+    margin: 0;
+  }
+
+  .author-blurb {
+    font-family: var(--font-sans);
+    font-size: 14px;
+    line-height: 1.6;
+    color: var(--color-text-secondary);
+    margin: 0;
+  }
+
+  .author-actions {
+    display: flex;
+    align-items: center;
+    gap: var(--space-5);
+    flex-wrap: wrap;
+    margin-top: var(--space-2);
+  }
+
+  .author-link {
+    font-family: var(--font-mono);
+    font-size: 13px;
+    color: var(--color-text-muted);
+    text-decoration: none;
+    transition: color var(--duration-quick) var(--easing-smooth);
+  }
+
+  .author-link:hover {
+    color: var(--color-green-500);
+  }
+
+  .author-cta {
+    display: inline-flex;
+    align-items: center;
+    background: var(--color-green-500);
+    color: #000;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    padding: 7px 16px;
+    border-radius: var(--radius-sm);
+    text-decoration: none;
+    transition:
+      background var(--duration-quick) var(--easing-smooth),
+      transform var(--duration-quick) var(--easing-spring);
+  }
+
+  .author-cta:hover {
+    background: var(--color-green-400);
+    transform: translateY(-1px);
+  }
+
+  @media (max-width: 480px) {
+    .author-bio {
+      flex-direction: column;
+      gap: var(--space-4);
+    }
+  }
+</style>

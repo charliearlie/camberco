@@ -1,0 +1,226 @@
+/* prose.css — terminal-themed article typography */
+
+.prose {
+  font-family: var(--font-sans);
+  font-size: 18px;
+  line-height: 1.8;
+  max-width: 720px;
+  color: var(--color-text-secondary);
+}
+
+/* ---- Headings ---- */
+.prose h1,
+.prose h2,
+.prose h3,
+.prose h4,
+.prose h5,
+.prose h6 {
+  font-family: var(--font-mono);
+  color: var(--color-green-500);
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+
+.prose h2::before,
+.prose h3::before {
+  color: var(--color-text-muted);
+  font-family: var(--font-mono);
+  font-weight: 400;
+}
+
+.prose h2::before {
+  content: '# ';
+}
+
+.prose h3::before {
+  content: '## ';
+}
+
+.prose h2 {
+  font-size: 28px;
+  margin-top: 48px;
+  margin-bottom: 16px;
+  border-bottom: 1px solid var(--color-border-subtle);
+  padding-bottom: 8px;
+}
+
+.prose h3 {
+  font-size: 22px;
+  margin-top: 36px;
+  margin-bottom: 12px;
+}
+
+.prose h4 {
+  font-size: 18px;
+  margin-top: 28px;
+  margin-bottom: 10px;
+}
+
+/* ---- Paragraphs ---- */
+.prose p {
+  margin-bottom: 24px;
+  color: var(--color-text-secondary);
+}
+
+/* ---- Links ---- */
+.prose a {
+  color: var(--color-green-500);
+  text-underline-offset: 2px;
+  text-decoration: underline;
+  transition: color var(--duration-quick) var(--easing-smooth);
+}
+
+.prose a:hover {
+  color: var(--color-green-400);
+}
+
+/* ---- Inline code ---- */
+.prose code {
+  font-family: var(--font-mono);
+  font-size: 0.875em;
+  background: var(--color-surface-02);
+  padding: 2px 6px;
+  border-radius: 4px;
+  color: var(--color-green-400);
+}
+
+/* ---- Code blocks ---- */
+.prose pre {
+  background: var(--color-surface-01);
+  border: 1px solid var(--color-border-muted);
+  border-radius: 8px;
+  padding: 24px;
+  overflow-x: auto;
+  line-height: 1.6;
+  margin-bottom: 24px;
+}
+
+.prose pre code {
+  background: none;
+  padding: 0;
+  border-radius: 0;
+  font-size: 0.875em;
+  color: var(--color-text-secondary);
+}
+
+/* ---- Blockquotes ---- */
+.prose blockquote {
+  border-left: 3px solid var(--color-green-500);
+  padding: 16px 20px;
+  margin: 32px 0;
+  color: var(--color-text-muted);
+  font-style: italic;
+  background: var(--color-green-glow);
+  border-radius: 0 8px 8px 0;
+}
+
+.prose blockquote p {
+  margin-bottom: 0;
+  color: var(--color-text-muted);
+}
+
+/* ---- Lists ---- */
+.prose ul,
+.prose ol {
+  padding-left: 24px;
+  margin-bottom: 24px;
+}
+
+.prose li {
+  margin-bottom: 8px;
+  color: var(--color-text-secondary);
+}
+
+.prose ul {
+  list-style: none;
+  padding-left: 0;
+}
+
+.prose ul li {
+  padding-left: 24px;
+  position: relative;
+}
+
+.prose ul li::before {
+  content: '▸';
+  position: absolute;
+  left: 0;
+  color: var(--color-green-500);
+  font-family: var(--font-mono);
+}
+
+.prose ol {
+  list-style: none;
+  counter-reset: prose-counter;
+}
+
+.prose ol li {
+  counter-increment: prose-counter;
+  padding-left: 32px;
+  position: relative;
+}
+
+.prose ol li::before {
+  content: counter(prose-counter) '.';
+  position: absolute;
+  left: 0;
+  color: var(--color-green-500);
+  font-family: var(--font-mono);
+  font-weight: 600;
+  min-width: 24px;
+}
+
+/* ---- Strong & em ---- */
+.prose strong {
+  color: var(--color-text-primary);
+  font-weight: 600;
+}
+
+.prose em {
+  font-style: italic;
+}
+
+/* ---- Images ---- */
+.prose img {
+  border-radius: 8px;
+  border: 1px solid var(--color-border-muted);
+  margin: 32px 0;
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+/* ---- Tables ---- */
+.prose table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 24px;
+  font-size: 0.9em;
+}
+
+.prose th {
+  background: var(--color-surface-01);
+  color: var(--color-text-primary);
+  font-family: var(--font-mono);
+  font-weight: 600;
+  text-align: left;
+  padding: 10px 14px;
+  border-bottom: 1px solid var(--color-border-muted);
+}
+
+.prose td {
+  padding: 10px 14px;
+  border-bottom: 1px solid var(--color-border-subtle);
+  color: var(--color-text-secondary);
+}
+
+.prose tr:last-child td {
+  border-bottom: none;
+}
+
+/* ---- Horizontal rule ---- */
+.prose hr {
+  border: none;
+  border-top: 1px solid var(--color-border-muted);
+  margin: 48px 0;
+}

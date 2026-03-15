@@ -1,0 +1,269 @@
+---
+import AdminLayout from '../../components/admin/AdminLayout.astro';
+---
+
+<AdminLayout title="Dashboard">
+  <main style="max-width: 900px; margin: 0 auto; padding: var(--space-8) var(--space-6);">
+    <!-- Heading row -->
+    <div
+      style="
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: var(--space-8);
+      "
+    >
+      <h1
+        style="
+          font-family: var(--font-mono);
+          font-size: 20px;
+          font-weight: 700;
+          color: var(--color-green-500);
+          margin: 0;
+        "
+      >
+        $ camber admin --dashboard
+      </h1>
+      <a
+        href="/admin/editor"
+        style="
+          display: inline-flex;
+          align-items: center;
+          height: 36px;
+          padding: 0 var(--space-4);
+          background: var(--color-green-500);
+          color: var(--color-text-inverse);
+          font-family: var(--font-mono);
+          font-size: 13px;
+          font-weight: 600;
+          font-variant: small-caps;
+          letter-spacing: 0.05em;
+          border-radius: var(--radius-sm);
+          text-decoration: none;
+          transition: background var(--duration-quick);
+        "
+        id="new-post-btn"
+      >
+        + new post
+      </a>
+    </div>
+
+    <!-- Error -->
+    <div
+      id="dash-error"
+      style="
+        display: none;
+        padding: var(--space-2) var(--space-3);
+        background: rgba(239,68,68,0.1);
+        border: 1px solid rgba(239,68,68,0.3);
+        border-radius: var(--radius-sm);
+        font-family: var(--font-mono);
+        font-size: 12px;
+        color: var(--color-error);
+        margin-bottom: var(--space-4);
+      "
+    >
+    </div>
+
+    <!-- Drafts table -->
+    <div
+      style="
+        background: var(--color-surface-01);
+        border: 1px solid var(--color-border-muted);
+        border-radius: var(--radius-md);
+        overflow: hidden;
+      "
+    >
+      <!-- Table header -->
+      <div
+        style="
+          display: grid;
+          grid-template-columns: 1fr 100px 140px 120px;
+          padding: var(--space-3) var(--space-4);
+          border-bottom: 1px solid var(--color-border-subtle);
+          background: var(--color-surface-02);
+        "
+      >
+        <span style="font-family: var(--font-mono); font-size: 11px; font-variant: small-caps; color: var(--color-text-muted); letter-spacing: 0.06em;">title</span>
+        <span style="font-family: var(--font-mono); font-size: 11px; font-variant: small-caps; color: var(--color-text-muted); letter-spacing: 0.06em;">status</span>
+        <span style="font-family: var(--font-mono); font-size: 11px; font-variant: small-caps; color: var(--color-text-muted); letter-spacing: 0.06em;">updated</span>
+        <span style="font-family: var(--font-mono); font-size: 11px; font-variant: small-caps; color: var(--color-text-muted); letter-spacing: 0.06em;">actions</span>
+      </div>
+
+      <!-- Draft rows rendered by JS -->
+      <div id="drafts-list">
+        <div
+          id="drafts-loading"
+          style="
+            padding: var(--space-6) var(--space-4);
+            font-family: var(--font-mono);
+            font-size: 13px;
+            color: var(--color-text-muted);
+            text-align: center;
+          "
+        >
+          loading drafts...
+        </div>
+      </div>
+    </div>
+  </main>
+</AdminLayout>
+
+<script>
+  interface Draft {
+    id: string;
+    title: string;
+    slug: string;
+    status: string;
+    updated_at: string;
+  }
+
+  const listEl = document.getElementById('drafts-list') as HTMLDivElement;
+  const errorEl = document.getElementById('dash-error') as HTMLDivElement;
+  const loadingEl = document.getElementById('drafts-loading') as HTMLDivElement;
+
+  function getToken(): string | null {
+    return sessionStorage.getItem('sb-access-token');
+  }
+
+  function formatDate(iso: string): string {
+    return new Date(iso).toLocaleDateString('en-GB', {
+      day: '2-digit',
+      month: 'short',
+      year: 'numeric',
+    });
+  }
+
+  function statusBadge(status: string): string {
+    const color = status === 'published' ? 'var(--color-green-500)' : 'var(--color-text-muted)';
+    return `<span style="font-family:var(--font-mono);font-size:11px;color:${color};font-variant:small-caps;">${status}</span>`;
+  }
+
+  function renderDraft(draft: Draft): string {
+    return `
+      <div
+        data-draft-id="${draft.id}"
+        style="
+          display: grid;
+          grid-template-columns: 1fr 100px 140px 120px;
+          align-items: center;
+          padding: var(--space-3) var(--space-4);
+          border-bottom: 1px solid var(--color-border-subtle);
+          transition: background var(--duration-quick);
+        "
+        class="draft-row"
+      >
+        <span style="font-family:var(--font-sans);font-size:14px;color:var(--color-text-primary);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">
+          ${draft.title || '<span style="color:var(--color-text-muted);font-style:italic;">Untitled</span>'}
+        </span>
+        ${statusBadge(draft.status)}
+        <span style="font-family:var(--font-mono);font-size:12px;color:var(--color-text-muted);">${formatDate(draft.updated_at)}</span>
+        <div style="display:flex;gap:var(--space-2);">
+          <a
+            href="/admin/editor/${draft.id}"
+            style="
+              font-family:var(--font-mono);font-size:11px;color:var(--color-green-400);
+              text-decoration:none;padding:2px 8px;border:1px solid rgba(74,222,128,0.3);
+              border-radius:var(--radius-sm);transition:background var(--duration-quick);
+            "
+          >edit</a>
+          <button
+            class="delete-btn"
+            data-id="${draft.id}"
+            style="
+              font-family:var(--font-mono);font-size:11px;color:var(--color-text-muted);
+              background:none;padding:2px 8px;border:1px solid var(--color-border-muted);
+              border-radius:var(--radius-sm);cursor:pointer;transition:color var(--duration-quick);
+            "
+          >del</button>
+        </div>
+      </div>
+    `;
+  }
+
+  function renderEmpty(): string {
+    return `
+      <div style="
+        padding: var(--space-8) var(--space-4);
+        font-family: var(--font-mono);
+        font-size: 13px;
+        color: var(--color-text-muted);
+        text-align: center;
+      ">
+        no drafts yet — <a href="/admin/editor" style="color:var(--color-green-400);">create one</a>
+      </div>
+    `;
+  }
+
+  async function loadDrafts() {
+    const token = getToken();
+    if (!token) {
+      window.location.href = '/admin/login';
+      return;
+    }
+
+    try {
+      const res = await fetch('/api/admin/drafts', {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+
+      if (res.status === 401) {
+        window.location.href = '/admin/login';
+        return;
+      }
+
+      const json = await res.json() as { drafts?: Draft[]; error?: string };
+      if (!res.ok || json.error) throw new Error(json.error ?? 'Failed to load drafts.');
+
+      const drafts = json.drafts ?? [];
+      loadingEl?.remove();
+
+      if (drafts.length === 0) {
+        listEl.innerHTML = renderEmpty();
+      } else {
+        listEl.innerHTML = drafts.map(renderDraft).join('');
+        attachDeleteListeners();
+      }
+    } catch (err) {
+      loadingEl?.remove();
+      errorEl.textContent = (err as Error).message;
+      errorEl.style.display = 'block';
+    }
+  }
+
+  function attachDeleteListeners() {
+    listEl.querySelectorAll('.delete-btn').forEach((btn) => {
+      btn.addEventListener('click', async (e) => {
+        const id = (e.currentTarget as HTMLButtonElement).dataset.id;
+        if (!id) return;
+        if (!confirm('Delete this draft? This cannot be undone.')) return;
+
+        const token = getToken();
+        const res = await fetch(`/api/admin/drafts?id=${id}`, {
+          method: 'DELETE',
+          headers: { Authorization: `Bearer ${token ?? ''}` },
+        });
+
+        if (res.ok) {
+          const row = listEl.querySelector(`[data-draft-id="${id}"]`);
+          row?.remove();
+          if (!listEl.querySelector('[data-draft-id]')) {
+            listEl.innerHTML = renderEmpty();
+          }
+        }
+      });
+    });
+  }
+
+  // Hover effect for draft rows
+  document.addEventListener('mouseover', (e) => {
+    const row = (e.target as HTMLElement).closest('.draft-row') as HTMLElement | null;
+    if (row) row.style.background = 'var(--color-surface-02)';
+  });
+  document.addEventListener('mouseout', (e) => {
+    const row = (e.target as HTMLElement).closest('.draft-row') as HTMLElement | null;
+    if (row) row.style.background = '';
+  });
+
+  loadDrafts();
+</script>
