@@ -3,9 +3,6 @@ import { Plugin, PluginKey } from '@tiptap/pm/state';
 import { uploadImage } from './uploadImage';
 
 export interface ImageDropPasteOptions {
-  supabaseUrl: string;
-  supabaseAnonKey: string;
-  accessToken: string;
   onUploadStart?: () => void;
   onUploadEnd?: () => void;
   onUploadError?: (error: Error) => void;
@@ -39,9 +36,6 @@ export const ImageDropPaste = Extension.create<ImageDropPasteOptions>({
 
   addOptions() {
     return {
-      supabaseUrl: '',
-      supabaseAnonKey: '',
-      accessToken: '',
       onUploadStart: undefined,
       onUploadEnd: undefined,
       onUploadError: undefined,
@@ -55,11 +49,7 @@ export const ImageDropPaste = Extension.create<ImageDropPasteOptions>({
     const doUpload = async (file: File, insertPos?: number) => {
       opts.onUploadStart?.();
       try {
-        const url = await uploadImage(file, {
-          supabaseUrl: opts.supabaseUrl,
-          supabaseAnonKey: opts.supabaseAnonKey,
-          accessToken: opts.accessToken,
-        });
+        const url = await uploadImage(file);
 
         if (insertPos !== undefined) {
           editor

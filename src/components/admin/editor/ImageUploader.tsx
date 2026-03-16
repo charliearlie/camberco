@@ -2,16 +2,10 @@ import React, { useRef, useState, useCallback } from 'react';
 import { uploadImage } from './uploadImage';
 
 interface ImageUploaderProps {
-  supabaseUrl: string;
-  supabaseAnonKey: string;
-  session: { access_token: string } | null;
   onUpload: (url: string) => void;
 }
 
 export default function ImageUploader({
-  supabaseUrl,
-  supabaseAnonKey,
-  session,
   onUpload,
 }: ImageUploaderProps) {
   const inputRef = useRef<HTMLInputElement>(null);
@@ -25,11 +19,7 @@ export default function ImageUploader({
       setProgress(0);
 
       try {
-        const url = await uploadImage(file, {
-          supabaseUrl,
-          supabaseAnonKey,
-          accessToken: session?.access_token ?? '',
-        });
+        const url = await uploadImage(file);
         setProgress(100);
         onUpload(url);
       } catch (err) {

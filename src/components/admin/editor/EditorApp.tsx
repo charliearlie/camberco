@@ -7,7 +7,8 @@ import CodeBlockLowlight from '@tiptap/extension-code-block-lowlight';
 import Placeholder from '@tiptap/extension-placeholder';
 import Typography from '@tiptap/extension-typography';
 import CharacterCount from '@tiptap/extension-character-count';
-import { createClient, type Session } from '@supabase/supabase-js';
+import type { Session } from '@supabase/supabase-js';
+import { supabase } from '../../../lib/supabase';
 import { createLowlight, common } from 'lowlight';
 
 import EditorToolbar from './EditorToolbar';
@@ -67,7 +68,7 @@ interface EditorAppProps {
 }
 
 export default function EditorApp({ draftId, supabaseUrl, supabaseAnonKey }: EditorAppProps) {
-  const supabase = useRef(createClient(supabaseUrl, supabaseAnonKey));
+  const supabaseRef = useRef(supabase);
   const [session, setSession] = useState<Session | null>(null);
   const [metadata, setMetadata] = useState<Metadata>(defaultMetadata());
   const [slugLocked, setSlugLocked] = useState(false);
@@ -84,8 +85,8 @@ export default function EditorApp({ draftId, supabaseUrl, supabaseAnonKey }: Edi
   // ----------------------------------------------------------------
 
   useEffect(() => {
-    supabase.current.auth.getSession().then(({ data }) => setSession(data.session));
-    const { data: { subscription } } = supabase.current.auth.onAuthStateChange((_e, s) => {
+    supabaseRef.current.auth.getSession().then(({ data }) => setSession(data.session));
+    const { data: { subscription } } = supabaseRef.current.auth.onAuthStateChange((_e, s) => {
       setSession(s);
       if (!s) window.location.href = '/admin/login';
     });
@@ -111,9 +112,6 @@ export default function EditorApp({ draftId, supabaseUrl, supabaseAnonKey }: Edi
         onImageCommand: () => handleImageUploadFromPicker(),
       }),
       ImageDropPaste.configure({
-        supabaseUrl,
-        supabaseAnonKey,
-        accessToken: session?.access_token ?? '',
         onUploadStart: () => setUploading(true),
         onUploadEnd: () => setUploading(false),
         onUploadError: (err: Error) => console.error('Image upload failed:', err.message),
@@ -142,11 +140,7 @@ export default function EditorApp({ draftId, supabaseUrl, supabaseAnonKey }: Edi
         if (!file) return reject(new Error('No file selected'));
         setUploading(true);
         try {
-          const url = await uploadImage(file, {
-            supabaseUrl,
-            supabaseAnonKey,
-            accessToken: session?.access_token ?? '',
-          });
+          const url = await uploadImage(file);
           if (editor) {
             editor.chain().focus().setImage({ src: url }).run();
           }
@@ -169,7 +163,7 @@ export default function EditorApp({ draftId, supabaseUrl, supabaseAnonKey }: Edi
     if (!draftId || !editor) return;
 
     (async () => {
-      const { data, error } = await supabase.current
+      const { data, error } = await supabaseRef.current
         .from('blog_drafts')
         .select('*')
         .eq('id', draftId)
@@ -248,14 +242,14 @@ export default function EditorApp({ draftId, supabaseUrl, supabaseAnonKey }: Edi
     };
 
     if (currentDraftId.current) {
-      const { error } = await supabase.current
+      const { error } = await supabaseRef.current
         .from('blog_drafts')
         .update(payload)
         .eq('id', currentDraftId.current);
 
       setSaveStatus(error ? 'error' : 'saved');
     } else {
-      const { data, error } = await supabase.current
+      const { data, error } = await supabaseRef.current
         .from('blog_drafts')
         .insert({ ...payload, created_at: new Date().toISOString() })
         .select('id')
@@ -420,9 +414,6 @@ export default function EditorApp({ draftId, supabaseUrl, supabaseAnonKey }: Edi
             metadata={metadata}
             onChange={handleMetadataChange}
             onImageUpload={(url) => handleMetadataChange({ coverImage: url })}
-            supabaseUrl={supabaseUrl}
-            supabaseAnonKey={supabaseAnonKey}
-            session={session}
           />
         )}
       </div>

@@ -24,18 +24,12 @@ interface MetadataPanelProps {
   metadata: Metadata;
   onChange: (updates: Partial<Metadata>) => void;
   onImageUpload: (url: string) => void;
-  supabaseUrl: string;
-  supabaseAnonKey: string;
-  session: { access_token: string } | null;
 }
 
 export default function MetadataPanel({
   metadata,
   onChange,
   onImageUpload,
-  supabaseUrl,
-  supabaseAnonKey,
-  session,
 }: MetadataPanelProps) {
   const descLen = metadata.description.length;
   const descWarn = descLen > 160;
@@ -139,9 +133,6 @@ export default function MetadataPanel({
           </div>
         ) : (
           <ImageUploader
-            supabaseUrl={supabaseUrl}
-            supabaseAnonKey={supabaseAnonKey}
-            session={session}
             onUpload={handleUpload}
           />
         )}

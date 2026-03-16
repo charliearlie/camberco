@@ -106,7 +106,7 @@ import AdminLayout from '../../components/admin/AdminLayout.astro';
 </AdminLayout>
 
 <script>
-  import { createClient } from '@supabase/supabase-js';
+  import { supabase } from '../../lib/supabase';
 
   const form = document.getElementById('login-form') as HTMLFormElement;
   const errorEl = document.getElementById('login-error') as HTMLDivElement;
@@ -117,28 +117,9 @@ import AdminLayout from '../../components/admin/AdminLayout.astro';
     errorEl.style.display = 'block';
   }
 
-  const supabaseUrl = import.meta.env.PUBLIC_SUPABASE_URL;
-  const supabaseKey = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
-
-  if (!supabaseUrl || !supabaseKey) {
-    showError(`Config missing: URL=${!!supabaseUrl}, KEY=${!!supabaseKey}`);
-  }
-
-  let supabase: ReturnType<typeof createClient> | null = null;
-  try {
-    supabase = createClient(supabaseUrl, supabaseKey);
-  } catch (err) {
-    showError(`Client init failed: ${(err as Error).message}`);
-  }
-
   form.addEventListener('submit', async (e) => {
     e.preventDefault();
     errorEl.style.display = 'none';
-
-    if (!supabase) {
-      showError('Supabase client not initialized');
-      return;
-    }
 
     btn.disabled = true;
     btn.textContent = '$ signing in…';
