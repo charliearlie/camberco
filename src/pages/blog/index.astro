@@ -18,12 +18,53 @@ const categories = [
   { value: 'founder-journey', label: 'Founder Journey' },
   { value: 'industry-trends', label: 'Industry Trends' },
 ];
+
+const blogSchema = JSON.stringify([
+  {
+    "@context": "https://schema.org",
+    "@type": "Blog",
+    "@id": "https://camberco.uk/blog/#blog",
+    "name": "Camber Co Blog",
+    "description": "AI strategy, n8n automation tutorials, and founder insights from Charlie Waite — helping UK founders build smarter with AI.",
+    "url": "https://camberco.uk/blog/",
+    "author": {
+      "@type": "Person",
+      "name": "Charlie Waite",
+      "url": "https://camberco.uk/about-me"
+    },
+    "publisher": {
+      "@type": "Organization",
+      "name": "Camber Co",
+      "url": "https://camberco.uk"
+    },
+    "inLanguage": "en-GB"
+  },
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      {
+        "@type": "ListItem",
+        "position": 1,
+        "name": "Home",
+        "item": "https://camberco.uk/"
+      },
+      {
+        "@type": "ListItem",
+        "position": 2,
+        "name": "Blog",
+        "item": "https://camberco.uk/blog/"
+      }
+    ]
+  }
+]);
 ---
 
 <Layout
-  title="Blog | Camber Co"
-  description="AI strategy, automation, and insights for founders and small teams building in 2026."
+  title="AI Strategy, Automation & Founder Insights — Camber Co Blog"
+  description="Practical articles on AI strategy, n8n workflow automation, and the solo founder journey. Written by Charlie Waite for UK founders building real products with AI."
   canonicalUrl="https://camberco.uk/blog/"
+  schema={blogSchema}
 >
   <main class="blog-page">
     <!-- Header -->
@@ -36,6 +77,9 @@ const categories = [
       </h1>
       <p class="blog-subtitle">
         AI strategy, automation, and the founder journey — written for people building real things.
+      </p>
+      <p class="blog-intro">
+        Camber Co works with UK founders to ship AI-powered products and automations. This blog is where we share what we're learning — from n8n workflow patterns and AI tool evaluations to the honest realities of building a business around artificial intelligence.
       </p>
     </header>
 

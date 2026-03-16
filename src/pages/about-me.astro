@@ -236,6 +236,20 @@ const schema = JSON.stringify({
       </div>
     </section>
 
+    <!-- ===== WRITING ===== -->
+    <section class="writing" id="writing">
+      <div class="container">
+        <div class="section-header" data-reveal>
+          <p class="section-tag">writing</p>
+          <h2 class="section-title">What I'm thinking about.</h2>
+        </div>
+        <p class="writing-body" data-reveal>
+          I write about AI strategy, automation, and the founder journey — lessons from building systems that ship.
+          <a href="/blog" class="writing-link">Read the blog →</a>
+        </p>
+      </div>
+    </section>
+
     <!-- ===== CTA ===== -->
     <section class="cta" id="cta">
       <div class="container">
@@ -658,6 +672,38 @@ const schema = JSON.stringify({
     border-radius: var(--radius-sm);
     padding: 3px 8px;
     letter-spacing: 0.04em;
+  }
+
+  /* ============================================================
+     Writing
+     ============================================================ */
+
+  .writing {
+    padding: clamp(80px, 12vw, 128px) 0;
+    border-bottom: 1px solid var(--color-border-subtle);
+  }
+
+  .writing-body {
+    font-family: var(--font-sans);
+    font-size: var(--type-body-lg);
+    color: var(--color-text-secondary);
+    line-height: 1.7;
+    max-width: 56ch;
+    margin: 0;
+  }
+
+  .writing-link {
+    font-family: var(--font-mono);
+    font-size: var(--type-body-sm);
+    color: var(--color-green-500);
+    text-decoration: none;
+    display: inline-block;
+    margin-top: var(--space-4);
+    transition: color var(--duration-quick) var(--easing-smooth);
+  }
+
+  .writing-link:hover {
+    color: var(--color-green-400);
   }
 
   /* ============================================================

@@ -46,6 +46,15 @@
   line-height: 1.6;
 }
 
+.blog-intro {
+  font-family: var(--font-sans);
+  font-size: var(--type-body-sm);
+  color: var(--color-text-secondary);
+  max-width: 640px;
+  margin: var(--space-6) auto 0;
+  line-height: 1.7;
+}
+
 /* ---- Category filter ---- */
 .category-filter {
   display: flex;

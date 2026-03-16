@@ -2,6 +2,10 @@
 import Layout from '../layouts/Layout.astro';
 import StarfieldHero from '../components/StarfieldHero.astro';
 import ChatDrawer from '../components/ChatDrawer.astro';
+import { getPublishedPosts } from '../lib/blog';
+import BlogCard from '../components/blog/BlogCard.astro';
+
+const recentPosts = (await getPublishedPosts()).slice(0, 3);
 
 const schema = JSON.stringify([
   {
@@ -403,6 +407,7 @@ const schema = JSON.stringify([
           <h2>Built by someone who's done it.</h2>
           <p class="about-p">I'm Charlie. I've been building software for 12 years and using AI tools in production since before they were mainstream. Camber Co exists because I got tired of watching founders waste months on AI experiments that never shipped anything real.</p>
           <p class="about-p">I work with a small number of founders at a time — directly, hands-on. No account managers, no juniors. You get me, and you get results you can point at.</p>
+          <a href="/blog" class="about-link">Read what I'm building and why →</a>
           <div class="stat-row">
             <div class="stat-block">
               <span class="stat-number" data-count-to="40" data-count-suffix="+">0+</span>
@@ -452,6 +457,29 @@ const schema = JSON.stringify([
       </div>
     </div>
   </section>
+
+  <!-- ===== SECTION DIVIDER 03 ===== -->
+  <div class="section-divider">/* 03 — latest writing */</div>
+
+  <!-- ===== LATEST WRITING ===== -->
+  {recentPosts.length > 0 && (
+    <section class="writing-section" id="writing">
+      <div class="container">
+        <div class="section-header" data-reveal>
+          <span class="section-tag">writing</span>
+          <h2>What we're thinking about.</h2>
+        </div>
+        <div class="writing-grid" data-reveal-stagger>
+          {recentPosts.map((post) => (
+            <BlogCard post={post} />
+          ))}
+        </div>
+        <div class="writing-cta" data-reveal>
+          <a href="/blog" class="btn-ghost">&gt; See all posts</a>
+        </div>
+      </div>
+    </section>
+  )}
 
   <!-- ===== FAQ ===== -->
   <section class="faq" id="faq">
@@ -1056,6 +1084,21 @@ const schema = JSON.stringify([
     margin-bottom: var(--space-4);
   }
 
+  .about-link {
+    font-family: var(--font-mono);
+    font-size: var(--type-body-sm);
+    color: var(--color-green-500);
+    text-decoration: none;
+    letter-spacing: 0.02em;
+    transition: color var(--duration-quick) var(--easing-smooth);
+    display: inline-block;
+    margin-bottom: var(--space-4);
+  }
+
+  .about-link:hover {
+    color: var(--color-green-400);
+  }
+
   .stat-row {
     display: flex;
     gap: var(--space-8);
@@ -1238,6 +1281,37 @@ const schema = JSON.stringify([
     user-select: none;
     text-transform: uppercase;
     letter-spacing: 0.05em;
+  }
+
+  /* ============================================================
+     LATEST WRITING SECTION
+     ============================================================ */
+  .writing-section {
+    padding: clamp(80px, 12vw, 128px) 0;
+    border-bottom: 1px solid var(--color-border-subtle);
+  }
+
+  .writing-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: var(--space-6);
+  }
+
+  .writing-cta {
+    text-align: center;
+    margin-top: var(--space-10);
+  }
+
+  @media (max-width: 1024px) {
+    .writing-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  @media (max-width: 640px) {
+    .writing-grid {
+      grid-template-columns: 1fr;
+    }
   }
 
   /* ============================================================
