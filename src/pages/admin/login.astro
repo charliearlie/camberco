@@ -67,6 +67,18 @@ import AdminLayout from '../../components/admin/AdminLayout.astro';
           />
         </div>
 
+        <div class="metadata-field">
+          <label for="login-password">password</label>
+          <input
+            id="login-password"
+            name="password"
+            type="password"
+            autocomplete="current-password"
+            required
+            placeholder="••••••••"
+          />
+        </div>
+
         <button
           id="login-btn"
           type="submit"
@@ -85,28 +97,10 @@ import AdminLayout from '../../components/admin/AdminLayout.astro';
             transition: background var(--duration-quick);
           "
         >
-          $ send magic link
+          $ sign in
         </button>
       </form>
 
-      <!-- Success message (hidden by default) -->
-      <div
-        id="login-success"
-        style="
-          display: none;
-          padding: var(--space-3) var(--space-4);
-          background: rgba(34,197,94,0.1);
-          border: 1px solid rgba(34,197,94,0.3);
-          border-radius: var(--radius-sm);
-          font-family: var(--font-mono);
-          font-size: 13px;
-          color: var(--color-green-500);
-          text-align: center;
-          line-height: 1.5;
-        "
-      >
-        Check your email for a magic link to sign in.
-      </div>
     </div>
   </main>
 </AdminLayout>
@@ -121,36 +115,33 @@ import AdminLayout from '../../components/admin/AdminLayout.astro';
 
   const form = document.getElementById('login-form') as HTMLFormElement;
   const errorEl = document.getElementById('login-error') as HTMLDivElement;
-  const successEl = document.getElementById('login-success') as HTMLDivElement;
+
   const btn = document.getElementById('login-btn') as HTMLButtonElement;
 
   form.addEventListener('submit', async (e) => {
     e.preventDefault();
     errorEl.style.display = 'none';
-    successEl.style.display = 'none';
     btn.disabled = true;
-    btn.textContent = '$ sending…';
+    btn.textContent = '$ signing in…';
 
-    const data = new FormData(form);
-    const email = data.get('email') as string;
+    const formData = new FormData(form);
+    const email = formData.get('email') as string;
+    const password = formData.get('password') as string;
 
     try {
-      const { error } = await supabase.auth.signInWithOtp({
+      const { error } = await supabase.auth.signInWithPassword({
         email,
-        options: {
-          emailRedirectTo: `${window.location.origin}/admin/auth/callback`,
-        },
+        password,
       });
 
       if (error) throw error;
 
-      form.style.display = 'none';
-      successEl.style.display = 'block';
+      window.location.href = '/admin';
     } catch (err) {
       errorEl.textContent = (err as Error).message;
       errorEl.style.display = 'block';
       btn.disabled = false;
-      btn.textContent = '$ send magic link';
+      btn.textContent = '$ sign in';
     }
   });
 </script>

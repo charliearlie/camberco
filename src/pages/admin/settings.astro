@@ -1,0 +1,208 @@
+---
+export const prerender = false;
+import AdminLayout from '../../components/admin/AdminLayout.astro';
+---
+
+<AdminLayout title="Settings">
+  <main
+    style="
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: calc(100vh - 48px);
+      padding: var(--space-6);
+    "
+  >
+    <div
+      style="
+        width: 100%;
+        max-width: 380px;
+        background: var(--color-surface-01);
+        border: 1px solid var(--color-border-muted);
+        border-radius: var(--radius-lg);
+        padding: var(--space-8);
+      "
+    >
+      <h1
+        style="
+          font-family: var(--font-mono);
+          font-size: 16px;
+          font-weight: 600;
+          color: var(--color-green-500);
+          margin: 0 0 var(--space-6);
+          letter-spacing: 0.02em;
+        "
+      >
+        $ camber settings
+      </h1>
+
+      <!-- Error message -->
+      <div
+        id="settings-error"
+        style="
+          display: none;
+          padding: var(--space-2) var(--space-3);
+          background: rgba(239,68,68,0.1);
+          border: 1px solid rgba(239,68,68,0.3);
+          border-radius: var(--radius-sm);
+          font-family: var(--font-mono);
+          font-size: 12px;
+          color: var(--color-error);
+          margin-bottom: var(--space-4);
+        "
+      >
+      </div>
+
+      <!-- Success message -->
+      <div
+        id="settings-success"
+        style="
+          display: none;
+          padding: var(--space-2) var(--space-3);
+          background: rgba(34,197,94,0.1);
+          border: 1px solid rgba(34,197,94,0.3);
+          border-radius: var(--radius-sm);
+          font-family: var(--font-mono);
+          font-size: 12px;
+          color: var(--color-green-500);
+          margin-bottom: var(--space-4);
+        "
+      >
+        Password updated successfully.
+      </div>
+
+      <!-- Change password form -->
+      <form id="password-form" style="display: flex; flex-direction: column; gap: var(--space-4);">
+        <div class="metadata-field">
+          <label for="new-password">new password</label>
+          <input
+            id="new-password"
+            name="new-password"
+            type="password"
+            autocomplete="new-password"
+            required
+            minlength="8"
+            placeholder="minimum 8 characters"
+          />
+        </div>
+
+        <div class="metadata-field">
+          <label for="confirm-password">confirm password</label>
+          <input
+            id="confirm-password"
+            name="confirm-password"
+            type="password"
+            autocomplete="new-password"
+            required
+            minlength="8"
+            placeholder="re-enter password"
+          />
+        </div>
+
+        <button
+          id="password-btn"
+          type="submit"
+          style="
+            height: 40px;
+            background: var(--color-green-500);
+            color: var(--color-text-inverse);
+            font-family: var(--font-mono);
+            font-size: 13px;
+            font-weight: 600;
+            font-variant: small-caps;
+            letter-spacing: 0.06em;
+            border: none;
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            transition: background var(--duration-quick);
+          "
+        >
+          $ update password
+        </button>
+      </form>
+
+      <div style="margin-top: var(--space-6); border-top: 1px solid var(--color-border-muted); padding-top: var(--space-4);">
+        <button
+          id="logout-btn"
+          style="
+            width: 100%;
+            height: 36px;
+            background: transparent;
+            color: var(--color-text-muted);
+            font-family: var(--font-mono);
+            font-size: 12px;
+            font-weight: 500;
+            border: 1px solid var(--color-border-muted);
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            transition: all var(--duration-quick);
+          "
+        >
+          $ logout
+        </button>
+      </div>
+    </div>
+  </main>
+</AdminLayout>
+
+<script>
+  import { createClient } from '@supabase/supabase-js';
+
+  const supabase = createClient(
+    import.meta.env.PUBLIC_SUPABASE_URL,
+    import.meta.env.PUBLIC_SUPABASE_ANON_KEY,
+  );
+
+  // Redirect if not logged in
+  const { data: { session } } = await supabase.auth.getSession();
+  if (!session) {
+    window.location.href = '/admin/login';
+  }
+
+  const form = document.getElementById('password-form') as HTMLFormElement;
+  const errorEl = document.getElementById('settings-error') as HTMLDivElement;
+  const successEl = document.getElementById('settings-success') as HTMLDivElement;
+  const btn = document.getElementById('password-btn') as HTMLButtonElement;
+  const logoutBtn = document.getElementById('logout-btn') as HTMLButtonElement;
+
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    errorEl.style.display = 'none';
+    successEl.style.display = 'none';
+
+    const formData = new FormData(form);
+    const newPassword = formData.get('new-password') as string;
+    const confirmPassword = formData.get('confirm-password') as string;
+
+    if (newPassword !== confirmPassword) {
+      errorEl.textContent = 'Passwords do not match.';
+      errorEl.style.display = 'block';
+      return;
+    }
+
+    btn.disabled = true;
+    btn.textContent = '$ updating…';
+
+    try {
+      const { error } = await supabase.auth.updateUser({
+        password: newPassword,
+      });
+
+      if (error) throw error;
+
+      successEl.style.display = 'block';
+      form.reset();
+    } catch (err) {
+      errorEl.textContent = (err as Error).message;
+      errorEl.style.display = 'block';
+    } finally {
+      btn.disabled = false;
+      btn.textContent = '$ update password';
+    }
+  });
+
+  logoutBtn.addEventListener('click', async () => {
+    await supabase.auth.signOut();
+    window.location.href = '/admin/login';
+  });
+</script>
