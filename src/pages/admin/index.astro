@@ -220,8 +220,14 @@ import AdminLayout from '../../components/admin/AdminLayout.astro';
         return;
       }
 
-      const json = await res.json() as { drafts?: Draft[]; error?: string };
-      if (!res.ok || json.error) throw new Error(json.error ?? 'Failed to load drafts.');
+      const text = await res.text();
+      let json: { drafts?: Draft[]; error?: string };
+      try {
+        json = JSON.parse(text);
+      } catch {
+        throw new Error(`Server returned ${res.status}: ${text.slice(0, 200) || '(empty body)'}`);
+      }
+      if (!res.ok || json.error) throw new Error(json.error ?? `Failed to load drafts (${res.status}).`);
 
       const drafts = json.drafts ?? [];
       loadingEl?.remove();
