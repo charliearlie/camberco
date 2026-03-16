@@ -129,6 +129,21 @@ export const PUT: APIRoute = async ({ request }) => {
 
   if (error?.code === 'PGRST116') return jsonRes({ error: 'Draft not found.' }, 404);
   if (error) return jsonRes({ error: error.message }, 500);
+
+  // Trigger redeploy if the saved post is published
+  const { data: post } = await supabase
+    .from('blog_drafts')
+    .select('status')
+    .eq('id', id)
+    .single();
+
+  if (post?.status === 'published') {
+    const deployHook = import.meta.env.VERCEL_DEPLOY_HOOK ?? '';
+    if (deployHook) {
+      fetch(deployHook, { method: 'POST' }).catch(() => {});
+    }
+  }
+
   return jsonRes({ ok: true });
 };
 

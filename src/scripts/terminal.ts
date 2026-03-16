@@ -81,7 +81,7 @@ const COMMANDS: Record<string, Command> = {
     run: () => L`
     <span class="t-muted">&gt; checking systems...</span> <span class="t-green">✓</span>
 
-    <span class="t-muted">  founder:</span>        Charlie Waite
+    <span class="t-muted">  founder:</span>        Charlie W
     <span class="t-muted">  location:</span>        London, UK
     <span class="t-muted">  status:</span>          <span class="t-green">[● ACTIVE]</span>
     <span class="t-muted">  specialty:</span>       AI systems + automation
@@ -95,7 +95,7 @@ const COMMANDS: Record<string, Command> = {
   about: {
     description: 'founder info',
     run: () => L`
-    <span class="t-green">Charlie Waite</span> · Founder, Camber Co
+    <span class="t-green">Charlie W</span> · Founder, Camber Co
 
     12 years building software.
     Using AI in production since 2023.
