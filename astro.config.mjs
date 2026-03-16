@@ -5,6 +5,11 @@ import react from '@astrojs/react';
 
 export default defineConfig({
   site: 'https://camberco.uk',
-  integrations: [sitemap(), react()],
+  integrations: [
+    sitemap({
+      filter: (page) => !page.includes('/admin/'),
+    }),
+    react(),
+  ],
   adapter: vercel(),
 });
