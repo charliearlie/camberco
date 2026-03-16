@@ -38,16 +38,31 @@ import AdminLayout from '../../../components/admin/AdminLayout.astro';
     const statusEl = document.getElementById('callback-status') as HTMLParagraphElement;
 
     try {
-      const { data, error } = await supabase.auth.getSession();
+      // PKCE flow: exchange the ?code= param for a session
+      const params = new URLSearchParams(window.location.search);
+      const code = params.get('code');
 
-      if (error) throw error;
-
-      if (data.session) {
+      if (code) {
+        const { error } = await supabase.auth.exchangeCodeForSession(code);
+        if (error) throw error;
         window.location.href = '/admin';
-      } else {
-        statusEl.textContent = 'No session found. Redirecting to login…';
-        setTimeout(() => { window.location.href = '/admin/login'; }, 2000);
+        return;
       }
+
+      // Implicit flow fallback: hash fragment with access_token
+      const hash = window.location.hash;
+      if (hash && hash.includes('access_token')) {
+        // Supabase client auto-detects hash tokens on init, just check session
+        const { data, error } = await supabase.auth.getSession();
+        if (error) throw error;
+        if (data.session) {
+          window.location.href = '/admin';
+          return;
+        }
+      }
+
+      statusEl.textContent = 'No session found. Redirecting to login…';
+      setTimeout(() => { window.location.href = '/admin/login'; }, 2000);
     } catch (err) {
       statusEl.textContent = `Error: ${(err as Error).message}`;
       setTimeout(() => { window.location.href = '/admin/login'; }, 3000);
