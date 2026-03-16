@@ -1,7 +1,13 @@
 export const prerender = false;
 
 import type { APIRoute } from 'astro';
-import { serverSupabase } from '../../../lib/blog';
+import { createClient } from '@supabase/supabase-js';
+
+function serverSupabase() {
+  const url = import.meta.env.PUBLIC_SUPABASE_URL ?? '';
+  const key = import.meta.env.SUPABASE_SERVICE_ROLE_KEY ?? '';
+  return createClient(url, key, { auth: { autoRefreshToken: false, persistSession: false } });
+}
 
 async function verifyAuth(request: Request): Promise<string | null> {
   const authHeader = request.headers.get('Authorization') ?? '';
@@ -44,19 +50,27 @@ export const POST: APIRoute = async ({ request }) => {
     .from('blog_drafts')
     .select('*')
     .eq('id', draftId)
+    .eq('user_id', userId)
     .single();
 
   if (draftErr || !draft) {
     return jsonRes({ error: 'Draft not found.' }, 404);
   }
 
-  const slug = draft.slug || (draft.title as string).toLowerCase().replace(/\s+/g, '-');
+  const title = (draft.title as string || '').trim();
+  if (!title) {
+    return jsonRes({ error: 'Cannot publish without a title.' }, 400);
+  }
 
-  // Update status to published
+  const slug = (draft.slug as string || '').trim()
+    || title.toLowerCase().replace(/[^\w\s-]/g, '').replace(/[\s_]+/g, '-').replace(/^-+|-+$/g, '');
+
+  // Update status + ensure slug is persisted
   const { error: updateErr } = await supabase
     .from('blog_drafts')
-    .update({ status: 'published', published_at: new Date().toISOString() })
-    .eq('id', draftId);
+    .update({ status: 'published', slug, published_at: new Date().toISOString() })
+    .eq('id', draftId)
+    .eq('user_id', userId);
 
   if (updateErr) {
     return jsonRes({ error: 'Failed to update draft status.' }, 500);

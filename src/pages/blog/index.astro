@@ -6,7 +6,7 @@ import '../../styles/blog.css';
 
 const posts = await getPublishedPosts();
 
-const featuredPost = posts.find((p) => p.featured);
+const featuredPosts = posts.filter((p) => p.featured);
 const regularPosts = posts.filter((p) => !p.featured);
 
 const categories = [
@@ -96,10 +96,12 @@ const blogSchema = JSON.stringify([
     </nav>
 
     <!-- Featured post -->
-    {featuredPost && (
-      <section class="featured-section" aria-label="Featured post">
+    {featuredPosts.length > 0 && (
+      <section class="featured-section" aria-label="Featured posts">
         <p class="featured-label">Featured</p>
-        <BlogCard post={featuredPost} featured />
+        {featuredPosts.map((post) => (
+          <BlogCard post={post} featured />
+        ))}
       </section>
     )}
 

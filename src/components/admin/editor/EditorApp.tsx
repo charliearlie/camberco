@@ -121,7 +121,22 @@ export default function EditorApp({ draftId, supabaseUrl, supabaseAnonKey }: Edi
     editorProps: {
       attributes: { class: 'tiptap' },
     },
-    onUpdate: () => {
+    onUpdate: ({ editor: e }) => {
+      // Backup to localStorage immediately on every change
+      try {
+        const key = `camber-draft-backup-${currentDraftId.current ?? draftId ?? 'new'}`;
+        localStorage.setItem(key, JSON.stringify({
+          content: e.getHTML(),
+          title: metadata.title,
+          slug: metadata.slug,
+          description: metadata.description,
+          category: metadata.category,
+          tags: metadata.tags,
+          coverImage: metadata.coverImage,
+          coverImageAlt: metadata.coverImageAlt,
+          savedAt: new Date().toISOString(),
+        }));
+      } catch { /* storage full */ }
       scheduleSave();
     },
   });
@@ -163,27 +178,57 @@ export default function EditorApp({ draftId, supabaseUrl, supabaseAnonKey }: Edi
     if (!draftId || !editor) return;
 
     (async () => {
-      const { data, error } = await supabaseRef.current
-        .from('blog_drafts')
-        .select('*')
-        .eq('id', draftId)
-        .single();
+      const { data: { session: s } } = await supabaseRef.current.auth.getSession();
+      if (!s) return;
 
-      if (error || !data) return;
+      const res = await fetch(`/api/admin/drafts?id=${draftId}`, {
+        headers: { Authorization: `Bearer ${s.access_token}` },
+      });
+      if (!res.ok) return;
+      const { draft: data } = await res.json() as { draft: Record<string, unknown> | null };
+      if (!data) return;
 
-      editor.commands.setContent(data.content ?? '');
+      editor.commands.setContent((data.content as string) ?? '');
       setMetadata({
-        title: data.title ?? '',
-        slug: data.slug ?? '',
-        description: data.description ?? '',
-        category: data.category ?? '',
-        tags: Array.isArray(data.tags) ? data.tags.join(', ') : (data.tags ?? ''),
-        coverImage: data.cover_image ?? '',
-        coverImageAlt: data.cover_image_alt ?? '',
+        title: (data.title as string) ?? '',
+        slug: (data.slug as string) ?? '',
+        description: (data.description as string) ?? '',
+        category: (data.category as string) ?? '',
+        tags: Array.isArray(data.tags) ? (data.tags as string[]).join(', ') : ((data.tags as string) ?? ''),
+        coverImage: (data.cover_image as string) ?? '',
+        coverImageAlt: (data.cover_image_alt as string) ?? '',
       });
       if (data.slug) setSlugLocked(true);
     })();
   }, [draftId, editor]);
+
+  // Recover from localStorage backup if editor is empty (e.g. after hot reload)
+  useEffect(() => {
+    if (!editor) return;
+    // Only recover if editor has no content yet
+    if (editor.getText().trim()) return;
+
+    const key = `camber-draft-backup-${draftId ?? 'new'}`;
+    try {
+      const raw = localStorage.getItem(key);
+      if (!raw) return;
+      const backup = JSON.parse(raw) as Record<string, string>;
+      if (backup.content) {
+        editor.commands.setContent(backup.content);
+        setMetadata({
+          title: backup.title ?? '',
+          slug: backup.slug ?? '',
+          description: backup.description ?? '',
+          category: backup.category ?? '',
+          tags: backup.tags ?? '',
+          coverImage: backup.coverImage ?? '',
+          coverImageAlt: backup.coverImageAlt ?? '',
+        });
+        if (backup.slug) setSlugLocked(true);
+        console.info('[editor] Restored content from localStorage backup');
+      }
+    } catch { /* ignore parse errors */ }
+  }, [editor, draftId]);
 
   // ----------------------------------------------------------------
   // Auto-generate slug from title
@@ -215,54 +260,135 @@ export default function EditorApp({ draftId, supabaseUrl, supabaseAnonKey }: Edi
   // Save
   // ----------------------------------------------------------------
 
+  // Ref so scheduleSave (stable) always calls the latest persistDraft
+  const persistDraftRef = useRef<() => Promise<void>>();
+
   const scheduleSave = useCallback(() => {
     setSaveStatus('unsaved');
     if (saveTimer.current) clearTimeout(saveTimer.current);
-    saveTimer.current = setTimeout(() => void persistDraft(), 30_000);
+    saveTimer.current = setTimeout(() => void persistDraftRef.current?.(), 5_000);
   }, []);
+
+  const saveToLocalStorage = useCallback((html: string) => {
+    try {
+      const key = `camber-draft-backup-${currentDraftId.current ?? 'new'}`;
+      localStorage.setItem(key, JSON.stringify({
+        content: html,
+        title: metadata.title,
+        slug: metadata.slug,
+        description: metadata.description,
+        category: metadata.category,
+        tags: metadata.tags,
+        coverImage: metadata.coverImage,
+        coverImageAlt: metadata.coverImageAlt,
+        savedAt: new Date().toISOString(),
+      }));
+    } catch { /* storage full — ignore */ }
+  }, [metadata]);
 
   const persistDraft = useCallback(async () => {
     if (!editor) return;
     setSaveStatus('saving');
 
-    const payload = {
+    const html = editor.getHTML();
+
+    // Always save to localStorage as backup first
+    saveToLocalStorage(html);
+
+    const { data: { session: currentSession } } = await supabaseRef.current.auth.getSession();
+    const token = currentSession?.access_token;
+    if (!token) {
+      console.error('[save] No session/token — content backed up to localStorage');
+      setSaveStatus('error');
+      return;
+    }
+
+    const payload: Record<string, unknown> = {
       title: metadata.title,
       slug: metadata.slug,
       description: metadata.description,
-      category: metadata.category || null,
+      category: metadata.category || 'ai-strategy',
       tags: metadata.tags
         .split(',')
         .map((t) => t.trim())
         .filter(Boolean),
       cover_image: metadata.coverImage || null,
       cover_image_alt: metadata.coverImageAlt || null,
-      content: editor.getHTML(),
-      status: 'draft',
-      updated_at: new Date().toISOString(),
+      content: html,
     };
 
-    if (currentDraftId.current) {
-      const { error } = await supabaseRef.current
-        .from('blog_drafts')
-        .update(payload)
-        .eq('id', currentDraftId.current);
-
-      setSaveStatus(error ? 'error' : 'saved');
-    } else {
-      const { data, error } = await supabaseRef.current
-        .from('blog_drafts')
-        .insert({ ...payload, created_at: new Date().toISOString() })
-        .select('id')
-        .single();
-
-      if (!error && data) {
-        currentDraftId.current = data.id as string;
-        // Update URL without reload
-        window.history.replaceState({}, '', `/admin/editor/${data.id}`);
+    try {
+      if (currentDraftId.current) {
+        payload.id = currentDraftId.current;
+        const res = await fetch('/api/admin/drafts', {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify(payload),
+        });
+        if (res.status === 404) {
+          // Draft doesn't exist in DB — re-create it
+          console.warn('[save] Draft not found in DB, re-creating…');
+          currentDraftId.current = null;
+          delete payload.id;
+          const createRes = await fetch('/api/admin/drafts', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              Authorization: `Bearer ${token}`,
+            },
+            body: JSON.stringify(payload),
+          });
+          if (createRes.ok) {
+            const json = await createRes.json() as { id?: string };
+            if (json.id) {
+              currentDraftId.current = json.id;
+              window.history.replaceState({}, '', `/admin/editor/${json.id}`);
+            }
+            setSaveStatus('saved');
+          } else {
+            console.error(`[save] Re-create failed: ${createRes.status}`);
+            setSaveStatus('error');
+          }
+          return;
+        }
+        if (!res.ok) {
+          const body = await res.text();
+          console.error(`[save] PUT ${res.status}: ${body}`);
+        }
+        setSaveStatus(res.ok ? 'saved' : 'error');
+      } else {
+        const res = await fetch('/api/admin/drafts', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify(payload),
+        });
+        if (!res.ok) {
+          const body = await res.text();
+          console.error(`[save] POST ${res.status}: ${body}`);
+          setSaveStatus('error');
+          return;
+        }
+        const json = await res.json() as { id?: string };
+        if (json.id) {
+          currentDraftId.current = json.id;
+          window.history.replaceState({}, '', `/admin/editor/${json.id}`);
+        }
+        setSaveStatus('saved');
       }
-      setSaveStatus(error ? 'error' : 'saved');
+    } catch (err) {
+      console.error('[save] Network error:', err);
+      setSaveStatus('error');
     }
   }, [editor, metadata]);
+
+  // Keep ref in sync so scheduleSave always calls the latest version
+  persistDraftRef.current = persistDraft;
 
   // Manual save on Cmd/Ctrl+S
   useEffect(() => {
@@ -281,9 +407,8 @@ export default function EditorApp({ draftId, supabaseUrl, supabaseAnonKey }: Edi
   // ----------------------------------------------------------------
 
   const handlePublish = async () => {
-    if (!currentDraftId.current) {
-      await persistDraft();
-    }
+    // Always save latest content before publishing
+    await persistDraft();
     if (!currentDraftId.current) {
       setPublishError('Save the draft first.');
       return;
@@ -293,9 +418,19 @@ export default function EditorApp({ draftId, supabaseUrl, supabaseAnonKey }: Edi
     setPublishError(null);
 
     try {
+      const { data: { session: s } } = await supabaseRef.current.auth.getSession();
+      if (!s) {
+        setPublishError('Not authenticated — please log in again.');
+        setPublishing(false);
+        return;
+      }
+
       const res = await fetch('/api/admin/publish', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${s.access_token}`,
+        },
         body: JSON.stringify({ draftId: currentDraftId.current }),
       });
       const json = (await res.json()) as { ok?: boolean; error?: string };

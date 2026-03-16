@@ -31,11 +31,26 @@ function jsonRes(body: unknown, status = 200) {
 // GET — list drafts
 // ----------------------------------------------------------------
 
-export const GET: APIRoute = async ({ request }) => {
+export const GET: APIRoute = async ({ request, url }) => {
   const userId = await verifyAuth(request);
   if (!userId) return jsonRes({ error: 'Unauthorized.' }, 401);
 
   const supabase = serverSupabase();
+  const id = url.searchParams.get('id');
+
+  if (id) {
+    // Single draft with all fields
+    const { data, error } = await supabase
+      .from('blog_drafts')
+      .select('*')
+      .eq('id', id)
+      .eq('user_id', userId)
+      .single();
+
+    if (error) return jsonRes({ error: error.message }, error.code === 'PGRST116' ? 404 : 500);
+    return jsonRes({ draft: data });
+  }
+
   const { data, error } = await supabase
     .from('blog_drafts')
     .select('id, title, slug, status, category, updated_at, created_at')
@@ -69,7 +84,7 @@ export const POST: APIRoute = async ({ request }) => {
       title: body.title ?? 'Untitled',
       slug: body.slug ?? '',
       description: body.description ?? '',
-      category: body.category ?? null,
+      category: body.category || 'ai-strategy',
       tags: body.tags ?? [],
       cover_image: body.cover_image ?? null,
       cover_image_alt: body.cover_image_alt ?? null,
@@ -104,12 +119,15 @@ export const PUT: APIRoute = async ({ request }) => {
   if (!id) return jsonRes({ error: 'Draft id required.' }, 400);
 
   const supabase = serverSupabase();
-  const { error } = await supabase
+  const { data, error } = await supabase
     .from('blog_drafts')
     .update({ ...updates, updated_at: new Date().toISOString() })
     .eq('id', id)
-    .eq('user_id', userId);
+    .eq('user_id', userId)
+    .select('id')
+    .single();
 
+  if (error?.code === 'PGRST116') return jsonRes({ error: 'Draft not found.' }, 404);
   if (error) return jsonRes({ error: error.message }, 500);
   return jsonRes({ ok: true });
 };

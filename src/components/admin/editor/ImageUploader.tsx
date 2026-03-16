@@ -28,7 +28,7 @@ export default function ImageUploader({
         setProgress(null);
       }
     },
-    [supabaseUrl, supabaseAnonKey, session, onUpload]
+    [onUpload]
   );
 
   const handleFiles = (files: FileList | null) => {

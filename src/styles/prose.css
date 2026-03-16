@@ -21,19 +21,9 @@
   letter-spacing: -0.01em;
 }
 
-.prose h2::before,
-.prose h3::before {
-  color: var(--color-text-muted);
-  font-family: var(--font-mono);
-  font-weight: 400;
-}
-
-.prose h2::before {
-  content: '# ';
-}
-
-.prose h3::before {
-  content: '## ';
+.prose h2,
+.prose h3 {
+  scroll-margin-top: 100px;
 }
 
 .prose h2 {
@@ -186,8 +176,36 @@
   border: 1px solid var(--color-border-muted);
   margin: 32px 0;
   max-width: 100%;
+  max-height: 80vh;
   height: auto;
+  object-fit: contain;
   display: block;
+}
+
+/* Consecutive image paragraphs → side-by-side */
+.prose p:has(> img:only-child):has(+ p > img:only-child),
+.prose p:has(> img:only-child) + p:has(> img:only-child) {
+  display: inline-block;
+  vertical-align: top;
+  width: calc(50% - 8px);
+}
+.prose p:has(> img:only-child):has(+ p > img:only-child) {
+  margin-right: 16px;
+}
+
+/* Consecutive bare images (not wrapped in <p>) → side-by-side */
+.prose img:has(+ img) {
+  display: inline-block;
+  vertical-align: top;
+  width: calc(50% - 8px);
+  margin-right: 16px;
+  margin-bottom: 24px;
+}
+.prose img + img {
+  display: inline-block;
+  vertical-align: top;
+  width: calc(50% - 8px);
+  margin-bottom: 24px;
 }
 
 /* ---- Tables ---- */
