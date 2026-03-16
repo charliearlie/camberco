@@ -108,19 +108,38 @@ import AdminLayout from '../../components/admin/AdminLayout.astro';
 <script>
   import { createClient } from '@supabase/supabase-js';
 
-  const supabase = createClient(
-    import.meta.env.PUBLIC_SUPABASE_URL,
-    import.meta.env.PUBLIC_SUPABASE_ANON_KEY,
-  );
-
   const form = document.getElementById('login-form') as HTMLFormElement;
   const errorEl = document.getElementById('login-error') as HTMLDivElement;
-
   const btn = document.getElementById('login-btn') as HTMLButtonElement;
+
+  function showError(msg: string) {
+    errorEl.textContent = msg;
+    errorEl.style.display = 'block';
+  }
+
+  const supabaseUrl = import.meta.env.PUBLIC_SUPABASE_URL;
+  const supabaseKey = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
+
+  if (!supabaseUrl || !supabaseKey) {
+    showError(`Config missing: URL=${!!supabaseUrl}, KEY=${!!supabaseKey}`);
+  }
+
+  let supabase: ReturnType<typeof createClient> | null = null;
+  try {
+    supabase = createClient(supabaseUrl, supabaseKey);
+  } catch (err) {
+    showError(`Client init failed: ${(err as Error).message}`);
+  }
 
   form.addEventListener('submit', async (e) => {
     e.preventDefault();
     errorEl.style.display = 'none';
+
+    if (!supabase) {
+      showError('Supabase client not initialized');
+      return;
+    }
+
     btn.disabled = true;
     btn.textContent = '$ signing in…';
 
@@ -129,17 +148,23 @@ import AdminLayout from '../../components/admin/AdminLayout.astro';
     const password = formData.get('password') as string;
 
     try {
-      const { error } = await supabase.auth.signInWithPassword({
+      const { data, error } = await supabase.auth.signInWithPassword({
         email,
         password,
       });
 
       if (error) throw error;
 
+      if (!data.session) {
+        showError('No session returned');
+        btn.disabled = false;
+        btn.textContent = '$ sign in';
+        return;
+      }
+
       window.location.href = '/admin';
     } catch (err) {
-      errorEl.textContent = (err as Error).message;
-      errorEl.style.display = 'block';
+      showError((err as Error).message);
       btn.disabled = false;
       btn.textContent = '$ sign in';
     }
