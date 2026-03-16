@@ -110,6 +110,13 @@ import AdminLayout from '../../components/admin/AdminLayout.astro';
 </AdminLayout>
 
 <script>
+  import { createClient } from '@supabase/supabase-js';
+
+  const supabase = createClient(
+    import.meta.env.PUBLIC_SUPABASE_URL,
+    import.meta.env.PUBLIC_SUPABASE_ANON_KEY,
+  );
+
   interface Draft {
     id: string;
     title: string;
@@ -122,8 +129,9 @@ import AdminLayout from '../../components/admin/AdminLayout.astro';
   const errorEl = document.getElementById('dash-error') as HTMLDivElement;
   const loadingEl = document.getElementById('drafts-loading') as HTMLDivElement;
 
-  function getToken(): string | null {
-    return sessionStorage.getItem('sb-access-token');
+  async function getToken(): Promise<string | null> {
+    const { data: { session } } = await supabase.auth.getSession();
+    return session?.access_token ?? null;
   }
 
   function formatDate(iso: string): string {
@@ -196,7 +204,7 @@ import AdminLayout from '../../components/admin/AdminLayout.astro';
   }
 
   async function loadDrafts() {
-    const token = getToken();
+    const token = await getToken();
     if (!token) {
       window.location.href = '/admin/login';
       return;
@@ -238,7 +246,7 @@ import AdminLayout from '../../components/admin/AdminLayout.astro';
         if (!id) return;
         if (!confirm('Delete this draft? This cannot be undone.')) return;
 
-        const token = getToken();
+        const token = await getToken();
         const res = await fetch(`/api/admin/drafts?id=${id}`, {
           method: 'DELETE',
           headers: { Authorization: `Bearer ${token ?? ''}` },
