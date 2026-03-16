@@ -1,17 +1,17 @@
 ---
-import type { CollectionEntry } from 'astro:content';
+import type { BlogPost } from '../../lib/blog';
 import CategoryBadge from './CategoryBadge.astro';
 import { getReadingTime } from '../../lib/reading-time';
 
 interface Props {
-  post: CollectionEntry<'blog'>;
+  post: BlogPost;
   featured?: boolean;
 }
 
 const { post, featured = false } = Astro.props;
-const { title, description, publishedAt, category, coverImage, coverImageAlt } = post.data;
+const { title, description, publishedAt, category, coverImage, coverImageAlt } = post;
 
-const readingTime = getReadingTime(post.body);
+const readingTime = getReadingTime(post.content);
 const formattedDate = publishedAt.toLocaleDateString('en-GB', {
   day: 'numeric',
   month: 'short',

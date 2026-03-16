@@ -1,17 +1,17 @@
 ---
-import type { CollectionEntry } from 'astro:content';
+import type { BlogPost } from '../../lib/blog';
 import CategoryBadge from './CategoryBadge.astro';
 
 interface Props {
   currentSlug: string;
   category: string;
-  posts: CollectionEntry<'blog'>[];
+  posts: BlogPost[];
 }
 
 const { currentSlug, category, posts } = Astro.props;
 
 const related = posts
-  .filter((p) => p.slug !== currentSlug && p.data.category === category && !p.data.draft)
+  .filter((p) => p.slug !== currentSlug && p.category === category)
   .slice(0, 3);
 ---
 
@@ -20,7 +20,7 @@ const related = posts
     <p class="related-label"><span class="comment" aria-hidden="true">// </span>Related posts</p>
     <ul class="related-grid" role="list">
       {related.map((post) => {
-        const formattedDate = post.data.publishedAt.toLocaleDateString('en-GB', {
+        const formattedDate = post.publishedAt.toLocaleDateString('en-GB', {
           day: 'numeric',
           month: 'short',
           year: 'numeric',
@@ -29,12 +29,12 @@ const related = posts
           <li class="related-card">
             <a href={`/blog/${post.slug}/`} class="related-link">
               <div class="related-meta">
-                <CategoryBadge category={post.data.category} small />
-                <time datetime={post.data.publishedAt.toISOString()} class="related-date">
+                <CategoryBadge category={post.category} small />
+                <time datetime={post.publishedAt.toISOString()} class="related-date">
                   {formattedDate}
                 </time>
               </div>
-              <p class="related-title">{post.data.title}</p>
+              <p class="related-title">{post.title}</p>
             </a>
           </li>
         );

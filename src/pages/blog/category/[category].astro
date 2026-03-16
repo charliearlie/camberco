@@ -1,5 +1,5 @@
 ---
-import { getCollection } from 'astro:content';
+import { getPublishedPosts } from '../../../lib/blog';
 import Layout from '../../../layouts/Layout.astro';
 import BlogCard from '../../../components/blog/BlogCard.astro';
 import '../../../styles/blog.css';
@@ -30,15 +30,8 @@ const categoryLabels: Record<string, string> = {
   'industry-trends': 'Industry Trends',
 };
 
-const isDev = import.meta.env.DEV;
-
-const allPosts = await getCollection('blog', ({ data }) =>
-  (isDev || !data.draft) && data.category === category
-);
-
-const posts = allPosts.sort(
-  (a, b) => b.data.publishedAt.valueOf() - a.data.publishedAt.valueOf()
-);
+const allPosts = await getPublishedPosts();
+const posts = allPosts.filter((p) => p.category === category);
 
 const categoryLabel = categoryLabels[category] ?? category;
 

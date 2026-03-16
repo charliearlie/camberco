@@ -1,20 +1,11 @@
 import React, { useRef, useState, useCallback } from 'react';
-import { createClient } from '@supabase/supabase-js';
+import { uploadImage } from './uploadImage';
 
 interface ImageUploaderProps {
   supabaseUrl: string;
   supabaseAnonKey: string;
   session: { access_token: string } | null;
   onUpload: (url: string) => void;
-}
-
-const MAX_SIZE_BYTES = 5 * 1024 * 1024; // 5 MB
-const BUCKET = 'blog-images';
-
-function generateFilename(original: string): string {
-  const ext = original.split('.').pop() ?? 'jpg';
-  const uuid = crypto.randomUUID();
-  return `${uuid}.${ext}`;
 }
 
 export default function ImageUploader({
@@ -31,45 +22,21 @@ export default function ImageUploader({
   const uploadFile = useCallback(
     async (file: File) => {
       setError(null);
-
-      if (!file.type.startsWith('image/')) {
-        setError('Only image files are accepted.');
-        return;
-      }
-      if (file.size > MAX_SIZE_BYTES) {
-        setError('File exceeds 5 MB limit.');
-        return;
-      }
-
-      const supabase = createClient(supabaseUrl, supabaseAnonKey);
-
-      // Attach user JWT so RLS policies allow the upload
-      if (session?.access_token) {
-        // @ts-expect-error — internal header injection
-        supabase.auth.setSession({ access_token: session.access_token, refresh_token: '' });
-      }
-
-      const filename = generateFilename(file.name);
       setProgress(0);
 
-      const { data, error: uploadError } = await supabase.storage
-        .from(BUCKET)
-        .upload(filename, file, {
-          contentType: file.type,
-          upsert: false,
+      try {
+        const url = await uploadImage(file, {
+          supabaseUrl,
+          supabaseAnonKey,
+          accessToken: session?.access_token ?? '',
         });
-
-      if (uploadError) {
-        setError(uploadError.message);
+        setProgress(100);
+        onUpload(url);
+      } catch (err) {
+        setError(err instanceof Error ? err.message : 'Upload failed.');
+      } finally {
         setProgress(null);
-        return;
       }
-
-      setProgress(100);
-
-      const { data: urlData } = supabase.storage.from(BUCKET).getPublicUrl(data.path);
-      onUpload(urlData.publicUrl);
-      setProgress(null);
     },
     [supabaseUrl, supabaseAnonKey, session, onUpload]
   );

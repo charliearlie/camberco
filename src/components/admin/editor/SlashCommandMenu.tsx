@@ -69,10 +69,9 @@ const ALL_COMMANDS: CommandItem[] = [
   {
     icon: 'img',
     label: 'Image',
-    hint: 'embed',
-    command: (editor) => {
-      const url = window.prompt('Image URL');
-      if (url) editor.chain().focus().setImage({ src: url }).run();
+    hint: 'upload',
+    command: () => {
+      // Replaced at runtime by extension options
     },
   },
   {
@@ -162,18 +161,36 @@ interface SlashState {
 // Extension
 // ----------------------------------------------------------------
 
-const SlashCommandExtension = Extension.create({
+interface SlashCommandOptions {
+  onImageCommand?: () => void;
+}
+
+const SlashCommandExtension = Extension.create<SlashCommandOptions>({
   name: 'slashCommand',
+
+  addOptions() {
+    return {
+      onImageCommand: undefined,
+    };
+  },
 
   addProseMirrorPlugins() {
     const editor = this.editor;
+    const extensionOptions = this.options;
     let containerEl: HTMLDivElement | null = null;
     let root: Root | null = null;
     let menuRef: MenuHandle | null = null;
 
     function getMenuItems(query: string): CommandItem[] {
       const q = query.toLowerCase();
-      return ALL_COMMANDS.filter((c) => c.label.toLowerCase().includes(q));
+      return ALL_COMMANDS
+        .map((c) => {
+          if (c.label === 'Image' && extensionOptions.onImageCommand) {
+            return { ...c, command: () => extensionOptions.onImageCommand!() };
+          }
+          return c;
+        })
+        .filter((c) => c.label.toLowerCase().includes(q));
     }
 
     function showMenu(view: EditorView, slashPos: number, query: string) {

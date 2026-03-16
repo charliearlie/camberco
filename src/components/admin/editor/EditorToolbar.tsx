@@ -3,6 +3,7 @@ import type { Editor } from '@tiptap/core';
 
 interface EditorToolbarProps {
   editor: Editor;
+  onImageUpload?: () => Promise<string>;
 }
 
 interface ToolbarButton {
@@ -113,7 +114,7 @@ function BubbleMenuBar({ editor }: { editor: Editor }) {
 // Main toolbar
 // ----------------------------------------------------------------
 
-export default function EditorToolbar({ editor }: EditorToolbarProps) {
+export default function EditorToolbar({ editor, onImageUpload }: EditorToolbarProps) {
   const setLink = useCallback(() => {
     const prev = editor.getAttributes('link').href as string | undefined;
     const url = window.prompt('URL', prev ?? '');
@@ -126,11 +127,15 @@ export default function EditorToolbar({ editor }: EditorToolbarProps) {
   }, [editor]);
 
   const insertImage = useCallback(() => {
-    const url = window.prompt('Image URL');
-    if (url) {
-      editor.chain().focus().setImage({ src: url }).run();
+    if (onImageUpload) {
+      onImageUpload().catch(() => {});
+    } else {
+      const url = window.prompt('Image URL');
+      if (url) {
+        editor.chain().focus().setImage({ src: url }).run();
+      }
     }
-  }, [editor]);
+  }, [editor, onImageUpload]);
 
   const groups: ToolbarGroup[] = [
     {

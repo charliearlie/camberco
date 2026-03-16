@@ -1,19 +1,13 @@
 ---
-import { getCollection } from 'astro:content';
+import { getPublishedPosts } from '../../lib/blog';
 import Layout from '../../layouts/Layout.astro';
 import BlogCard from '../../components/blog/BlogCard.astro';
 import '../../styles/blog.css';
 
-const isDev = import.meta.env.DEV;
+const posts = await getPublishedPosts();
 
-const allPosts = await getCollection('blog', ({ data }) => isDev || !data.draft);
-
-const posts = allPosts.sort(
-  (a, b) => b.data.publishedAt.valueOf() - a.data.publishedAt.valueOf()
-);
-
-const featuredPost = posts.find((p) => p.data.featured);
-const regularPosts = posts.filter((p) => !p.data.featured);
+const featuredPost = posts.find((p) => p.featured);
+const regularPosts = posts.filter((p) => !p.featured);
 
 const categories = [
   { value: 'all', label: 'All Posts' },

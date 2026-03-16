@@ -1,5 +1,6 @@
 ---
-import { getCollection } from 'astro:content';
+import { getPublishedPosts, processHtml } from '../../lib/blog';
+import type { BlogPost } from '../../lib/blog';
 import Layout from '../../layouts/Layout.astro';
 import CategoryBadge from '../../components/blog/CategoryBadge.astro';
 import TableOfContents from '../../components/blog/TableOfContents.astro';
@@ -10,17 +11,17 @@ import { getReadingTime } from '../../lib/reading-time';
 import '../../styles/prose.css';
 
 export async function getStaticPaths() {
-  const posts = await getCollection('blog');
+  const posts = await getPublishedPosts();
   return posts.map((post) => ({
     params: { slug: post.slug },
     props: { post },
   }));
 }
 
-const { post } = Astro.props;
-const { Content, headings } = await post.render();
+const { post } = Astro.props as { post: BlogPost };
+const { html: articleHtml, headings } = processHtml(post.content);
 
-const allPosts = await getCollection('blog');
+const allPosts = await getPublishedPosts();
 
 const {
   title,
@@ -32,9 +33,9 @@ const {
   tags,
   coverImage,
   coverImageAlt,
-} = post.data;
+} = post;
 
-const readingTime = getReadingTime(post.body);
+const readingTime = getReadingTime(post.content);
 
 const formattedDate = publishedAt.toLocaleDateString('en-GB', {
   day: 'numeric',
@@ -54,6 +55,8 @@ const categoryLabels: Record<string, string> = {
 };
 
 const categoryLabel = categoryLabels[category] ?? category;
+
+const plainText = post.content.replace(/<[^>]+>/g, '');
 
 // JSON-LD Article schema
 const schema = JSON.stringify({
@@ -77,7 +80,7 @@ const schema = JSON.stringify({
       url: 'https://camberco.uk/social.png',
     },
   },
-  wordCount: post.body.trim().split(/\s+/).length,
+  wordCount: plainText.trim().split(/\s+/).length,
   articleSection: categoryLabel,
   keywords: tags.join(', '),
   mainEntityOfPage: {
@@ -156,12 +159,12 @@ const articleMeta = {
         )}
 
         <!-- Main content -->
-        <article class="post-content prose">
-          <Content />
+        <article class="post-content prose" set:html={articleHtml} />
+        <div class="post-content">
           <ShareButtons title={title} url={canonicalUrl} />
           <AuthorBio />
           <RelatedPosts currentSlug={post.slug} category={category} posts={allPosts} />
-        </article>
+        </div>
       </div>
     </div>
   </main>

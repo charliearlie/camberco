@@ -555,6 +555,15 @@ html.editor-page body {
   50% { opacity: 0.4; }
 }
 
+.upload-indicator {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.04em;
+  color: var(--color-text-muted);
+  animation: pulse 1.2s ease-in-out infinite;
+  white-space: nowrap;
+}
+
 /* ============================================================
    Word Count / Status Bar
    ============================================================ */

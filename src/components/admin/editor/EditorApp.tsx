@@ -13,6 +13,8 @@ import { createLowlight, common } from 'lowlight';
 import EditorToolbar from './EditorToolbar';
 import MetadataPanel from './MetadataPanel';
 import SlashCommandExtension from './SlashCommandMenu';
+import ImageDropPaste from './ImageDropPaste';
+import { uploadImage } from './uploadImage';
 import type { Metadata } from './MetadataPanel';
 
 // ----------------------------------------------------------------
@@ -71,6 +73,7 @@ export default function EditorApp({ draftId, supabaseUrl, supabaseAnonKey }: Edi
   const [slugLocked, setSlugLocked] = useState(false);
   const [saveStatus, setSaveStatus] = useState<SaveStatus>('saved');
   const [panelOpen, setPanelOpen] = useState(true);
+  const [uploading, setUploading] = useState(false);
   const [publishing, setPublishing] = useState(false);
   const [publishError, setPublishError] = useState<string | null>(null);
   const saveTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -104,7 +107,17 @@ export default function EditorApp({ draftId, supabaseUrl, supabaseAnonKey }: Edi
       Placeholder.configure({ placeholder: 'Start writing… or type / for commands' }),
       Typography,
       CharacterCount,
-      SlashCommandExtension,
+      SlashCommandExtension.configure({
+        onImageCommand: () => handleImageUploadFromPicker(),
+      }),
+      ImageDropPaste.configure({
+        supabaseUrl,
+        supabaseAnonKey,
+        accessToken: session?.access_token ?? '',
+        onUploadStart: () => setUploading(true),
+        onUploadEnd: () => setUploading(false),
+        onUploadError: (err: Error) => console.error('Image upload failed:', err.message),
+      }),
     ],
     autofocus: true,
     editorProps: {
@@ -114,6 +127,39 @@ export default function EditorApp({ draftId, supabaseUrl, supabaseAnonKey }: Edi
       scheduleSave();
     },
   });
+
+  // ----------------------------------------------------------------
+  // Image upload via file picker (toolbar + slash command)
+  // ----------------------------------------------------------------
+
+  const handleImageUploadFromPicker = useCallback((): Promise<string> => {
+    return new Promise((resolve, reject) => {
+      const input = document.createElement('input');
+      input.type = 'file';
+      input.accept = 'image/*';
+      input.onchange = async () => {
+        const file = input.files?.[0];
+        if (!file) return reject(new Error('No file selected'));
+        setUploading(true);
+        try {
+          const url = await uploadImage(file, {
+            supabaseUrl,
+            supabaseAnonKey,
+            accessToken: session?.access_token ?? '',
+          });
+          if (editor) {
+            editor.chain().focus().setImage({ src: url }).run();
+          }
+          resolve(url);
+        } catch (err) {
+          reject(err);
+        } finally {
+          setUploading(false);
+        }
+      };
+      input.click();
+    });
+  }, [editor, session, supabaseUrl, supabaseAnonKey]);
 
   // ----------------------------------------------------------------
   // Load existing draft
@@ -313,7 +359,7 @@ export default function EditorApp({ draftId, supabaseUrl, supabaseAnonKey }: Edi
     <div className="editor-container">
       {/* Top toolbar row */}
       <div style={{ display: 'flex', alignItems: 'center', borderBottom: '1px solid var(--color-border-subtle)' }}>
-        {editor && <EditorToolbar editor={editor} />}
+        {editor && <EditorToolbar editor={editor} onImageUpload={handleImageUploadFromPicker} />}
 
         {/* Right-side actions */}
         <div
@@ -327,6 +373,7 @@ export default function EditorApp({ draftId, supabaseUrl, supabaseAnonKey }: Edi
           }}
         >
           <span className={`save-status ${saveStatus}`}>{saveLabel}</span>
+          {uploading && <span className="upload-indicator">uploading image…</span>}
 
           <button
             type="button"
