@@ -3,7 +3,7 @@ import AdminLayout from '../../components/admin/AdminLayout.astro';
 ---
 
 <AdminLayout title="Enquiries">
-  <main style="max-width: 960px; margin: 0 auto; padding: var(--space-8) var(--space-6);">
+  <main style="max-width: 1100px; margin: 0 auto; padding: var(--space-8) var(--space-6);">
     <!-- Heading -->
     <h1
       style="
@@ -168,7 +168,7 @@ import AdminLayout from '../../components/admin/AdminLayout.astro';
 
   function statusBadge(status: string): string {
     const color = statusColors[status] || 'var(--color-text-muted)';
-    return `<span style="display:inline-block;padding:2px 8px;background:${color}20;color:${color};font-family:var(--font-mono);font-size:11px;font-weight:600;border-radius:var(--radius-sm);border:1px solid ${color}40;">${status}</span>`;
+    return `<span style="display:inline-block;padding:2px 10px;background:${color}22;color:${color};font-family:var(--font-mono);font-size:11px;font-weight:600;border-radius:9999px;border:1px solid ${color}33;letter-spacing:0.02em;">${status}</span>`;
   }
 
   function renderRow(enq: Enquiry): string {
@@ -420,8 +420,8 @@ import AdminLayout from '../../components/admin/AdminLayout.astro';
 
   .enq-header {
     display: grid;
-    grid-template-columns: 1.5fr 1fr 80px 100px 100px;
-    padding: var(--space-3) var(--space-4);
+    grid-template-columns: 2fr 1.2fr 90px 110px 110px;
+    padding: var(--space-3) var(--space-5);
     border-bottom: 1px solid var(--color-border-subtle);
     background: var(--color-surface-02);
   }
@@ -436,9 +436,9 @@ import AdminLayout from '../../components/admin/AdminLayout.astro';
 
   .enq-row {
     display: grid;
-    grid-template-columns: 1.5fr 1fr 80px 100px 100px;
+    grid-template-columns: 2fr 1.2fr 90px 110px 110px;
     align-items: center;
-    padding: var(--space-3) var(--space-4);
+    padding: var(--space-4) var(--space-5);
     border-bottom: 1px solid var(--color-border-subtle);
     cursor: pointer;
     transition: background var(--duration-quick);
@@ -447,7 +447,7 @@ import AdminLayout from '../../components/admin/AdminLayout.astro';
   .enq-contact {
     display: flex;
     flex-direction: column;
-    gap: 2px;
+    gap: var(--space-1);
     overflow: hidden;
   }
 
@@ -478,6 +478,10 @@ import AdminLayout from '../../components/admin/AdminLayout.astro';
   }
 
   /* Detail panel */
+  .enq-detail[hidden] {
+    display: none;
+  }
+
   .enq-detail {
     margin-top: var(--space-6);
     padding: var(--space-6);
@@ -622,9 +626,9 @@ import AdminLayout from '../../components/admin/AdminLayout.astro';
     font-family: var(--font-mono);
     font-size: 12px;
     font-weight: 500;
-    color: var(--color-text-muted);
+    color: var(--color-text-secondary);
     background: var(--color-surface-02);
-    border: 1px solid var(--color-border-muted);
+    border: 1px solid var(--color-border-visible);
     border-radius: var(--radius-sm);
     cursor: pointer;
     transition:
@@ -634,14 +638,16 @@ import AdminLayout from '../../components/admin/AdminLayout.astro';
   }
 
   .status-btn:hover {
-    color: var(--color-text-secondary);
-    border-color: var(--color-border-visible);
+    color: var(--color-text-primary);
+    border-color: var(--color-green-400);
+    background: var(--color-green-glow);
   }
 
   .status-btn--active {
     background: var(--color-green-glow);
     border-color: var(--color-green-500);
     color: var(--color-green-400);
+    font-weight: 700;
     cursor: default;
   }
 
@@ -649,13 +655,30 @@ import AdminLayout from '../../components/admin/AdminLayout.astro';
   @media (max-width: 640px) {
     .enq-header,
     .enq-row {
-      grid-template-columns: 1fr 80px 80px;
+      grid-template-columns: 1fr 90px 100px;
     }
 
     .enq-header .enq-col-label:nth-child(2),
     .enq-header .enq-col-label:nth-child(3),
     .enq-row .enq-cell:nth-child(2),
     .enq-row .enq-cell:nth-child(3) {
+      display: none;
+    }
+  }
+
+  @media (max-width: 420px) {
+    .enq-header,
+    .enq-row {
+      grid-template-columns: 1fr;
+      gap: var(--space-2);
+    }
+
+    .enq-header .enq-col-label:nth-child(2),
+    .enq-header .enq-col-label:nth-child(3),
+    .enq-header .enq-col-label:nth-child(5),
+    .enq-row .enq-cell:nth-child(2),
+    .enq-row .enq-cell:nth-child(3),
+    .enq-row .enq-cell:nth-child(5) {
       display: none;
     }
   }

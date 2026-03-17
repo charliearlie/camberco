@@ -34,7 +34,7 @@ export async function sendAdminNotification(data: EnquiryData): Promise<void> {
 
   const html = `
     <div style="${terminalStyles}">
-      <h2 style="${greenText} font-size: 18px; margin: 0 0 24px 0;">$ new enquiry received</h2>
+      <h2 style="${greenText} font-size: 18px; margin: 0 0 24px 0;">$ new CamberCo enquiry</h2>
 
       <table style="width: 100%; border-collapse: collapse;">
         <tr>
@@ -74,7 +74,7 @@ export async function sendAdminNotification(data: EnquiryData): Promise<void> {
   await resend.emails.send({
     from: FROM_EMAIL,
     to: ADMIN_EMAIL,
-    subject: `New enquiry from ${data.name}`,
+    subject: `New CamberCo enquiry from ${data.name}`,
     html,
   });
 }
