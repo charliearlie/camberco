@@ -167,12 +167,22 @@ import ChatDrawer from '../components/ChatDrawer.astro';
       // Animate form out, then show success
       form.classList.add('fade-out');
       chatAlt.classList.add('fade-out');
-      form.addEventListener('transitionend', () => {
+
+      function showSuccess() {
         form.hidden = true;
         chatAlt.hidden = true;
         successEl.hidden = false;
-        // Trigger reflow then fade in
-        requestAnimationFrame(() => successEl.classList.add('visible'));
+        requestAnimationFrame(() => {
+          successEl.classList.add('visible');
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+      }
+
+      const fallback = setTimeout(showSuccess, 350);
+      form.addEventListener('transitionend', (e) => {
+        if (e.target !== form) return;
+        clearTimeout(fallback);
+        showSuccess();
       }, { once: true });
     } catch {
       showError('Connection error. Please try again.');
@@ -251,6 +261,9 @@ import ChatDrawer from '../components/ChatDrawer.astro';
   @media (max-width: 520px) {
     .form-row {
       grid-template-columns: 1fr;
+    }
+    .form-input {
+      font-size: 16px;
     }
   }
 
