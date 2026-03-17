@@ -10,6 +10,7 @@ interface Props {
   schema?: string;
   ogType?: string;
   ogImage?: string;
+  ogImageAlt?: string;
   articleMeta?: {
     publishedTime: string;
     modifiedTime?: string;
@@ -26,10 +27,12 @@ const {
   schema,
   ogType = 'website',
   ogImage: ogImageProp,
+  ogImageAlt: ogImageAltProp,
   articleMeta,
 } = Astro.props;
 
 const ogImage = ogImageProp ?? 'https://camberco.co.uk/social.png';
+const ogImageAlt = ogImageAltProp ?? 'Camber Co — AI services for founders who move fast.';
 ---
 
 <!doctype html>
@@ -65,7 +68,7 @@ const ogImage = ogImageProp ?? 'https://camberco.co.uk/social.png';
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
     <meta property="og:image" content={ogImage} />
-    <meta property="og:image:alt" content="Camber Co — AI services for founders who move fast." />
+    <meta property="og:image:alt" content={ogImageAlt} />
     <meta property="og:locale" content="en_GB" />
     <meta property="og:site_name" content="Camber Co" />
 
