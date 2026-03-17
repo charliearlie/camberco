@@ -162,25 +162,25 @@ const COMMANDS: Record<string, Command> = {
     <span class="t-green">GET IN TOUCH</span>
 
     <span class="t-muted">  email:</span>     hello@camberco.co.uk
-    <span class="t-muted">  calendar:</span>  calendly.com/camber-co/30min
+    <span class="t-muted">  form:</span>      camberco.co.uk/contact
     <span class="t-muted">  web:</span>       camberco.co.uk
 
-    <span class="t-pink">→ free 30-min audit — no commitment</span>
+    <span class="t-pink">→ get in touch — no commitment</span>
     `,
   },
 
   book: {
-    description: 'book an audit call',
+    description: 'get in touch',
     run: () => {
-      window.open('https://calendly.com/camber-co/30min', '_blank');
+      window.location.href = '/contact/';
       return L`
-      <span class="t-green">opening booking page...</span>
+      <span class="t-green">opening contact page...</span>
 
-      → calendly.com/camber-co/30min
-        30-minute free audit call
+      → camberco.co.uk/contact
+        tell us what you need
         no commitment required
 
-      <span class="t-muted">if the page didn't open, visit the link above</span>
+      <span class="t-muted">if the page didn't open, visit /contact</span>
       `;
     },
   },

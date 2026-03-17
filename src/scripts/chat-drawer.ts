@@ -106,7 +106,7 @@ async function streamResponse(messagesEl: HTMLElement): Promise<void> {
   } catch {
     msgEl.classList.remove('chat-msg--streaming');
     msgEl.innerHTML =
-      'connection lost. <a href="https://calendly.com/camber-co/30min" target="_blank" rel="noopener noreferrer">book a call directly</a>';
+      'connection lost. <a href="/contact/">get in touch directly</a>';
   }
 
   isStreaming = false;

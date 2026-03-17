@@ -1,0 +1,662 @@
+---
+import AdminLayout from '../../components/admin/AdminLayout.astro';
+---
+
+<AdminLayout title="Enquiries">
+  <main style="max-width: 960px; margin: 0 auto; padding: var(--space-8) var(--space-6);">
+    <!-- Heading -->
+    <h1
+      style="
+        font-family: var(--font-mono);
+        font-size: 20px;
+        font-weight: 700;
+        color: var(--color-green-500);
+        margin: 0 0 var(--space-6) 0;
+      "
+    >
+      $ camber admin --enquiries
+    </h1>
+
+    <!-- Filter tabs -->
+    <div id="filter-tabs" class="filter-tabs">
+      <button class="filter-tab active" data-status="all">all <span class="tab-count" id="count-all">0</span></button>
+      <button class="filter-tab" data-status="new">new <span class="tab-count" id="count-new">0</span></button>
+      <button class="filter-tab" data-status="contacted">contacted <span class="tab-count" id="count-contacted">0</span></button>
+      <button class="filter-tab" data-status="booked">booked <span class="tab-count" id="count-booked">0</span></button>
+      <button class="filter-tab" data-status="closed">closed <span class="tab-count" id="count-closed">0</span></button>
+    </div>
+
+    <!-- Error -->
+    <div
+      id="enq-error"
+      style="
+        display: none;
+        padding: var(--space-2) var(--space-3);
+        background: rgba(239,68,68,0.1);
+        border: 1px solid rgba(239,68,68,0.3);
+        border-radius: var(--radius-sm);
+        font-family: var(--font-mono);
+        font-size: 12px;
+        color: var(--color-error);
+        margin-bottom: var(--space-4);
+      "
+    >
+    </div>
+
+    <!-- Enquiries table -->
+    <div class="enq-table">
+      <!-- Table header -->
+      <div class="enq-header">
+        <span class="enq-col-label">contact</span>
+        <span class="enq-col-label">service</span>
+        <span class="enq-col-label">source</span>
+        <span class="enq-col-label">status</span>
+        <span class="enq-col-label">received</span>
+      </div>
+
+      <!-- Rows rendered by JS -->
+      <div id="enq-list">
+        <div
+          id="enq-loading"
+          style="
+            padding: var(--space-6) var(--space-4);
+            font-family: var(--font-mono);
+            font-size: 13px;
+            color: var(--color-text-muted);
+            text-align: center;
+          "
+        >
+          loading enquiries...
+        </div>
+      </div>
+    </div>
+
+    <!-- Detail panel (toggled by JS) -->
+    <div id="enq-detail" class="enq-detail" hidden>
+      <div class="detail-header">
+        <h2 id="detail-name" class="detail-name"></h2>
+        <button id="detail-close" class="detail-close" aria-label="Close detail">✕</button>
+      </div>
+
+      <div class="detail-grid">
+        <div class="detail-field">
+          <span class="detail-label">email</span>
+          <a id="detail-email" class="detail-value detail-link" href=""></a>
+        </div>
+        <div class="detail-field">
+          <span class="detail-label">company</span>
+          <span id="detail-company" class="detail-value"></span>
+        </div>
+        <div class="detail-field">
+          <span class="detail-label">service</span>
+          <span id="detail-service" class="detail-value"></span>
+        </div>
+        <div class="detail-field">
+          <span class="detail-label">source</span>
+          <span id="detail-source" class="detail-value"></span>
+        </div>
+      </div>
+
+      <div class="detail-section">
+        <span class="detail-label">message</span>
+        <p id="detail-message" class="detail-message-text"></p>
+      </div>
+
+      <div id="detail-transcript-section" class="detail-section" hidden>
+        <span class="detail-label">chat transcript</span>
+        <div id="detail-transcript" class="detail-transcript"></div>
+      </div>
+
+      <div class="detail-section">
+        <span class="detail-label">status</span>
+        <div id="detail-status-btns" class="status-btns"></div>
+      </div>
+    </div>
+  </main>
+</AdminLayout>
+
+<script>
+  import { supabase } from '../../lib/supabase';
+
+  interface Enquiry {
+    id: string;
+    name: string;
+    email: string;
+    company: string | null;
+    service: string;
+    message: string;
+    source: 'form' | 'bot';
+    chat_transcript: { role: string; content: string }[] | null;
+    status: string;
+    created_at: string;
+    updated_at: string;
+  }
+
+  let enquiries: Enquiry[] = [];
+  let currentFilter = 'all';
+  let selectedId: string | null = null;
+
+  const listEl = document.getElementById('enq-list') as HTMLDivElement;
+  const errorEl = document.getElementById('enq-error') as HTMLDivElement;
+  const loadingEl = document.getElementById('enq-loading') as HTMLDivElement;
+  const detailEl = document.getElementById('enq-detail') as HTMLDivElement;
+  const detailClose = document.getElementById('detail-close');
+
+  async function getToken(): Promise<string | null> {
+    const { data: { session } } = await supabase.auth.getSession();
+    return session?.access_token ?? null;
+  }
+
+  function formatDate(iso: string): string {
+    return new Date(iso).toLocaleDateString('en-GB', {
+      day: '2-digit',
+      month: 'short',
+      year: 'numeric',
+    });
+  }
+
+  function escapeHtml(s: string): string {
+    return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+  }
+
+  const statusColors: Record<string, string> = {
+    new: 'var(--color-green-500)',
+    contacted: 'var(--color-warning)',
+    booked: 'var(--color-pink-500)',
+    closed: 'var(--color-text-muted)',
+  };
+
+  function statusBadge(status: string): string {
+    const color = statusColors[status] || 'var(--color-text-muted)';
+    return `<span style="display:inline-block;padding:2px 8px;background:${color}20;color:${color};font-family:var(--font-mono);font-size:11px;font-weight:600;border-radius:var(--radius-sm);border:1px solid ${color}40;">${status}</span>`;
+  }
+
+  function renderRow(enq: Enquiry): string {
+    return `
+      <div class="enq-row" data-enq-id="${enq.id}">
+        <span class="enq-cell enq-contact">
+          <span class="enq-name">${escapeHtml(enq.name)}</span>
+          <span class="enq-email">${escapeHtml(enq.email)}</span>
+        </span>
+        <span class="enq-cell" style="font-size:12px;color:var(--color-text-secondary);">${escapeHtml(enq.service)}</span>
+        <span class="enq-cell" style="font-size:11px;color:var(--color-text-muted);font-variant:small-caps;">${enq.source === 'bot' ? 'ai chat' : 'form'}</span>
+        <span class="enq-cell">${statusBadge(enq.status)}</span>
+        <span class="enq-cell" style="font-family:var(--font-mono);font-size:12px;color:var(--color-text-muted);">${formatDate(enq.created_at)}</span>
+      </div>
+    `;
+  }
+
+  function renderEmpty(): string {
+    return `
+      <div style="padding:var(--space-8) var(--space-4);font-family:var(--font-mono);font-size:13px;color:var(--color-text-muted);text-align:center;">
+        no enquiries${currentFilter !== 'all' ? ` with status "${currentFilter}"` : ''} yet
+      </div>
+    `;
+  }
+
+  function updateCounts() {
+    const counts: Record<string, number> = { all: enquiries.length, new: 0, contacted: 0, booked: 0, closed: 0 };
+    for (const e of enquiries) {
+      counts[e.status] = (counts[e.status] || 0) + 1;
+    }
+    for (const key of Object.keys(counts)) {
+      const el = document.getElementById(`count-${key}`);
+      if (el) el.textContent = String(counts[key]);
+    }
+  }
+
+  function renderList() {
+    const filtered = currentFilter === 'all'
+      ? enquiries
+      : enquiries.filter((e) => e.status === currentFilter);
+
+    if (filtered.length === 0) {
+      listEl.innerHTML = renderEmpty();
+    } else {
+      listEl.innerHTML = filtered.map(renderRow).join('');
+    }
+    attachRowListeners();
+  }
+
+  function attachRowListeners() {
+    listEl.querySelectorAll('.enq-row').forEach((row) => {
+      row.addEventListener('click', () => {
+        const id = (row as HTMLElement).dataset.enqId;
+        if (!id) return;
+        showDetail(id);
+      });
+    });
+  }
+
+  function showDetail(id: string) {
+    const enq = enquiries.find((e) => e.id === id);
+    if (!enq) return;
+
+    selectedId = id;
+
+    (document.getElementById('detail-name') as HTMLElement).textContent = enq.name;
+
+    const emailEl = document.getElementById('detail-email') as HTMLAnchorElement;
+    emailEl.textContent = enq.email;
+    emailEl.href = `mailto:${enq.email}`;
+
+    (document.getElementById('detail-company') as HTMLElement).textContent = enq.company || '—';
+    (document.getElementById('detail-service') as HTMLElement).textContent = enq.service;
+    (document.getElementById('detail-source') as HTMLElement).textContent = enq.source === 'bot' ? 'AI chat' : 'Contact form';
+    (document.getElementById('detail-message') as HTMLElement).textContent = enq.message;
+
+    // Chat transcript
+    const transcriptSection = document.getElementById('detail-transcript-section') as HTMLDivElement;
+    const transcriptEl = document.getElementById('detail-transcript') as HTMLDivElement;
+    if (enq.chat_transcript && enq.chat_transcript.length > 0) {
+      transcriptSection.hidden = false;
+      transcriptEl.innerHTML = enq.chat_transcript
+        .map((msg) => `<div class="transcript-msg transcript-msg--${msg.role}"><strong>${msg.role}:</strong> ${escapeHtml(msg.content)}</div>`)
+        .join('');
+    } else {
+      transcriptSection.hidden = true;
+    }
+
+    // Status buttons
+    const statuses = ['new', 'contacted', 'booked', 'closed'];
+    const btnsEl = document.getElementById('detail-status-btns') as HTMLDivElement;
+    btnsEl.innerHTML = statuses
+      .map((s) => `<button class="status-btn${enq.status === s ? ' status-btn--active' : ''}" data-status="${s}">${s}</button>`)
+      .join('');
+
+    btnsEl.querySelectorAll('.status-btn').forEach((btn) => {
+      btn.addEventListener('click', async () => {
+        const newStatus = (btn as HTMLElement).dataset.status;
+        if (!newStatus || newStatus === enq.status) return;
+        await updateStatus(enq.id, newStatus);
+      });
+    });
+
+    detailEl.hidden = false;
+    detailEl.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  }
+
+  async function updateStatus(id: string, status: string) {
+    const token = await getToken();
+    if (!token) return;
+
+    const res = await fetch('/api/enquiries', {
+      method: 'PATCH',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify({ id, status }),
+    });
+
+    if (res.ok) {
+      const enq = enquiries.find((e) => e.id === id);
+      if (enq) {
+        enq.status = status;
+        enq.updated_at = new Date().toISOString();
+      }
+      updateCounts();
+      renderList();
+      if (selectedId === id) showDetail(id);
+    }
+  }
+
+  detailClose?.addEventListener('click', () => {
+    detailEl.hidden = true;
+    selectedId = null;
+  });
+
+  // Filter tabs
+  document.getElementById('filter-tabs')?.addEventListener('click', (e) => {
+    const btn = (e.target as HTMLElement).closest('.filter-tab') as HTMLElement | null;
+    if (!btn) return;
+    const status = btn.dataset.status ?? 'all';
+    currentFilter = status;
+
+    document.querySelectorAll('.filter-tab').forEach((t) => t.classList.remove('active'));
+    btn.classList.add('active');
+
+    detailEl.hidden = true;
+    selectedId = null;
+    renderList();
+  });
+
+  // Load enquiries
+  async function loadEnquiries() {
+    const token = await getToken();
+    if (!token) {
+      window.location.href = '/admin/login';
+      return;
+    }
+
+    try {
+      const res = await fetch('/api/enquiries', {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+
+      if (res.status === 401) {
+        window.location.href = '/admin/login';
+        return;
+      }
+
+      const json = await res.json();
+      if (!res.ok || json.error) throw new Error(json.error ?? 'Failed to load enquiries.');
+
+      enquiries = json.enquiries ?? [];
+      loadingEl?.remove();
+      updateCounts();
+      renderList();
+    } catch (err) {
+      loadingEl?.remove();
+      errorEl.textContent = (err as Error).message;
+      errorEl.style.display = 'block';
+    }
+  }
+
+  // Hover effect for rows
+  document.addEventListener('mouseover', (e) => {
+    const row = (e.target as HTMLElement).closest('.enq-row') as HTMLElement | null;
+    if (row) row.style.background = 'var(--color-surface-02)';
+  });
+  document.addEventListener('mouseout', (e) => {
+    const row = (e.target as HTMLElement).closest('.enq-row') as HTMLElement | null;
+    if (row) row.style.background = '';
+  });
+
+  loadEnquiries();
+</script>
+
+<style>
+  /* Filter tabs */
+  .filter-tabs {
+    display: flex;
+    gap: var(--space-2);
+    margin-bottom: var(--space-6);
+    flex-wrap: wrap;
+  }
+
+  .filter-tab {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-1);
+    padding: var(--space-2) var(--space-4);
+    font-family: var(--font-mono);
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--color-text-muted);
+    background: var(--color-surface-01);
+    border: 1px solid var(--color-border-muted);
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    transition:
+      background var(--duration-quick),
+      color var(--duration-quick),
+      border-color var(--duration-quick);
+  }
+
+  .filter-tab:hover {
+    color: var(--color-text-secondary);
+    border-color: var(--color-border-visible);
+  }
+
+  .filter-tab.active {
+    background: var(--color-green-glow);
+    border-color: var(--color-green-500);
+    color: var(--color-green-400);
+  }
+
+  .tab-count {
+    font-size: 10px;
+    opacity: 0.6;
+  }
+
+  /* Table */
+  .enq-table {
+    background: var(--color-surface-01);
+    border: 1px solid var(--color-border-muted);
+    border-radius: var(--radius-md);
+    overflow: hidden;
+  }
+
+  .enq-header {
+    display: grid;
+    grid-template-columns: 1.5fr 1fr 80px 100px 100px;
+    padding: var(--space-3) var(--space-4);
+    border-bottom: 1px solid var(--color-border-subtle);
+    background: var(--color-surface-02);
+  }
+
+  .enq-col-label {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    font-variant: small-caps;
+    color: var(--color-text-muted);
+    letter-spacing: 0.06em;
+  }
+
+  .enq-row {
+    display: grid;
+    grid-template-columns: 1.5fr 1fr 80px 100px 100px;
+    align-items: center;
+    padding: var(--space-3) var(--space-4);
+    border-bottom: 1px solid var(--color-border-subtle);
+    cursor: pointer;
+    transition: background var(--duration-quick);
+  }
+
+  .enq-contact {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    overflow: hidden;
+  }
+
+  .enq-name {
+    font-family: var(--font-sans);
+    font-size: 14px;
+    color: var(--color-text-primary);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .enq-email {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--color-text-muted);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .enq-cell {
+    font-family: var(--font-sans);
+    font-size: 13px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  /* Detail panel */
+  .enq-detail {
+    margin-top: var(--space-6);
+    padding: var(--space-6);
+    background: var(--color-surface-01);
+    border: 1px solid var(--color-border-muted);
+    border-radius: var(--radius-md);
+  }
+
+  .detail-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: var(--space-6);
+  }
+
+  .detail-name {
+    font-family: var(--font-mono);
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--color-text-primary);
+    margin: 0;
+  }
+
+  .detail-close {
+    background: none;
+    border: none;
+    color: var(--color-text-muted);
+    font-size: 16px;
+    cursor: pointer;
+    padding: var(--space-2);
+    transition: color var(--duration-quick);
+  }
+
+  .detail-close:hover {
+    color: var(--color-text-primary);
+  }
+
+  .detail-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-4);
+    margin-bottom: var(--space-6);
+  }
+
+  @media (max-width: 520px) {
+    .detail-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  .detail-field {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-1);
+  }
+
+  .detail-label {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    font-weight: 500;
+    color: var(--color-text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+  }
+
+  .detail-value {
+    font-family: var(--font-sans);
+    font-size: 14px;
+    color: var(--color-text-primary);
+  }
+
+  .detail-link {
+    color: var(--color-green-400);
+    text-decoration: none;
+  }
+
+  .detail-link:hover {
+    color: var(--color-green-300);
+  }
+
+  .detail-section {
+    margin-bottom: var(--space-6);
+  }
+
+  .detail-message-text {
+    font-family: var(--font-sans);
+    font-size: 14px;
+    color: var(--color-text-secondary);
+    line-height: 1.6;
+    margin: var(--space-2) 0 0;
+    white-space: pre-wrap;
+  }
+
+  /* Transcript */
+  .detail-transcript {
+    margin-top: var(--space-2);
+    background: var(--color-surface-02);
+    border: 1px solid var(--color-border-subtle);
+    border-radius: var(--radius-sm);
+    padding: var(--space-4);
+    max-height: 300px;
+    overflow-y: auto;
+  }
+
+  .transcript-msg {
+    font-family: var(--font-sans);
+    font-size: 13px;
+    color: var(--color-text-secondary);
+    padding: var(--space-2) 0;
+    line-height: 1.5;
+  }
+
+  .transcript-msg + .transcript-msg {
+    border-top: 1px solid var(--color-border-subtle);
+  }
+
+  .transcript-msg strong {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+
+  .transcript-msg--user strong {
+    color: var(--color-text-muted);
+  }
+
+  .transcript-msg--assistant strong {
+    color: var(--color-green-500);
+  }
+
+  /* Status buttons */
+  .status-btns {
+    display: flex;
+    gap: var(--space-2);
+    margin-top: var(--space-2);
+    flex-wrap: wrap;
+  }
+
+  .status-btn {
+    padding: var(--space-2) var(--space-4);
+    font-family: var(--font-mono);
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--color-text-muted);
+    background: var(--color-surface-02);
+    border: 1px solid var(--color-border-muted);
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    transition:
+      background var(--duration-quick),
+      color var(--duration-quick),
+      border-color var(--duration-quick);
+  }
+
+  .status-btn:hover {
+    color: var(--color-text-secondary);
+    border-color: var(--color-border-visible);
+  }
+
+  .status-btn--active {
+    background: var(--color-green-glow);
+    border-color: var(--color-green-500);
+    color: var(--color-green-400);
+    cursor: default;
+  }
+
+  /* Responsive table */
+  @media (max-width: 640px) {
+    .enq-header,
+    .enq-row {
+      grid-template-columns: 1fr 80px 80px;
+    }
+
+    .enq-header .enq-col-label:nth-child(2),
+    .enq-header .enq-col-label:nth-child(3),
+    .enq-row .enq-cell:nth-child(2),
+    .enq-row .enq-cell:nth-child(3) {
+      display: none;
+    }
+  }
+</style>

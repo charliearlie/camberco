@@ -1,0 +1,475 @@
+---
+import Layout from '../layouts/Layout.astro';
+import ChatDrawer from '../components/ChatDrawer.astro';
+---
+
+<Layout
+  title="Get in Touch — Camber Co"
+  description="Ready to move fast with AI? Get in touch with Camber Co for AI strategy, automation, training, or a custom AI bot."
+  canonicalUrl="https://camberco.co.uk/contact/"
+>
+  <main class="contact-page">
+    <!-- Breadcrumb -->
+    <nav class="breadcrumb" aria-label="Breadcrumb">
+      <a href="/">~</a>
+      <span aria-hidden="true">/</span>
+      <span>contact</span>
+    </nav>
+
+    <h1 class="page-title">get in touch</h1>
+    <p class="page-subtitle">
+      Tell us what you're working on — we'll get back to you within 24 hours.
+    </p>
+
+    <!-- Form -->
+    <form id="contact-form" class="contact-form" novalidate>
+      <!-- Honeypot -->
+      <div style="position:absolute;left:-9999px;" aria-hidden="true">
+        <label for="website">Website</label>
+        <input type="text" id="website" name="website" tabindex="-1" autocomplete="off" />
+      </div>
+
+      <div class="form-row">
+        <div class="form-field">
+          <label for="name" class="form-label">name <span class="required">*</span></label>
+          <input type="text" id="name" name="name" required autocomplete="name" class="form-input" />
+        </div>
+        <div class="form-field">
+          <label for="email" class="form-label">email <span class="required">*</span></label>
+          <input type="email" id="email" name="email" required autocomplete="email" class="form-input" />
+        </div>
+      </div>
+
+      <div class="form-field">
+        <label for="company" class="form-label">company</label>
+        <input type="text" id="company" name="company" autocomplete="organization" class="form-input" />
+      </div>
+
+      <fieldset class="form-field chips-fieldset">
+        <legend class="form-label">service interest <span class="required">*</span></legend>
+        <div class="chips" id="service-chips">
+          <label class="chip">
+            <input type="checkbox" name="service" value="AI Strategy" />
+            <span class="chip-text">AI Strategy</span>
+          </label>
+          <label class="chip">
+            <input type="checkbox" name="service" value="Automation" />
+            <span class="chip-text">Automation</span>
+          </label>
+          <label class="chip">
+            <input type="checkbox" name="service" value="Training" />
+            <span class="chip-text">Training</span>
+          </label>
+          <label class="chip">
+            <input type="checkbox" name="service" value="Personal AI" />
+            <span class="chip-text">Personal AI</span>
+          </label>
+          <label class="chip">
+            <input type="checkbox" name="service" value="Something else" />
+            <span class="chip-text">Something else</span>
+          </label>
+        </div>
+      </fieldset>
+
+      <div class="form-field">
+        <label for="message" class="form-label">message <span class="required">*</span></label>
+        <textarea id="message" name="message" required rows="5" class="form-input form-textarea"></textarea>
+      </div>
+
+      <div id="form-error" class="form-error" hidden></div>
+
+      <button type="submit" class="submit-btn" id="submit-btn">
+        send enquiry →
+      </button>
+    </form>
+
+    <!-- Success state -->
+    <div id="form-success" class="form-success" hidden>
+      <div class="success-icon" aria-hidden="true">✓</div>
+      <h2 class="success-title">enquiry sent</h2>
+      <p class="success-text">
+        Thanks for reaching out. Charlie will review your message and get back to you within 24 hours.
+        Check your inbox for a confirmation email.
+      </p>
+      <a href="/" class="success-link">← back to home</a>
+    </div>
+
+    <!-- Chat alternative -->
+    <p class="chat-alt" id="chat-alt">
+      or <button type="button" class="chat-alt-btn" id="open-chat-btn">chat with the AI assistant</button> instead
+    </p>
+  </main>
+  <ChatDrawer />
+</Layout>
+
+<script>
+  const form = document.getElementById('contact-form') as HTMLFormElement;
+  const errorEl = document.getElementById('form-error') as HTMLDivElement;
+  const successEl = document.getElementById('form-success') as HTMLDivElement;
+  const submitBtn = document.getElementById('submit-btn') as HTMLButtonElement;
+  const chatAlt = document.getElementById('chat-alt') as HTMLParagraphElement;
+  const openChatBtn = document.getElementById('open-chat-btn');
+
+  openChatBtn?.addEventListener('click', () => {
+    if (window.__openChatDrawer) window.__openChatDrawer('general');
+  });
+
+  function showError(msg: string) {
+    errorEl.textContent = msg;
+    errorEl.hidden = false;
+  }
+
+  form?.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    errorEl.hidden = true;
+
+    const fd = new FormData(form);
+    const name = (fd.get('name') as string)?.trim();
+    const email = (fd.get('email') as string)?.trim();
+    const company = (fd.get('company') as string)?.trim();
+    const services = fd.getAll('service') as string[];
+    const message = (fd.get('message') as string)?.trim();
+    const website = (fd.get('website') as string)?.trim();
+
+    // Client-side validation
+    if (!name) { showError('Name is required.'); return; }
+    if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { showError('Valid email is required.'); return; }
+    if (services.length === 0) { showError('Please select at least one service.'); return; }
+    if (!message) { showError('Message is required.'); return; }
+
+    submitBtn.disabled = true;
+    submitBtn.textContent = 'sending...';
+
+    try {
+      const res = await fetch('/api/enquiries', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          name,
+          email,
+          company: company || undefined,
+          service: services.join(', '),
+          message,
+          source: 'form',
+          website,
+        }),
+      });
+
+      const data = await res.json();
+
+      if (!res.ok || data.error) {
+        showError(data.error || 'Something went wrong. Please try again.');
+        submitBtn.disabled = false;
+        submitBtn.textContent = 'send enquiry →';
+        return;
+      }
+
+      // Show success
+      form.hidden = true;
+      chatAlt.hidden = true;
+      successEl.hidden = false;
+    } catch {
+      showError('Connection error. Please try again.');
+      submitBtn.disabled = false;
+      submitBtn.textContent = 'send enquiry →';
+    }
+  });
+</script>
+
+<style>
+  .contact-page {
+    max-width: 640px;
+    margin: 0 auto;
+    padding: calc(56px + var(--space-12)) var(--space-6) var(--space-16);
+  }
+
+  /* Breadcrumb */
+  .breadcrumb {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    font-family: var(--font-mono);
+    font-size: var(--type-caption);
+    color: var(--color-text-muted);
+    margin-bottom: var(--space-8);
+  }
+
+  .breadcrumb a {
+    color: var(--color-text-muted);
+    text-decoration: none;
+    transition: color var(--duration-quick) var(--easing-smooth);
+  }
+
+  .breadcrumb a:hover {
+    color: var(--color-green-400);
+  }
+
+  /* Title */
+  .page-title {
+    font-family: var(--font-mono);
+    font-size: var(--type-h2);
+    font-weight: 700;
+    color: var(--color-green-500);
+    margin: 0 0 var(--space-3) 0;
+  }
+
+  .page-subtitle {
+    font-family: var(--font-sans);
+    font-size: var(--type-body);
+    color: var(--color-text-secondary);
+    margin: 0 0 var(--space-10) 0;
+    line-height: 1.6;
+  }
+
+  /* Form */
+  .contact-form {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-6);
+  }
+
+  .form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-6);
+  }
+
+  @media (max-width: 520px) {
+    .form-row {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  .form-field {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+  }
+
+  .form-label {
+    font-family: var(--font-mono);
+    font-size: var(--type-label);
+    font-weight: 500;
+    color: var(--color-text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+  }
+
+  .required {
+    color: var(--color-green-500);
+  }
+
+  .form-input {
+    background: var(--color-surface-01);
+    border: 1px solid var(--color-border-muted);
+    border-radius: var(--radius-sm);
+    padding: var(--space-3) var(--space-4);
+    font-family: var(--font-sans);
+    font-size: var(--type-body-sm);
+    color: var(--color-text-primary);
+    transition: border-color var(--duration-quick) var(--easing-smooth);
+    height: 44px;
+    box-sizing: border-box;
+  }
+
+  .form-input:focus {
+    outline: none;
+    border-color: var(--color-green-500);
+  }
+
+  .form-input::placeholder {
+    color: var(--color-text-muted);
+  }
+
+  .form-textarea {
+    height: auto;
+    resize: vertical;
+    min-height: 120px;
+  }
+
+  /* Chips */
+  .chips-fieldset {
+    border: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  .chips-fieldset .form-label {
+    margin-bottom: var(--space-1);
+  }
+
+  .chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+  }
+
+  .chip {
+    cursor: pointer;
+  }
+
+  .chip input {
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  .chip-text {
+    display: inline-block;
+    padding: var(--space-2) var(--space-4);
+    font-family: var(--font-mono);
+    font-size: var(--type-caption);
+    font-weight: 500;
+    color: var(--color-text-secondary);
+    background: var(--color-surface-01);
+    border: 1px solid var(--color-border-muted);
+    border-radius: var(--radius-sm);
+    transition:
+      background var(--duration-quick) var(--easing-smooth),
+      border-color var(--duration-quick) var(--easing-smooth),
+      color var(--duration-quick) var(--easing-smooth);
+    user-select: none;
+  }
+
+  .chip-text:hover {
+    border-color: var(--color-border-visible);
+  }
+
+  .chip input:checked + .chip-text {
+    background: var(--color-green-glow);
+    border-color: var(--color-green-500);
+    color: var(--color-green-400);
+  }
+
+  .chip input:focus-visible + .chip-text {
+    outline: 2px solid var(--color-green-500);
+    outline-offset: 2px;
+  }
+
+  /* Error */
+  .form-error {
+    padding: var(--space-3) var(--space-4);
+    background: rgba(239, 68, 68, 0.1);
+    border: 1px solid rgba(239, 68, 68, 0.3);
+    border-radius: var(--radius-sm);
+    font-family: var(--font-mono);
+    font-size: var(--type-body-sm);
+    color: var(--color-error);
+  }
+
+  /* Submit */
+  .submit-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    height: 48px;
+    padding: 0 var(--space-8);
+    background: var(--color-green-500);
+    color: var(--color-text-inverse);
+    font-family: var(--font-mono);
+    font-size: var(--type-body-sm);
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    border: none;
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    transition:
+      background var(--duration-quick) var(--easing-smooth),
+      transform var(--duration-quick) var(--easing-spring);
+    align-self: flex-start;
+  }
+
+  .submit-btn:hover:not(:disabled) {
+    background: var(--color-green-400);
+    transform: translateY(-1px);
+  }
+
+  .submit-btn:active:not(:disabled) {
+    transform: translateY(0);
+  }
+
+  .submit-btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+
+  /* Success */
+  .form-success {
+    text-align: center;
+    padding: var(--space-16) 0;
+  }
+
+  .success-icon {
+    width: 56px;
+    height: 56px;
+    margin: 0 auto var(--space-6);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--color-green-glow);
+    border: 1px solid var(--color-green-500);
+    border-radius: 50%;
+    color: var(--color-green-500);
+    font-size: 24px;
+    font-weight: 700;
+  }
+
+  .success-title {
+    font-family: var(--font-mono);
+    font-size: var(--type-h3);
+    font-weight: 700;
+    color: var(--color-green-500);
+    margin: 0 0 var(--space-3) 0;
+  }
+
+  .success-text {
+    font-family: var(--font-sans);
+    font-size: var(--type-body);
+    color: var(--color-text-secondary);
+    line-height: 1.6;
+    margin: 0 0 var(--space-8) 0;
+    max-width: 440px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .success-link {
+    font-family: var(--font-mono);
+    font-size: var(--type-body-sm);
+    color: var(--color-green-400);
+    text-decoration: none;
+    transition: color var(--duration-quick) var(--easing-smooth);
+  }
+
+  .success-link:hover {
+    color: var(--color-green-300);
+  }
+
+  /* Chat alternative */
+  .chat-alt {
+    margin-top: var(--space-8);
+    text-align: center;
+    font-family: var(--font-mono);
+    font-size: var(--type-body-sm);
+    color: var(--color-text-muted);
+  }
+
+  .chat-alt-btn {
+    background: none;
+    border: none;
+    color: var(--color-green-400);
+    font-family: var(--font-mono);
+    font-size: var(--type-body-sm);
+    cursor: pointer;
+    text-decoration: underline;
+    text-decoration-style: dashed;
+    text-underline-offset: 3px;
+    padding: 0;
+    transition: color var(--duration-quick) var(--easing-smooth);
+  }
+
+  .chat-alt-btn:hover {
+    color: var(--color-green-300);
+  }
+</style>
