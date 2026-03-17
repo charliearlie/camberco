@@ -164,10 +164,16 @@ import ChatDrawer from '../components/ChatDrawer.astro';
         return;
       }
 
-      // Show success
-      form.hidden = true;
-      chatAlt.hidden = true;
-      successEl.hidden = false;
+      // Animate form out, then show success
+      form.classList.add('fade-out');
+      chatAlt.classList.add('fade-out');
+      form.addEventListener('transitionend', () => {
+        form.hidden = true;
+        chatAlt.hidden = true;
+        successEl.hidden = false;
+        // Trigger reflow then fade in
+        requestAnimationFrame(() => successEl.classList.add('visible'));
+      }, { once: true });
     } catch {
       showError('Connection error. Please try again.');
       submitBtn.disabled = false;
@@ -226,6 +232,14 @@ import ChatDrawer from '../components/ChatDrawer.astro';
     display: flex;
     flex-direction: column;
     gap: var(--space-6);
+    transition: opacity 300ms var(--easing-smooth),
+                transform 300ms var(--easing-smooth);
+  }
+
+  .contact-form.fade-out,
+  .chat-alt.fade-out {
+    opacity: 0;
+    transform: translateY(-8px);
   }
 
   .form-row {
@@ -398,6 +412,24 @@ import ChatDrawer from '../components/ChatDrawer.astro';
   .form-success {
     text-align: center;
     padding: var(--space-16) 0;
+    opacity: 0;
+    transform: translateY(12px);
+  }
+
+  .form-success.visible {
+    opacity: 1;
+    transform: translateY(0);
+    transition: opacity 400ms var(--easing-smooth),
+                transform 400ms var(--easing-spring);
+  }
+
+  @keyframes scale-in {
+    from { transform: scale(0); opacity: 0; }
+    to { transform: scale(1); opacity: 1; }
+  }
+
+  .form-success.visible .success-icon {
+    animation: scale-in 400ms var(--easing-spring) 200ms both;
   }
 
   .success-icon {
@@ -453,6 +485,8 @@ import ChatDrawer from '../components/ChatDrawer.astro';
     font-family: var(--font-mono);
     font-size: var(--type-body-sm);
     color: var(--color-text-muted);
+    transition: opacity 300ms var(--easing-smooth),
+                transform 300ms var(--easing-smooth);
   }
 
   .chat-alt-btn {
