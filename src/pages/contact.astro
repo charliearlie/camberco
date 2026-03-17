@@ -168,7 +168,10 @@ import ChatDrawer from '../components/ChatDrawer.astro';
       form.classList.add('fade-out');
       chatAlt.classList.add('fade-out');
 
+      let shown = false;
       function showSuccess() {
+        if (shown) return;
+        shown = true;
         form.hidden = true;
         chatAlt.hidden = true;
         successEl.hidden = false;
@@ -246,6 +249,11 @@ import ChatDrawer from '../components/ChatDrawer.astro';
                 transform 300ms var(--easing-smooth);
   }
 
+  .contact-form[hidden],
+  .chat-alt[hidden] {
+    display: none;
+  }
+
   .contact-form.fade-out,
   .chat-alt.fade-out {
     opacity: 0;
@@ -262,7 +270,11 @@ import ChatDrawer from '../components/ChatDrawer.astro';
     .form-row {
       grid-template-columns: 1fr;
     }
-    .form-input {
+  }
+
+  @media (pointer: coarse) {
+    .form-input,
+    .form-textarea {
       font-size: 16px;
     }
   }
