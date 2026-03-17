@@ -4,7 +4,7 @@ import vercel from '@astrojs/vercel';
 import react from '@astrojs/react';
 
 export default defineConfig({
-  site: 'https://camberco.uk',
+  site: 'https://camberco.co.uk',
   integrations: [
     sitemap({
       filter: (page) => !page.includes('/admin/'),

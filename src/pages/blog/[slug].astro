@@ -43,7 +43,7 @@ const formattedDate = publishedAt.toLocaleDateString('en-GB', {
   year: 'numeric',
 });
 
-const canonicalUrl = `https://camberco.uk/blog/${post.slug}/`;
+const canonicalUrl = `https://camberco.co.uk/blog/${post.slug}/`;
 
 const categoryLabels: Record<string, string> = {
   'ai-strategy': 'AI Strategy',
@@ -70,15 +70,15 @@ const schema = JSON.stringify([
     author: {
       '@type': 'Person',
       name: author,
-      url: 'https://camberco.uk/about-me',
+      url: 'https://camberco.co.uk/about-me',
     },
     publisher: {
       '@type': 'Organization',
       name: 'Camber Co',
-      url: 'https://camberco.uk',
+      url: 'https://camberco.co.uk',
       logo: {
         '@type': 'ImageObject',
-        url: 'https://camberco.uk/social.png',
+        url: 'https://camberco.co.uk/social.png',
       },
     },
     wordCount: plainText.trim().split(/\s+/).length,
@@ -98,13 +98,13 @@ const schema = JSON.stringify([
         '@type': 'ListItem',
         position: 1,
         name: 'Home',
-        item: 'https://camberco.uk/',
+        item: 'https://camberco.co.uk/',
       },
       {
         '@type': 'ListItem',
         position: 2,
         name: 'Blog',
-        item: 'https://camberco.uk/blog/',
+        item: 'https://camberco.co.uk/blog/',
       },
       {
         '@type': 'ListItem',

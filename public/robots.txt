@@ -43,4 +43,4 @@ User-agent: YouBot
 Allow: /
 
 # Sitemap
-Sitemap: https://camberco.uk/sitemap-index.xml
+Sitemap: https://camberco.co.uk/sitemap-index.xml

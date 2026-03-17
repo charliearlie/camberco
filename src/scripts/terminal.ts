@@ -161,9 +161,9 @@ const COMMANDS: Record<string, Command> = {
     run: () => L`
     <span class="t-green">GET IN TOUCH</span>
 
-    <span class="t-muted">  email:</span>     hello@camberco.uk
+    <span class="t-muted">  email:</span>     hello@camberco.co.uk
     <span class="t-muted">  calendar:</span>  calendly.com/camber-co/30min
-    <span class="t-muted">  web:</span>       camberco.uk
+    <span class="t-muted">  web:</span>       camberco.co.uk
 
     <span class="t-pink">→ free 30-min audit — no commitment</span>
     `,
