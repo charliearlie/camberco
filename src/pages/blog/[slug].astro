@@ -116,6 +116,15 @@ const schema = JSON.stringify([
   },
 ]);
 
+// Transform Supabase public URL to a 1200x630 contained image for OG previews
+function ogImageUrl(url: string | null): string | undefined {
+  if (!url) return undefined;
+  return url.replace(
+    '/storage/v1/object/public/',
+    '/storage/v1/render/image/public/',
+  ) + '?width=1200&height=630&resize=contain';
+}
+
 const articleMeta = {
   publishedTime: publishedAt.toISOString(),
   modifiedTime: updatedAt?.toISOString(),
@@ -131,8 +140,10 @@ const articleMeta = {
   canonicalUrl={canonicalUrl}
   schema={schema}
   ogType="article"
-  ogImage={coverImage}
+  ogImage={ogImageUrl(coverImage)}
   ogImageAlt={coverImageAlt ?? title}
+  ogImageWidth={coverImage ? 1200 : undefined}
+  ogImageHeight={coverImage ? 630 : undefined}
   articleMeta={articleMeta}
 >
   <main class="post-page">
