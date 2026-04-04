@@ -64,6 +64,30 @@ const navLinks = [
 
     </div>
 
+    <!-- Newsletter -->
+    <div class="footer-newsletter">
+      <p class="col-label">Newsletter</p>
+      <p class="newsletter-desc">New posts delivered to your inbox.</p>
+      <form class="footer-nl-form" data-newsletter-form>
+        <input type="text" name="website" style="display:none" tabindex="-1" autocomplete="off" />
+        <div class="footer-nl-row">
+          <input
+            type="email"
+            name="email"
+            placeholder="you@example.com"
+            required
+            autocomplete="email"
+            class="footer-nl-input"
+          />
+          <button type="submit" class="footer-nl-btn">
+            <span class="btn-text">&gt; Subscribe</span>
+            <span class="btn-loading" style="display:none">...</span>
+          </button>
+        </div>
+        <p class="footer-nl-msg" data-newsletter-msg></p>
+      </form>
+    </div>
+
     <!-- Bottom bar -->
     <div class="footer-bottom">
       <p class="version-string">
@@ -176,6 +200,91 @@ const navLinks = [
     color: var(--color-green-400);
   }
 
+  /* ---- Newsletter ---- */
+  .footer-newsletter {
+    margin-bottom: var(--space-12);
+    padding-top: var(--space-8);
+    border-top: 1px solid var(--color-border-subtle);
+    max-width: 440px;
+  }
+
+  .newsletter-desc {
+    font-family: var(--font-sans);
+    font-size: var(--type-body-sm);
+    color: var(--color-text-secondary);
+    margin: 0 0 var(--space-3) 0;
+    line-height: 1.5;
+  }
+
+  .footer-nl-row {
+    display: flex;
+    gap: var(--space-3);
+  }
+
+  .footer-nl-input {
+    flex: 1;
+    font-family: var(--font-mono);
+    font-size: 13px;
+    color: var(--color-text-primary);
+    background: var(--color-surface-02);
+    border: 1px solid var(--color-border-muted);
+    border-radius: var(--radius-sm);
+    padding: 8px 12px;
+    outline: none;
+    transition: border-color var(--duration-quick) var(--easing-smooth);
+  }
+
+  .footer-nl-input::placeholder {
+    color: var(--color-text-muted);
+  }
+
+  .footer-nl-input:focus {
+    border-color: var(--color-green-500);
+  }
+
+  .footer-nl-btn {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    background: var(--color-green-500);
+    color: #000;
+    padding: 8px 14px;
+    border-radius: var(--radius-sm);
+    border: none;
+    cursor: pointer;
+    white-space: nowrap;
+    transition:
+      background var(--duration-quick) var(--easing-smooth),
+      transform var(--duration-quick) var(--easing-spring);
+  }
+
+  .footer-nl-btn:hover:not(:disabled) {
+    background: var(--color-green-400);
+    transform: translateY(-1px);
+  }
+
+  .footer-nl-btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+
+  .footer-nl-msg {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    margin: var(--space-2) 0 0 0;
+    min-height: 18px;
+  }
+
+  .footer-nl-msg:global(.success) {
+    color: var(--color-green-500);
+  }
+
+  .footer-nl-msg:global(.error) {
+    color: var(--color-error);
+  }
+
   /* ---- Bottom bar ---- */
   .footer-bottom {
     display: flex;
@@ -229,3 +338,49 @@ const navLinks = [
     }
   }
 </style>
+
+<script>
+  document.querySelectorAll('[data-newsletter-form]').forEach((form) => {
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const f = e.target as HTMLFormElement;
+      const msg = f.querySelector('[data-newsletter-msg]') as HTMLElement;
+      const btn = f.querySelector('button[type="submit"]') as HTMLButtonElement;
+      const btnText = btn.querySelector('.btn-text') as HTMLElement;
+      const btnLoading = btn.querySelector('.btn-loading') as HTMLElement;
+      const input = f.querySelector('input[name="email"]') as HTMLInputElement;
+      const honeypot = f.querySelector('input[name="website"]') as HTMLInputElement;
+
+      btn.disabled = true;
+      btnText.style.display = 'none';
+      btnLoading.style.display = 'inline';
+      msg.textContent = '';
+      msg.className = msg.className.replace(/\b(success|error)\b/g, '').trim();
+
+      try {
+        const res = await fetch('/api/subscribe', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email: input.value, website: honeypot.value }),
+        });
+        const data = await res.json();
+
+        if (res.ok) {
+          msg.textContent = 'Check your inbox to confirm.';
+          msg.classList.add('success');
+          input.value = '';
+        } else {
+          msg.textContent = data.error || 'Something went wrong.';
+          msg.classList.add('error');
+        }
+      } catch {
+        msg.textContent = 'Something went wrong.';
+        msg.classList.add('error');
+      }
+
+      btn.disabled = false;
+      btnText.style.display = 'inline';
+      btnLoading.style.display = 'none';
+    });
+  });
+</script>

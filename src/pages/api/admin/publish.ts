@@ -2,6 +2,7 @@ export const prerender = false;
 
 import type { APIRoute } from 'astro';
 import { createClient } from '@supabase/supabase-js';
+import { sendBlogDigest } from '../../../lib/email';
 
 function serverSupabase() {
   const url = import.meta.env.PUBLIC_SUPABASE_URL ?? '';
@@ -81,6 +82,23 @@ export const POST: APIRoute = async ({ request }) => {
   if (deployHook) {
     fetch(deployHook, { method: 'POST' }).catch(() => {});
   }
+
+  // Send blog digest to confirmed subscribers (fire-and-forget)
+  supabase
+    .from('subscribers')
+    .select('email, unsubscribe_token')
+    .eq('confirmed', true)
+    .then(({ data: subscribers }) => {
+      if (subscribers && subscribers.length > 0) {
+        sendBlogDigest(subscribers, {
+          title: title,
+          slug,
+          description: (draft.description as string) || '',
+          author: (draft.author as string) || 'Charlie',
+        }).catch((err) => console.error('Blog digest send failed:', err));
+      }
+    })
+    .catch((err) => console.error('Failed to fetch subscribers:', err));
 
   return jsonRes({ ok: true, slug });
 };

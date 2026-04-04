@@ -7,6 +7,7 @@ import TableOfContents from '../../components/blog/TableOfContents.astro';
 import AuthorBio from '../../components/blog/AuthorBio.astro';
 import ShareButtons from '../../components/blog/ShareButtons.astro';
 import RelatedPosts from '../../components/blog/RelatedPosts.astro';
+import NewsletterSignup from '../../components/blog/NewsletterSignup.astro';
 import { getReadingTime } from '../../lib/reading-time';
 import '../../styles/prose.css';
 
@@ -200,6 +201,7 @@ const articleMeta = {
         <article class="post-content prose" set:html={articleHtml} />
         <div class="post-content">
           <ShareButtons title={title} url={canonicalUrl} />
+          <NewsletterSignup />
           <AuthorBio />
           <RelatedPosts currentSlug={post.slug} category={category} posts={allPosts} />
         </div>

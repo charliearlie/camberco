@@ -111,6 +111,57 @@ export async function sendSenderConfirmation(data: EnquiryData): Promise<void> {
   });
 }
 
+interface BlogDigestData {
+  title: string;
+  slug: string;
+  description: string;
+  author: string;
+}
+
+interface Subscriber {
+  email: string;
+  unsubscribe_token: string;
+}
+
+export async function sendBlogDigest(subscribers: Subscriber[], post: BlogDigestData): Promise<void> {
+  const resend = getResend();
+  const postUrl = `https://camberco.co.uk/blog/${post.slug}/`;
+
+  for (const sub of subscribers) {
+    const unsubUrl = `https://camberco.co.uk/api/unsubscribe?token=${sub.unsubscribe_token}`;
+
+    const html = `
+      <div style="${terminalStyles}">
+        <h2 style="${greenText} font-size: 18px; margin: 0 0 16px 0;">$ new post from Camber Co</h2>
+
+        <h3 style="color: #f0f0f0; font-size: 20px; margin: 0 0 12px 0; font-family: 'JetBrains Mono', monospace;">${escapeHtml(post.title)}</h3>
+
+        <p style="color: #d0d0d0; line-height: 1.6; margin: 0 0 24px 0;">
+          ${escapeHtml(post.description)}
+        </p>
+
+        <a href="${postUrl}" style="display: inline-block; background: #22c55e; color: #000; font-family: 'JetBrains Mono', monospace; font-size: 11px; font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase; padding: 10px 20px; border-radius: 4px; text-decoration: none;">
+          &gt; Read the Post
+        </a>
+
+        <div style="margin-top: 32px; padding-top: 16px; border-top: 1px solid #1f1f1f;">
+          <p style="${mutedText} font-size: 11px; margin: 0;">
+            You received this because you subscribed to Camber Co.
+            <a href="${unsubUrl}" style="color: #8a8a8a; text-decoration: underline;">Unsubscribe</a>
+          </p>
+        </div>
+      </div>
+    `;
+
+    resend.emails.send({
+      from: FROM_EMAIL,
+      to: sub.email,
+      subject: `New post: ${post.title}`,
+      html,
+    }).catch((err) => console.error(`Digest email to ${sub.email} failed:`, err));
+  }
+}
+
 function escapeHtml(s: string): string {
   return s
     .replace(/&/g, '&amp;')
