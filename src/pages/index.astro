@@ -28,7 +28,7 @@ const schema = JSON.stringify([
       "height": 431
     },
     "image": "https://camberco.co.uk/social.png",
-    "description": "Camber Co is a London-based AI consultancy specialising in AI systems, n8n workflow automation, solo founder coaching, and personal AI assistants for UK founders and small businesses.",
+    "description": "Camber Co is a London-based digital consultancy specialising in AI systems, SEO, web development, n8n workflow automation, solo founder coaching, and personal AI assistants for UK founders and small businesses.",
     "email": "hello@camberco.co.uk",
     "sameAs": ["https://linkedin.com/company/camberco"],
     "address": {
@@ -49,7 +49,7 @@ const schema = JSON.stringify([
     "@id": "https://camberco.co.uk/#website",
     "url": "https://camberco.co.uk",
     "name": "Camber Co",
-    "description": "AI systems, automation, and strategic coaching for UK founders who mean business.",
+    "description": "AI systems, SEO, web development, automation, and strategic coaching for UK founders who mean business.",
     "publisher": { "@id": "https://camberco.co.uk/#organization" },
     "inLanguage": "en-GB"
   },
@@ -58,8 +58,8 @@ const schema = JSON.stringify([
     "@type": "WebPage",
     "@id": "https://camberco.co.uk/#webpage",
     "url": "https://camberco.co.uk",
-    "name": "AI Services for UK Founders — Camber Co",
-    "description": "AI systems, n8n workflow automation, solo founder training, and personal AI assistants for UK founders and small businesses. Based in London.",
+    "name": "AI, SEO & Web Development for UK Founders — Camber Co",
+    "description": "AI systems, SEO, web development, n8n workflow automation, solo founder training, and personal AI assistants for UK founders and small businesses. Based in London.",
     "isPartOf": { "@id": "https://camberco.co.uk/#website" },
     "about": { "@id": "https://camberco.co.uk/#organization" },
     "inLanguage": "en-GB"
@@ -102,8 +102,8 @@ const schema = JSON.stringify([
     "url": "https://camberco.co.uk",
     "provider": { "@id": "https://camberco.co.uk/#organization" },
     "areaServed": { "@type": "Country", "name": "United Kingdom" },
-    "serviceType": "AI Consultancy",
-    "description": "AI systems, n8n workflow automation, solo founder coaching, and personal AI assistants for UK founders and small businesses.",
+    "serviceType": "Digital Consultancy",
+    "description": "AI systems, SEO, web development, n8n workflow automation, solo founder coaching, and personal AI assistants for UK founders and small businesses.",
     "hasOfferCatalog": {
       "@type": "OfferCatalog",
       "name": "AI Services",
@@ -117,6 +117,22 @@ const schema = JSON.stringify([
           },
           "price": "297",
           "priceCurrency": "GBP"
+        },
+        {
+          "@type": "Offer",
+          "itemOffered": {
+            "@type": "Service",
+            "name": "SEO Services",
+            "description": "Technical audits, on-page optimisation, and keyword strategy for small businesses. Practical SEO that moves rankings."
+          }
+        },
+        {
+          "@type": "Offer",
+          "itemOffered": {
+            "@type": "Service",
+            "name": "App & Website Builds",
+            "description": "Clean, fast websites and web apps built to convert. From landing pages to full builds for small businesses."
+          }
         },
         {
           "@type": "Offer",
@@ -161,7 +177,7 @@ const schema = JSON.stringify([
         "name": "What does an AI consultancy do?",
         "acceptedAnswer": {
           "@type": "Answer",
-          "text": "An AI consultancy helps businesses identify where artificial intelligence can save time, reduce costs, and improve operations. At Camber Co, we go beyond advising — we build and deploy working AI tools including workflow automation, personal AI assistants, and AI coaching for founders. We work with solo founders and small businesses across the UK to implement AI that actually gets used."
+          "text": "An AI consultancy helps businesses identify where artificial intelligence can save time, reduce costs, and improve operations. At Camber Co, we go beyond advising — we build and deploy working tools including workflow automation, websites, web apps, SEO, and personal AI assistants. We work with solo founders and small businesses across the UK."
         }
       },
       {
@@ -169,7 +185,7 @@ const schema = JSON.stringify([
         "name": "How much does AI consultancy cost in the UK?",
         "acceptedAnswer": {
           "@type": "Answer",
-          "text": "Pricing at Camber Co depends on the scope of your project — every business is different. We offer AI consultations, workflow automation, founder training, and personal AI assistants. Every engagement starts with a free 30-minute audit call to understand your needs and recommend the right approach. No commitment required."
+          "text": "Pricing at Camber Co depends on the scope of your project — every business is different. We offer AI consultations, SEO, web development, workflow automation, founder training, and personal AI assistants. Every engagement starts with a free 30-minute audit call to understand your needs and recommend the right approach. No commitment required."
         }
       },
       {
@@ -230,6 +246,22 @@ const schema = JSON.stringify([
       },
       {
         "@type": "Question",
+        "name": "Do you offer SEO for small businesses?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Yes. Camber Co offers practical SEO for UK small businesses and founders. We cover technical audits, on-page optimisation, keyword research, and content strategy. Our focus is on traffic that converts, not vanity metrics."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Can you build me a website or app?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Yes. We build clean, fast websites and simple web apps for small businesses. Whether you need a landing page, a full company site, or a lightweight web app, we handle design and development end to end. Every build is performance-focused and designed to convert visitors into customers."
+        }
+      },
+      {
+        "@type": "Question",
         "name": "What is a personal AI assistant?",
         "acceptedAnswer": {
           "@type": "Answer",
@@ -250,8 +282,8 @@ const schema = JSON.stringify([
 ---
 
 <Layout
-  title="AI Services for UK Founders — Camber Co"
-  description="AI systems, automation, and strategic coaching for founders who mean business. Based in London, working with founders across the UK."
+  title="AI, SEO & Web Development for UK Founders — Camber Co"
+  description="AI systems, SEO, web development, and automation for founders who mean business. Based in London, working with businesses across the UK."
   canonicalUrl="https://camberco.co.uk/"
   schema={schema}
 >
@@ -275,7 +307,7 @@ const schema = JSON.stringify([
         data-speed="40"
       ></div>
 
-      <p class="hero-sub">AI systems, automation, and strategic coaching for founders who mean business. Based in London, working with founders across the UK.</p>
+      <p class="hero-sub">AI systems, automation, SEO, and web development for founders who mean business. Based in London, working with businesses across the UK.</p>
 
       <div class="hero-ctas">
         <a href="/contact/" class="btn-primary">&gt; Get in Touch</a>
@@ -294,8 +326,8 @@ const schema = JSON.stringify([
     <div class="container">
       <div class="section-header" data-reveal>
         <span class="section-tag">services</span>
-        <h2>The stack we build on.</h2>
-        <p>Not retainer engagements. Not vague strategy. Specific tools, specific outcomes.</p>
+        <h2>Everything your business needs to grow online.</h2>
+        <p>Strategy, builds, automation, and AI. Specific tools, specific outcomes.</p>
       </div>
       <div class="service-grid" data-reveal-stagger>
 
@@ -318,7 +350,45 @@ const schema = JSON.stringify([
           </div>
         </div>
 
-        <!-- Card 2: N8n Workflow Automation -->
+        <!-- Card 2: SEO Services -->
+        <div class="terminal-card">
+          <div class="terminal-titlebar">
+            <span class="dot dot-red"></span>
+            <span class="dot dot-yellow"></span>
+            <span class="dot dot-green-tc"></span>
+            <span class="terminal-title">camber/seo</span>
+            <span class="terminal-status"><span class="status-dot"></span> ACTIVE</span>
+          </div>
+          <div class="terminal-body">
+            <span class="terminal-comment">// search visibility</span>
+            <h3>Get found by the people who matter.</h3>
+            <p>Technical audits, on-page optimisation, and keyword strategy that moves rankings. No vanity metrics. Traffic that converts.</p>
+            <div class="terminal-footer">
+              <button class="terminal-link" data-chat-open="seo">→ explore</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Card 3: App & Website Builds -->
+        <div class="terminal-card">
+          <div class="terminal-titlebar">
+            <span class="dot dot-red"></span>
+            <span class="dot dot-yellow"></span>
+            <span class="dot dot-green-tc"></span>
+            <span class="terminal-title">camber/builds</span>
+            <span class="terminal-status"><span class="status-dot"></span> ACTIVE</span>
+          </div>
+          <div class="terminal-body">
+            <span class="terminal-comment">// web development</span>
+            <h3>A site or app that actually ships.</h3>
+            <p>Clean, fast websites and simple web apps built to convert. From landing pages to full builds. No bloat, no delays.</p>
+            <div class="terminal-footer">
+              <button class="terminal-link" data-chat-open="builds">→ explore</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Card 4: N8n Workflow Automation -->
         <div class="terminal-card">
           <div class="terminal-titlebar">
             <span class="dot dot-red"></span>
@@ -337,7 +407,7 @@ const schema = JSON.stringify([
           </div>
         </div>
 
-        <!-- Card 3: Solo Founder Training -->
+        <!-- Card 5: Solo Founder Training -->
         <div class="terminal-card">
           <div class="terminal-titlebar">
             <span class="dot dot-red"></span>
@@ -356,7 +426,7 @@ const schema = JSON.stringify([
           </div>
         </div>
 
-        <!-- Card 4: OpenClaw Personal AI -->
+        <!-- Card 6: OpenClaw Personal AI -->
         <div class="terminal-card">
           <div class="terminal-titlebar">
             <span class="dot dot-red"></span>
@@ -406,7 +476,7 @@ const schema = JSON.stringify([
           <span class="section-tag">about</span>
           <h2>Built by someone who's done it.</h2>
           <p class="about-p">I'm Charlie. I've been building software for 12 years and using AI tools in production since before they were mainstream. Camber Co exists because I got tired of watching founders waste months on AI experiments that never shipped anything real.</p>
-          <p class="about-p">I work with a small number of founders at a time — directly, hands-on. No account managers, no juniors. You get me, and you get results you can point at.</p>
+          <p class="about-p">I lead every project personally, with a small team of trusted specialists behind the scenes. No account managers, no runaround. You get me, and you get results you can point at.</p>
           <a href="/blog" class="about-link">Read what I'm building and why →</a>
           <div class="stat-row">
             <div class="stat-block">
@@ -496,7 +566,7 @@ const schema = JSON.stringify([
             <span class="faq-q-text">What does an AI consultancy actually do?</span>
           </summary>
           <div class="faq-answer">
-            <p>An AI consultancy helps businesses identify where artificial intelligence can save time, reduce costs, and improve operations. At Camber Co, we go beyond advising — we build and deploy working AI tools including n8n workflow automation, personal AI assistants for WhatsApp and Slack, and run hands-on coaching for non-technical founders. We work with a small number of clients at a time to ensure every engagement delivers something real.</p>
+            <p>An AI consultancy helps businesses identify where artificial intelligence can save time, reduce costs, and improve operations. At Camber Co, we go beyond advising — we build and deploy working tools including n8n workflow automation, websites, web apps, SEO, and personal AI assistants. We work with a small number of clients at a time to ensure every engagement delivers something real.</p>
           </div>
         </details>
 
@@ -536,7 +606,7 @@ const schema = JSON.stringify([
             <span class="faq-q-text">How long does it take to implement AI in a business?</span>
           </summary>
           <div class="faq-answer">
-            <p>Implementation timelines depend on scope. An n8n workflow automation can be built and deployed in 1-2 weeks. A personal AI assistant setup typically takes 3-5 days. Consultation and training sessions can start immediately. We prioritise quick wins that deliver value from day one, so you see results before larger projects complete.</p>
+            <p>Implementation timelines depend on scope. A website or landing page can ship in 1-2 weeks. An n8n workflow automation can be built and deployed in 1-2 weeks. SEO is ongoing but you will see early improvements within the first month. Consultation and training sessions can start immediately. We prioritise quick wins that deliver value from day one.</p>
           </div>
         </details>
 
@@ -577,6 +647,26 @@ const schema = JSON.stringify([
           </summary>
           <div class="faq-answer">
             <p>N8n is an open-source workflow automation platform that connects your business tools — email, CRM, spreadsheets, payment systems — and runs automated tasks between them 24/7. Camber Co builds and deploys custom n8n automations for UK businesses, typically saving 10-30 hours per month on repetitive processes.</p>
+          </div>
+        </details>
+
+        <details class="faq-item">
+          <summary class="faq-question">
+            <span class="faq-arrow">&gt;</span>
+            <span class="faq-q-text">Do you offer SEO for small businesses?</span>
+          </summary>
+          <div class="faq-answer">
+            <p>Yes. Camber Co offers practical SEO for UK small businesses and founders. We cover technical audits, on-page optimisation, keyword research, and content strategy. Our focus is on traffic that converts, not vanity metrics. SEO is delivered by a small team of trusted specialists, with Charlie leading strategy and ensuring everything ties back to your business goals.</p>
+          </div>
+        </details>
+
+        <details class="faq-item">
+          <summary class="faq-question">
+            <span class="faq-arrow">&gt;</span>
+            <span class="faq-q-text">Can you build me a website or app?</span>
+          </summary>
+          <div class="faq-answer">
+            <p>Yes. We build clean, fast websites and simple web apps for small businesses. Whether you need a landing page, a full company site, or a lightweight web app, we handle design and development end to end. Every build is performance-focused and designed to convert visitors into customers.</p>
           </div>
         </details>
 

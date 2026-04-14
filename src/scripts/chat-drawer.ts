@@ -122,6 +122,8 @@ function openDrawer(service: ServiceKey = 'general') {
 
   const titles: Record<ServiceKey, string> = {
     consultations: 'camber/ai — consultations',
+    seo: 'camber/ai — seo',
+    builds: 'camber/ai — builds',
     automation: 'camber/ai — automation',
     training: 'camber/ai — training',
     'personal-ai': 'camber/ai — personal ai',

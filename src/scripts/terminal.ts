@@ -101,8 +101,8 @@ const COMMANDS: Record<string, Command> = {
     Using AI in production since 2023.
     Based in London, UK.
 
-    I work with a small number of founders at a time —
-    directly, hands-on. No account managers, no juniors.
+    I lead every project personally, with a small team
+    of trusted specialists behind the scenes.
     You get me, and you get results you can point at.
     `,
   },
@@ -113,6 +113,8 @@ const COMMANDS: Record<string, Command> = {
     <span class="t-green">ACTIVE SERVICES</span>
 
     <span class="t-green">  consultations</span>   AI strategy sessions
+    <span class="t-green">  seo</span>             search engine optimisation
+    <span class="t-green">  builds</span>          apps & website development
     <span class="t-green">  automation</span>      n8n workflow engineering
     <span class="t-green">  training</span>        solo founder coaching
     <span class="t-green">  personal-ai</span>     your own AI assistant
@@ -125,7 +127,7 @@ const COMMANDS: Record<string, Command> = {
     description: 'explore a service',
     run: (args) => {
       const service = args[0] || '';
-      const valid = ['consultations', 'automation', 'training', 'personal-ai'];
+      const valid = ['consultations', 'seo', 'builds', 'automation', 'training', 'personal-ai'];
       if (valid.includes(service)) {
         setTimeout(() => {
           if (window.__openChatDrawer) {
@@ -135,7 +137,7 @@ const COMMANDS: Record<string, Command> = {
         return [`<span class="t-green">opening chat...</span>`];
       }
       return [
-        '<span class="t-muted">usage:</span> explore <span class="t-green">consultations</span> | <span class="t-green">automation</span> | <span class="t-green">training</span> | <span class="t-green">personal-ai</span>',
+        '<span class="t-muted">usage:</span> explore <span class="t-green">consultations</span> | <span class="t-green">seo</span> | <span class="t-green">builds</span> | <span class="t-green">automation</span> | <span class="t-green">training</span> | <span class="t-green">personal-ai</span>',
       ];
     },
   },
@@ -378,7 +380,7 @@ async function bootSequence(outputEl: HTMLElement): Promise<void> {
   const bootLines = [
     '<span class="t-muted">camber-os v2.0.0</span>',
     '<span class="t-muted">connecting to London node...</span> <span class="t-green">connected</span>',
-    '<span class="t-muted">loading services...</span> <span class="t-green">4 active</span>',
+    '<span class="t-muted">loading services...</span> <span class="t-green">6 active</span>',
     '',
     '<span class="t-green">system ready.</span> type <span class="t-pink">help</span> to begin.',
     '',

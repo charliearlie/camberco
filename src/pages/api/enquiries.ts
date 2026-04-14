@@ -49,6 +49,8 @@ const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 const VALID_SERVICES = [
   'AI Strategy',
+  'SEO',
+  'App & Website Builds',
   'Automation',
   'Training',
   'Personal AI',
