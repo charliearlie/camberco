@@ -1,0 +1,497 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import StarfieldHero from '../../components/StarfieldHero.astro';
+import ChatDrawer from '../../components/ChatDrawer.astro';
+
+const services = [
+  {
+    slug: 'builds',
+    title: 'Website builds',
+    comment: '// landing pages, sites, MVPs',
+    desc: 'Clean, fast sites and web apps built around one clear conversion path.',
+    href: '/services/builds',
+    action: 'Open page',
+    status: 'page',
+  },
+  {
+    slug: 'apps',
+    title: 'Mobile apps',
+    comment: '// prototype to App Store',
+    desc: 'Native-feeling mobile products, from tappable idea to release-ready build.',
+    href: '/services/apps',
+    action: 'Open page',
+    status: 'page',
+  },
+  {
+    slug: 'automation',
+    title: 'Workflow automation',
+    comment: '// tools connected',
+    desc: 'Automations that route, classify, log, notify, and run without babysitting.',
+    href: '/services/automation',
+    action: 'Open page',
+    status: 'page',
+  },
+  {
+    slug: 'consultations',
+    title: 'AI consultations',
+    comment: '// strategy sessions',
+    desc: 'A focused audit of where AI can save time, reduce drag, or create leverage.',
+    chat: 'consultations',
+    action: 'Chat',
+    status: 'chat',
+  },
+  {
+    slug: 'seo',
+    title: 'SEO services',
+    comment: '// search visibility',
+    desc: 'Technical audits, on-page optimisation, and content strategy tied to real demand.',
+    chat: 'seo',
+    action: 'Chat',
+    status: 'chat',
+  },
+  {
+    slug: 'training',
+    title: 'Training & coaching',
+    comment: '// founder enablement',
+    desc: 'Hands-on AI coaching for non-technical founders who want practical capability.',
+    chat: 'training',
+    action: 'Chat',
+    status: 'chat',
+  },
+  {
+    slug: 'personal-ai',
+    title: 'Personal AI',
+    comment: '// private assistant',
+    desc: 'Custom assistants for WhatsApp, Telegram, Slack, Discord, or internal workflows.',
+    chat: 'personal-ai',
+    action: 'Chat',
+    status: 'chat',
+  },
+];
+
+const schema = JSON.stringify({
+  '@context': 'https://schema.org',
+  '@type': 'ItemList',
+  '@id': 'https://camberco.co.uk/services#services',
+  name: 'Camber Co Services',
+  itemListElement: services.map((service, index) => ({
+    '@type': 'ListItem',
+    position: index + 1,
+    item: {
+      '@type': 'Service',
+      name: service.title,
+      url: service.href ? `https://camberco.co.uk${service.href}` : 'https://camberco.co.uk/services',
+      provider: { '@id': 'https://camberco.co.uk/#organization' },
+    },
+  })),
+});
+---
+
+<Layout
+  title="Services | Camber Co"
+  description="Websites, apps, automation, AI consulting, SEO, training, and personal AI assistants for founders and small businesses."
+  canonicalUrl="https://camberco.co.uk/services"
+  schema={schema}
+>
+  <StarfieldHero />
+
+  <main class="services-page">
+    <section class="hero">
+      <div class="container">
+        <div class="hero-copy" data-reveal>
+          <div class="status-chip">
+            <span class="status-dot" aria-hidden="true"></span>
+            <span class="status-label">[ SERVICES ]</span>
+            <span class="status-path">camber/services</span>
+          </div>
+          <h1>Choose the system you need next.</h1>
+          <p>
+            Build the page, ship the app, automate the workflow, or get enough clarity
+            to pick the right first move.
+          </p>
+        </div>
+
+        <div class="service-grid" data-reveal-stagger>
+          {services.map((service) => (
+            <article class={`terminal-card terminal-card--${service.status}`}>
+              <div class="card-bar">
+                <span class="window-dot window-dot--red"></span>
+                <span class="window-dot window-dot--yellow"></span>
+                <span class="window-dot window-dot--green"></span>
+                <span class="card-path">camber/{service.slug}</span>
+                <span class="status-pill">{service.status}</span>
+              </div>
+              <div class="card-body">
+                <span class="card-comment">{service.comment}</span>
+                <h2>{service.title}</h2>
+                <p>{service.desc}</p>
+                <div class="card-footer">
+                  {service.href ? (
+                    <a href={service.href} class="card-action">&gt; {service.action}</a>
+                  ) : (
+                    <button type="button" class="card-action" data-chat-open={service.chat}>
+                      &gt; {service.action}
+                    </button>
+                  )}
+                </div>
+              </div>
+            </article>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <section class="cta">
+      <div class="container">
+        <div class="cta-card" data-reveal>
+          <h2>Not sure which route fits?</h2>
+          <p>Start with the problem. We can point you toward the lightest useful next step.</p>
+          <div class="cta-actions">
+            <a href="/contact/" class="btn btn-primary">&gt; Get in touch</a>
+            <button type="button" class="btn btn-secondary" data-chat-open="general">&gt; Open chat</button>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <ChatDrawer />
+</Layout>
+
+<style>
+  .services-page {
+    position: relative;
+    z-index: 2;
+  }
+
+  .container {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 0 var(--space-8);
+  }
+
+  .hero {
+    padding: clamp(96px, 13vw, 148px) 0 clamp(72px, 9vw, 112px);
+  }
+
+  .hero-copy {
+    display: grid;
+    gap: var(--space-4);
+    margin-bottom: var(--space-10);
+    max-width: 820px;
+  }
+
+  .status-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    width: fit-content;
+    padding: var(--space-2) var(--space-3);
+    background: color-mix(in srgb, var(--color-surface-01) 76%, transparent);
+    border: 1px solid var(--color-border-subtle);
+    border-radius: var(--radius-sm);
+    font-family: var(--font-mono);
+  }
+
+  .status-dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--color-green-500);
+    box-shadow: 0 0 10px var(--color-green-glow);
+    animation: status-pulse 2.4s var(--easing-smooth) infinite;
+  }
+
+  @keyframes status-pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.45; }
+  }
+
+  .status-label,
+  .status-path {
+    font-size: var(--type-label);
+    letter-spacing: 0;
+  }
+
+  .status-label {
+    color: var(--color-green-500);
+  }
+
+  .status-path {
+    color: var(--color-text-muted);
+  }
+
+  h1 {
+    margin: 0;
+    max-width: 10ch;
+    font-family: var(--font-mono);
+    font-size: var(--type-display);
+    line-height: 1;
+    letter-spacing: 0;
+    color: var(--color-text-primary);
+  }
+
+  .hero-copy p {
+    margin: 0;
+    max-width: 64ch;
+    font-size: var(--type-body-lg);
+    color: var(--color-text-secondary);
+    line-height: 1.7;
+  }
+
+  .service-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: var(--space-4);
+  }
+
+  .terminal-card,
+  .cta-card {
+    border: 1px solid var(--color-border-subtle);
+    border-radius: var(--radius-md);
+    background: var(--color-surface-00);
+    overflow: hidden;
+  }
+
+  .terminal-card {
+    transition:
+      transform var(--duration-normal) var(--easing-spring),
+      border-color var(--duration-normal) var(--easing-smooth),
+      box-shadow var(--duration-normal) var(--easing-smooth);
+  }
+
+  .terminal-card:hover {
+    transform: translateY(-2px);
+    border-color: color-mix(in srgb, var(--color-green-500) 48%, var(--color-border-muted));
+    box-shadow: 0 0 28px color-mix(in srgb, var(--color-green-500) 8%, transparent);
+  }
+
+  .card-bar {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    min-height: 38px;
+    padding: 0 var(--space-3);
+    background: var(--color-surface-02);
+    border-bottom: 1px solid var(--color-border-subtle);
+  }
+
+  .window-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  .window-dot--red { background: var(--color-error); }
+  .window-dot--yellow { background: var(--color-warning); }
+  .window-dot--green { background: var(--color-success); }
+
+  .card-path,
+  .status-pill,
+  .card-comment {
+    font-family: var(--font-mono);
+    font-size: var(--type-caption);
+    color: var(--color-text-muted);
+  }
+
+  .card-path {
+    min-width: 0;
+    margin-left: var(--space-2);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .status-pill {
+    margin-left: auto;
+    color: var(--color-green-500);
+  }
+
+  .terminal-card--chat .status-pill {
+    color: var(--color-pink-500);
+  }
+
+  .card-body {
+    display: grid;
+    min-height: 260px;
+    gap: var(--space-4);
+    padding: var(--space-6);
+  }
+
+  .card-comment {
+    color: var(--color-green-500);
+  }
+
+  .card-body h2 {
+    margin: 0;
+    font-family: var(--font-mono);
+    font-size: var(--type-h3);
+    letter-spacing: 0;
+  }
+
+  .card-body p,
+  .cta-card p {
+    margin: 0;
+    color: var(--color-text-secondary);
+    line-height: 1.7;
+  }
+
+  .card-footer {
+    align-self: end;
+    padding-top: var(--space-4);
+    border-top: 1px solid var(--color-border-subtle);
+  }
+
+  .card-action {
+    color: var(--color-green-500);
+    font-family: var(--font-mono);
+    font-size: var(--type-caption);
+    font-weight: 700;
+  }
+
+  .terminal-card--chat .card-action {
+    color: var(--color-pink-500);
+  }
+
+  .cta {
+    padding: clamp(72px, 10vw, 124px) 0;
+    border-top: 1px solid var(--color-border-subtle);
+    background: var(--color-base);
+  }
+
+  .cta-card {
+    display: grid;
+    justify-items: center;
+    gap: var(--space-6);
+    padding: clamp(40px, 6vw, 72px);
+    text-align: center;
+  }
+
+  .cta-card h2 {
+    margin: 0;
+    font-family: var(--font-mono);
+    font-size: var(--type-h1);
+    line-height: 1.12;
+    letter-spacing: 0;
+  }
+
+  .cta-actions {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: var(--space-3);
+  }
+
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 44px;
+    border-radius: var(--radius-sm);
+    padding: var(--space-3) var(--space-6);
+    font-family: var(--font-mono);
+    font-size: var(--type-label);
+    font-weight: 700;
+    letter-spacing: 0;
+    transition:
+      transform var(--duration-quick) var(--easing-spring),
+      background var(--duration-quick) var(--easing-smooth),
+      border-color var(--duration-quick) var(--easing-smooth),
+      color var(--duration-quick) var(--easing-smooth),
+      box-shadow var(--duration-quick) var(--easing-smooth);
+  }
+
+  .btn:hover {
+    transform: translateY(-1px);
+  }
+
+  .btn-primary {
+    background: var(--color-green-500);
+    color: var(--color-text-inverse);
+  }
+
+  .btn-primary:hover {
+    background: var(--color-green-400);
+    box-shadow: 0 0 24px var(--color-green-glow);
+  }
+
+  .btn-secondary {
+    color: var(--color-text-secondary);
+    border: 1px solid var(--color-border-muted);
+    background: var(--color-surface-00);
+  }
+
+  .btn-secondary:hover {
+    color: var(--color-text-primary);
+    border-color: var(--color-border-visible);
+    background: var(--color-surface-01);
+  }
+
+  @media (max-width: 1100px) {
+    .service-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  @media (max-width: 768px) {
+    .container {
+      padding: 0 var(--space-4);
+    }
+
+    h1 {
+      max-width: 100%;
+    }
+
+    .service-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .cta-actions .btn {
+      width: 100%;
+    }
+  }
+
+  @media (max-width: 520px) {
+    .status-chip {
+      align-items: flex-start;
+      flex-direction: column;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .status-dot {
+      animation: none;
+    }
+
+    .terminal-card,
+    .btn {
+      transition: none;
+    }
+  }
+</style>
+
+<script>
+  import { initScrollReveal, initCounters, SCROLL_REVEAL_CSS } from '../../scripts/scroll-reveal.ts';
+  import { initChatDrawer } from '../../scripts/chat-drawer.ts';
+
+  if (!document.getElementById('scroll-reveal-css')) {
+    const style = document.createElement('style');
+    style.id = 'scroll-reveal-css';
+    style.textContent = SCROLL_REVEAL_CSS;
+    document.head.appendChild(style);
+  }
+
+  initScrollReveal();
+  initCounters();
+  initChatDrawer();
+
+  document.querySelectorAll<HTMLElement>('[data-chat-open]').forEach((button) => {
+    button.addEventListener('click', () => {
+      const service = button.dataset.chatOpen;
+      if (service && window.__openChatDrawer) {
+        window.__openChatDrawer(service as any);
+      }
+    });
+  });
+</script>

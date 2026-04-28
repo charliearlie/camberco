@@ -1,0 +1,1013 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import StarfieldHero from '../../components/StarfieldHero.astro';
+import ChatDrawer from '../../components/ChatDrawer.astro';
+
+const examples = [
+  {
+    title: 'Lead capture -> CRM enrichment -> Slack ping',
+    desc: 'Turn form fills into qualified leads, enriched records, and instant team notifications.',
+    tags: ['forms', 'CRM', 'Slack'],
+  },
+  {
+    title: 'Support email triage',
+    desc: 'Classify incoming emails, draft first responses, and route urgent tickets to the right channel.',
+    tags: ['Gmail', 'Claude', 'helpdesk'],
+  },
+  {
+    title: 'Weekly KPI digest',
+    desc: 'Pull metrics from your tools, summarise what changed, and send the report every Monday.',
+    tags: ['Sheets', 'Notion', 'email'],
+  },
+  {
+    title: 'Invoice chasing',
+    desc: 'Detect overdue invoices, draft a polite follow-up, and log the status back to your workspace.',
+    tags: ['Stripe', 'email', 'Notion'],
+  },
+];
+
+const processSteps = [
+  {
+    hash: 'aa01d7b',
+    label: 'Audit',
+    message: 'feat(map): find the repeated work worth killing',
+    body: 'We trace the manual process, tools, owners, edge cases, and failure modes before designing anything.',
+  },
+  {
+    hash: 'b4c19f0',
+    label: 'Design',
+    message: 'feat(flow): define triggers, decisions, retries, and handoff',
+    body: 'The workflow gets drawn before it gets built, including where humans stay in the loop.',
+  },
+  {
+    hash: 'd8e2c11',
+    label: 'Build',
+    message: 'feat(run): connect the tools and test real payloads',
+    body: 'n8n, APIs, LLM calls, logs, alerts, credentials, and guardrails are wired into one working system.',
+  },
+  {
+    hash: 'f33a904',
+    label: 'Hand-off',
+    message: 'docs(ops): leave you with a workflow you can trust',
+    body: 'You get the runbook, ownership notes, and clear instructions for handling exceptions.',
+  },
+];
+
+const faqs = [
+  {
+    q: 'What tools can you connect?',
+    a: 'Most modern SaaS tools with an API or webhook can be connected. Email, CRMs, Slack, Notion, Stripe, Sheets, Linear, and HubSpot are common starting points.',
+  },
+  {
+    q: 'Do automations run without me watching them?',
+    a: 'Yes. The point is reliable background work, with logs, alerts, and clear handoff when a human needs to review something.',
+  },
+  {
+    q: 'Can AI make decisions in the workflow?',
+    a: 'Yes, where it is useful. We normally keep AI decisions bounded, logged, and easy to override.',
+  },
+  {
+    q: 'What happens when something fails?',
+    a: 'Good automation plans for failure. Retries, fallback branches, alerting, and readable logs are part of the build.',
+  },
+];
+
+const schema = JSON.stringify({
+  '@context': 'https://schema.org',
+  '@type': 'Service',
+  '@id': 'https://camberco.co.uk/services/automation#service',
+  name: 'Workflow Automation',
+  serviceType: 'Business process automation',
+  provider: { '@id': 'https://camberco.co.uk/#organization' },
+  areaServed: {
+    '@type': 'Country',
+    name: 'United Kingdom',
+  },
+  url: 'https://camberco.co.uk/services/automation',
+  description: 'Custom workflow automation for small businesses, connecting tools like email, Slack, Notion, Stripe, Sheets, and AI models.',
+});
+---
+
+<Layout
+  title="Workflow Automation | Camber Co"
+  description="Custom workflow automation for small businesses. Connect email, Slack, Notion, Stripe, Sheets, and AI into reliable systems that run in the background."
+  canonicalUrl="https://camberco.co.uk/services/automation"
+  schema={schema}
+>
+  <StarfieldHero />
+
+  <main class="service-page">
+    <section class="hero">
+      <div class="container">
+        <div class="hero-copy" data-reveal>
+          <div class="status-chip">
+            <span class="status-dot" aria-hidden="true"></span>
+            <span class="status-label">[ WORKFLOW MODE ]</span>
+            <span class="status-path">camber/services/automation</span>
+          </div>
+          <h1>Watch a workflow run.</h1>
+          <p>
+            We connect the tools already in your business, remove the manual joins,
+            and leave you with a workflow that runs without babysitting.
+          </p>
+          <div class="hero-actions">
+            <a href="/contact/" class="btn btn-primary">&gt; Automate a workflow</a>
+            <button type="button" class="btn btn-secondary" data-chat-open="automation">&gt; Chat about it</button>
+          </div>
+        </div>
+
+        <div class="automation-demo" data-automation-demo data-reveal>
+          <div class="graph-topline">
+            <span>$ n8n run support-flow</span>
+            <button type="button" class="btn btn-secondary btn-small" data-automation-run>&gt; Run again</button>
+          </div>
+
+          <div class="graph-scroll" aria-label="Automation workflow graph">
+            <svg class="automation-svg" viewBox="0 0 760 320" role="img" aria-labelledby="automation-title">
+              <title id="automation-title">Email arrives, Claude classifies it, then Notion logs it and Slack receives an alert.</title>
+
+              <path class="edge" data-edge="email-claude" d="M 184 160 C 224 160 244 160 284 160"></path>
+              <path class="edge" data-edge="claude-notion" d="M 444 160 C 488 160 500 88 556 88"></path>
+              <path class="edge" data-edge="claude-slack" d="M 444 160 C 488 160 500 232 556 232"></path>
+
+              <circle class="particle" data-particle r="5" cx="184" cy="160"></circle>
+              <circle class="particle" data-particle r="5" cx="444" cy="160"></circle>
+              <circle class="particle" data-particle r="5" cx="444" cy="160"></circle>
+
+              <g
+                class="automation-node"
+                data-automation-node="email"
+                data-config-title="Gmail trigger"
+                data-config="trigger: new inbound email · filter: support@ inbox · payload: subject, sender, body"
+                tabindex="0"
+              >
+                <rect class="node-box" x="24" y="124" width="160" height="72" rx="8"></rect>
+                <rect class="node-bar" x="24" y="124" width="160" height="18" rx="8"></rect>
+                <circle class="node-dot node-dot--red" cx="40" cy="133" r="4"></circle>
+                <circle class="node-dot node-dot--yellow" cx="54" cy="133" r="4"></circle>
+                <circle class="node-dot node-dot--green" cx="68" cy="133" r="4"></circle>
+                <text class="node-label" x="104" y="164" text-anchor="middle">Email arrives</text>
+                <text class="node-icon" x="104" y="184" text-anchor="middle">Gmail</text>
+                <text class="node-status" x="104" y="220" text-anchor="middle">received: support enquiry</text>
+              </g>
+
+              <g
+                class="automation-node"
+                data-automation-node="claude"
+                data-config-title="Claude classifies"
+                data-config="model: claude-opus-4-7 · temperature: 0.2 · prompt: classify support email by urgency and topic"
+                tabindex="0"
+              >
+                <rect class="node-box" x="284" y="124" width="160" height="72" rx="8"></rect>
+                <rect class="node-bar" x="284" y="124" width="160" height="18" rx="8"></rect>
+                <circle class="node-dot node-dot--red" cx="300" cy="133" r="4"></circle>
+                <circle class="node-dot node-dot--yellow" cx="314" cy="133" r="4"></circle>
+                <circle class="node-dot node-dot--green" cx="328" cy="133" r="4"></circle>
+                <text class="node-label" x="364" y="164" text-anchor="middle">Claude classifies</text>
+                <text class="node-icon" x="364" y="184" text-anchor="middle">Anthropic</text>
+                <text class="node-status" x="364" y="220" text-anchor="middle">classified: support enquiry</text>
+              </g>
+
+              <g
+                class="automation-node"
+                data-automation-node="notion"
+                data-config-title="Notion logs"
+                data-config="database: support queue · fields: sender, urgency, summary · action: create row"
+                tabindex="0"
+              >
+                <rect class="node-box" x="556" y="52" width="160" height="72" rx="8"></rect>
+                <rect class="node-bar" x="556" y="52" width="160" height="18" rx="8"></rect>
+                <circle class="node-dot node-dot--red" cx="572" cy="61" r="4"></circle>
+                <circle class="node-dot node-dot--yellow" cx="586" cy="61" r="4"></circle>
+                <circle class="node-dot node-dot--green" cx="600" cy="61" r="4"></circle>
+                <text class="node-label" x="636" y="92" text-anchor="middle">Notion logs</text>
+                <text class="node-icon" x="636" y="112" text-anchor="middle">Notion</text>
+                <text class="node-status" x="636" y="148" text-anchor="middle">logged: row #438</text>
+              </g>
+
+              <g
+                class="automation-node"
+                data-automation-node="slack"
+                data-config-title="Slack alert"
+                data-config="channel: #support · message: urgency, summary, Notion link · mention: on-call"
+                tabindex="0"
+              >
+                <rect class="node-box" x="556" y="196" width="160" height="72" rx="8"></rect>
+                <rect class="node-bar" x="556" y="196" width="160" height="18" rx="8"></rect>
+                <circle class="node-dot node-dot--red" cx="572" cy="205" r="4"></circle>
+                <circle class="node-dot node-dot--yellow" cx="586" cy="205" r="4"></circle>
+                <circle class="node-dot node-dot--green" cx="600" cy="205" r="4"></circle>
+                <text class="node-label" x="636" y="236" text-anchor="middle">Slack alert</text>
+                <text class="node-icon" x="636" y="256" text-anchor="middle">Slack</text>
+                <text class="node-status" x="636" y="292" text-anchor="middle">slack: #support pinged</text>
+              </g>
+            </svg>
+          </div>
+
+          <p class="graph-hint">Tap a node for mocked config.</p>
+          <div class="automation-tooltip" data-automation-tooltip role="tooltip" aria-hidden="true"></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section-block">
+      <div class="container">
+        <div class="section-header" data-reveal>
+          <p class="section-tag">$ ls integrations/</p>
+          <h2>Tools we connect.</h2>
+        </div>
+
+        <div class="logo-grid" data-reveal-stagger>
+          <div class="logo-card logo-card--green">
+            <svg viewBox="0 0 48 48" aria-hidden="true"><path d="M18 6h12v36H18zM6 18h36v12H6z"></path></svg>
+            <span>Slack</span>
+          </div>
+          <div class="logo-card logo-card--pink">
+            <svg viewBox="0 0 48 48" aria-hidden="true"><path d="M8 12h32v24H8zM8 12l16 14L40 12"></path></svg>
+            <span>Gmail</span>
+          </div>
+          <div class="logo-card logo-card--green">
+            <svg viewBox="0 0 48 48" aria-hidden="true"><path d="M12 8h24l4 4v28H12zM18 18h12M18 24h12M18 30h8"></path></svg>
+            <span>Notion</span>
+          </div>
+          <div class="logo-card logo-card--warning">
+            <svg viewBox="0 0 48 48" aria-hidden="true"><path d="M12 16c0-5 5-8 12-8s12 3 12 8-5 8-12 8-12 3-12 8 5 8 12 8 12-3 12-8"></path></svg>
+            <span>Stripe</span>
+          </div>
+          <div class="logo-card logo-card--green">
+            <svg viewBox="0 0 48 48" aria-hidden="true"><path d="M12 10h24v22H22l-8 7v-7h-2z"></path></svg>
+            <span>WhatsApp</span>
+          </div>
+          <div class="logo-card logo-card--pink">
+            <svg viewBox="0 0 48 48" aria-hidden="true"><path d="M10 10h28v28H10zM16 16l16 16M32 16L16 32"></path></svg>
+            <span>Linear</span>
+          </div>
+          <div class="logo-card logo-card--green">
+            <svg viewBox="0 0 48 48" aria-hidden="true"><path d="M10 34c8-16 20-16 28 0M14 20h20M18 14h12"></path></svg>
+            <span>HubSpot</span>
+          </div>
+          <div class="logo-card logo-card--warning">
+            <svg viewBox="0 0 48 48" aria-hidden="true"><path d="M10 10h28v28H10zM10 20h28M10 29h28M20 10v28M29 10v28"></path></svg>
+            <span>Sheets</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section-block">
+      <div class="container">
+        <div class="section-header" data-reveal>
+          <p class="section-tag">$ cat examples.json</p>
+          <h2>Example automations.</h2>
+        </div>
+
+        <div class="example-grid" data-reveal-stagger>
+          {examples.map((item) => (
+            <article class="terminal-card">
+              <div class="card-bar">
+                <span class="window-dot window-dot--red"></span>
+                <span class="window-dot window-dot--yellow"></span>
+                <span class="window-dot window-dot--green"></span>
+                <span class="card-path">~/workflow</span>
+              </div>
+              <div class="card-body">
+                <h3>{item.title}</h3>
+                <p>{item.desc}</p>
+                <div class="card-tags">
+                  {item.tags.map((tag) => <span>{tag}</span>)}
+                </div>
+              </div>
+            </article>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <section class="section-block section-block--split">
+      <div class="container">
+        <div class="section-header" data-reveal>
+          <p class="section-tag">$ git log --automation-process</p>
+          <h2>From messy process to reliable run.</h2>
+        </div>
+
+        <ol class="git-log" data-reveal-stagger>
+          {processSteps.map((step, i) => (
+            <li class="commit">
+              <div class="commit-graph" aria-hidden="true">
+                <span class="commit-dot"></span>
+                {i < processSteps.length - 1 && <span class="commit-line"></span>}
+              </div>
+              <div class="commit-text">
+                <span class="commit-line-1"><span class="commit-hash">commit&nbsp;{step.hash}</span></span>
+                <span class="commit-line-2">Author: <span>camber@{step.label.toLowerCase()}</span></span>
+                <span class="commit-message">{step.message}</span>
+                <span class="commit-role">{step.label}</span>
+                <p>{step.body}</p>
+              </div>
+            </li>
+          ))}
+        </ol>
+      </div>
+    </section>
+
+    <section class="section-block">
+      <div class="container">
+        <div class="section-header" data-reveal>
+          <p class="section-tag">$ man automation</p>
+          <h2>Questions before we wire it up.</h2>
+        </div>
+
+        <div class="faq-list" data-reveal>
+          {faqs.map((item, i) => (
+            <details class="faq-item" open={i === 0}>
+              <summary>
+                <span aria-hidden="true">&gt;</span>
+                <span>{item.q}</span>
+              </summary>
+              <p>{item.a}</p>
+            </details>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <section class="cta">
+      <div class="container">
+        <div class="cta-card" data-reveal>
+          <h2>Got a workflow that should already be automatic?</h2>
+          <p>Show us the manual steps. We will map the system, build the workflow, and hand over something your team can trust.</p>
+          <div class="cta-actions">
+            <a href="/contact/" class="btn btn-primary">&gt; Get in touch</a>
+            <button type="button" class="btn btn-secondary" data-chat-open="automation">&gt; Chat about it</button>
+          </div>
+          <p class="cta-flags">
+            <span>--logged</span>
+            <span>--guardrailed</span>
+            <span>--runs-quietly</span>
+          </p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <ChatDrawer />
+</Layout>
+
+<style>
+  .service-page {
+    position: relative;
+    z-index: 2;
+  }
+
+  .container {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 0 var(--space-8);
+  }
+
+  .hero {
+    padding: clamp(96px, 13vw, 148px) 0 clamp(72px, 9vw, 112px);
+  }
+
+  .hero-copy {
+    display: grid;
+    gap: var(--space-4);
+    margin-bottom: var(--space-10);
+    max-width: 820px;
+  }
+
+  .status-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    width: fit-content;
+    padding: var(--space-2) var(--space-3);
+    background: color-mix(in srgb, var(--color-surface-01) 76%, transparent);
+    border: 1px solid var(--color-border-subtle);
+    border-radius: var(--radius-sm);
+    font-family: var(--font-mono);
+  }
+
+  .status-dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--color-green-500);
+    box-shadow: 0 0 10px var(--color-green-glow);
+    animation: status-pulse 2.4s var(--easing-smooth) infinite;
+  }
+
+  @keyframes status-pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.45; }
+  }
+
+  .status-label,
+  .status-path {
+    font-size: var(--type-label);
+    letter-spacing: 0;
+  }
+
+  .status-label {
+    color: var(--color-green-500);
+  }
+
+  .status-path {
+    color: var(--color-text-muted);
+  }
+
+  h1 {
+    margin: 0;
+    font-family: var(--font-mono);
+    font-size: var(--type-display);
+    line-height: 1;
+    letter-spacing: 0;
+    color: var(--color-text-primary);
+  }
+
+  .hero-copy p,
+  .section-header p {
+    margin: 0;
+    font-size: var(--type-body-lg);
+    color: var(--color-text-secondary);
+    line-height: 1.7;
+    max-width: 66ch;
+  }
+
+  .hero-actions,
+  .cta-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-3);
+    margin-top: var(--space-2);
+  }
+
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 44px;
+    border-radius: var(--radius-sm);
+    padding: var(--space-3) var(--space-6);
+    font-family: var(--font-mono);
+    font-size: var(--type-label);
+    font-weight: 700;
+    letter-spacing: 0;
+    transition:
+      transform var(--duration-quick) var(--easing-spring),
+      background var(--duration-quick) var(--easing-smooth),
+      border-color var(--duration-quick) var(--easing-smooth),
+      color var(--duration-quick) var(--easing-smooth),
+      box-shadow var(--duration-quick) var(--easing-smooth);
+  }
+
+  .btn:hover {
+    transform: translateY(-1px);
+  }
+
+  .btn-primary {
+    background: var(--color-green-500);
+    color: var(--color-text-inverse);
+  }
+
+  .btn-primary:hover {
+    background: var(--color-green-400);
+    box-shadow: 0 0 24px var(--color-green-glow);
+  }
+
+  .btn-secondary {
+    color: var(--color-text-secondary);
+    border: 1px solid var(--color-border-muted);
+    background: var(--color-surface-00);
+  }
+
+  .btn-secondary:hover {
+    color: var(--color-text-primary);
+    border-color: var(--color-border-visible);
+    background: var(--color-surface-01);
+  }
+
+  .btn-small {
+    min-height: 36px;
+    padding: var(--space-2) var(--space-4);
+    font-size: var(--type-caption);
+  }
+
+  .automation-demo {
+    border: 1px solid var(--color-border-subtle);
+    border-radius: var(--radius-md);
+    background: color-mix(in srgb, var(--color-surface-00) 88%, transparent);
+    overflow: hidden;
+    box-shadow: 0 0 52px color-mix(in srgb, var(--color-green-500) 8%, transparent);
+  }
+
+  .graph-topline {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-4);
+    padding: var(--space-3) var(--space-4);
+    border-bottom: 1px solid var(--color-border-subtle);
+    background: var(--color-surface-02);
+  }
+
+  .graph-topline span,
+  .graph-hint {
+    font-family: var(--font-mono);
+    font-size: var(--type-caption);
+    color: var(--color-text-muted);
+  }
+
+  .graph-scroll {
+    overflow-x: auto;
+    padding: var(--space-4);
+    scrollbar-width: thin;
+    scrollbar-color: var(--color-border-muted) transparent;
+  }
+
+  .automation-svg {
+    min-width: 760px;
+    height: auto;
+    overflow: visible;
+  }
+
+  .edge {
+    fill: none;
+    stroke: var(--color-green-500);
+    stroke-width: 2;
+    opacity: 0.4;
+  }
+
+  .particle {
+    fill: var(--color-green-500);
+    filter: drop-shadow(0 0 8px var(--color-green-500));
+    opacity: 0;
+  }
+
+  .automation-node {
+    cursor: pointer;
+    outline: none;
+  }
+
+  .node-box {
+    fill: var(--color-surface-00);
+    stroke: var(--color-border-muted);
+    stroke-width: 1.5;
+    transition:
+      stroke var(--duration-quick) var(--easing-smooth),
+      filter var(--duration-quick) var(--easing-smooth),
+      fill var(--duration-quick) var(--easing-smooth);
+  }
+
+  .node-bar {
+    fill: var(--color-surface-02);
+  }
+
+  .node-dot--red { fill: var(--color-error); }
+  .node-dot--yellow { fill: var(--color-warning); }
+  .node-dot--green { fill: var(--color-success); }
+
+  .node-label {
+    fill: var(--color-text-primary);
+    font-family: var(--font-mono);
+    font-size: 13px;
+    font-weight: 700;
+  }
+
+  .node-icon {
+    fill: var(--color-text-muted);
+    font-family: var(--font-mono);
+    font-size: 11px;
+  }
+
+  .node-status {
+    fill: var(--color-green-500);
+    font-family: var(--font-mono);
+    font-size: 11px;
+    opacity: 0;
+    transition: opacity var(--duration-quick) var(--easing-smooth);
+  }
+
+  .automation-node:hover .node-box,
+  .automation-node:focus-visible .node-box,
+  :global(.automation-node.is-lit .node-box) {
+    stroke: var(--color-green-500);
+    fill: color-mix(in srgb, var(--color-green-500) 8%, var(--color-surface-00));
+    filter: drop-shadow(0 0 10px var(--color-green-glow));
+  }
+
+  :global(.automation-node.is-lit .node-status) {
+    opacity: 1;
+  }
+
+  .graph-hint {
+    padding: 0 var(--space-4) var(--space-4);
+  }
+
+  .automation-tooltip {
+    position: fixed;
+    z-index: 1000;
+    display: grid;
+    gap: var(--space-2);
+    max-width: min(320px, calc(100vw - var(--space-6)));
+    padding: var(--space-3);
+    border: 1px solid var(--color-border-visible);
+    border-radius: var(--radius-sm);
+    background: var(--color-surface-02);
+    color: var(--color-text-secondary);
+    box-shadow: 0 var(--space-2) var(--space-6) color-mix(in srgb, var(--color-base) 70%, transparent);
+    font-family: var(--font-mono);
+    font-size: var(--type-caption);
+    line-height: 1.6;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity var(--duration-quick) var(--easing-smooth);
+  }
+
+  .automation-tooltip strong {
+    color: var(--color-green-500);
+  }
+
+  .automation-tooltip.is-visible {
+    opacity: 1;
+  }
+
+  .section-block {
+    padding: clamp(72px, 10vw, 124px) 0;
+    border-top: 1px solid var(--color-border-subtle);
+    background: var(--color-base);
+  }
+
+  .section-header {
+    margin-bottom: var(--space-10);
+  }
+
+  .section-tag {
+    margin: 0 0 var(--space-3);
+    font-family: var(--font-mono);
+    font-size: var(--type-caption);
+    color: var(--color-green-500);
+  }
+
+  h2 {
+    margin: 0;
+    font-family: var(--font-mono);
+    font-size: var(--type-h1);
+    line-height: 1.12;
+    letter-spacing: 0;
+  }
+
+  .logo-grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: var(--space-4);
+  }
+
+  .logo-card {
+    display: grid;
+    place-items: center;
+    gap: var(--space-3);
+    min-height: 140px;
+    border: 1px solid var(--color-border-subtle);
+    border-radius: var(--radius-md);
+    background: var(--color-surface-00);
+    color: var(--color-text-muted);
+    font-family: var(--font-mono);
+    transition:
+      color var(--duration-quick) var(--easing-smooth),
+      border-color var(--duration-quick) var(--easing-smooth),
+      transform var(--duration-quick) var(--easing-spring);
+  }
+
+  .logo-card svg {
+    width: 42px;
+    height: 42px;
+  }
+
+  .logo-card path {
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 3;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  .logo-card:hover {
+    transform: translateY(-2px);
+    border-color: currentColor;
+  }
+
+  .logo-card--green:hover { color: var(--color-green-500); }
+  .logo-card--pink:hover { color: var(--color-pink-500); }
+  .logo-card--warning:hover { color: var(--color-warning); }
+
+  .example-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--space-4);
+  }
+
+  .terminal-card,
+  .cta-card {
+    border: 1px solid var(--color-border-subtle);
+    border-radius: var(--radius-md);
+    background: var(--color-surface-00);
+    overflow: hidden;
+  }
+
+  .terminal-card {
+    transition:
+      transform var(--duration-normal) var(--easing-spring),
+      border-color var(--duration-normal) var(--easing-smooth),
+      box-shadow var(--duration-normal) var(--easing-smooth);
+  }
+
+  .terminal-card:hover {
+    transform: translateY(-2px);
+    border-color: color-mix(in srgb, var(--color-green-500) 48%, var(--color-border-muted));
+    box-shadow: 0 0 28px color-mix(in srgb, var(--color-green-500) 8%, transparent);
+  }
+
+  .card-bar {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    min-height: 38px;
+    padding: 0 var(--space-3);
+    background: var(--color-surface-02);
+    border-bottom: 1px solid var(--color-border-subtle);
+  }
+
+  .window-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  .window-dot--red { background: var(--color-error); }
+  .window-dot--yellow { background: var(--color-warning); }
+  .window-dot--green { background: var(--color-success); }
+
+  .card-path {
+    margin-left: var(--space-2);
+    font-family: var(--font-mono);
+    font-size: var(--type-caption);
+    color: var(--color-text-muted);
+  }
+
+  .card-body {
+    display: grid;
+    gap: var(--space-4);
+    padding: var(--space-6);
+  }
+
+  .card-body h3 {
+    margin: 0;
+    font-family: var(--font-mono);
+    font-size: var(--type-h3);
+    letter-spacing: 0;
+  }
+
+  .card-body p,
+  .commit-text p,
+  .faq-item p,
+  .cta-card p {
+    margin: 0;
+    color: var(--color-text-secondary);
+    line-height: 1.7;
+  }
+
+  .card-tags,
+  .cta-flags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+  }
+
+  .card-tags span {
+    border: 1px solid var(--color-border-subtle);
+    border-radius: var(--radius-sm);
+    background: var(--color-surface-02);
+    color: var(--color-text-muted);
+    padding: var(--space-1) var(--space-2);
+    font-family: var(--font-mono);
+    font-size: var(--type-caption);
+  }
+
+  .git-log {
+    display: grid;
+    max-width: 860px;
+  }
+
+  .commit {
+    display: grid;
+    grid-template-columns: 32px minmax(0, 1fr);
+    gap: var(--space-4);
+    list-style: none;
+  }
+
+  .commit-graph {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-top: var(--space-2);
+  }
+
+  .commit-dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: var(--color-green-500);
+    box-shadow: 0 0 16px var(--color-green-glow);
+    border: 2px solid var(--color-green-500);
+  }
+
+  .commit-line {
+    width: 1px;
+    flex: 1;
+    min-height: 96px;
+    margin-top: var(--space-2);
+    background: var(--color-border-muted);
+  }
+
+  .commit-text {
+    display: grid;
+    gap: var(--space-2);
+    padding-bottom: var(--space-8);
+    font-family: var(--font-mono);
+    font-size: var(--type-label);
+  }
+
+  .commit-line-1,
+  .commit-hash {
+    color: var(--color-pink-500);
+    font-weight: 700;
+  }
+
+  .commit-line-2 {
+    color: var(--color-text-muted);
+  }
+
+  .commit-line-2 span,
+  .commit-role {
+    color: var(--color-green-500);
+  }
+
+  .commit-message {
+    color: var(--color-text-primary);
+  }
+
+  .commit-text p {
+    font-family: var(--font-sans);
+    max-width: 66ch;
+  }
+
+  .faq-list {
+    max-width: 820px;
+  }
+
+  .faq-item {
+    border-top: 1px solid var(--color-border-subtle);
+  }
+
+  .faq-item:last-child {
+    border-bottom: 1px solid var(--color-border-subtle);
+  }
+
+  .faq-item summary {
+    display: flex;
+    gap: var(--space-3);
+    padding: var(--space-6) 0;
+    cursor: pointer;
+    list-style: none;
+    color: var(--color-text-primary);
+    font-weight: 700;
+  }
+
+  .faq-item summary::-webkit-details-marker {
+    display: none;
+  }
+
+  .faq-item summary span:first-child {
+    color: var(--color-green-500);
+    font-family: var(--font-mono);
+    transition: transform var(--duration-quick) var(--easing-smooth);
+  }
+
+  .faq-item[open] summary span:first-child {
+    transform: rotate(90deg);
+  }
+
+  .faq-item p {
+    padding: 0 0 var(--space-6) calc(var(--space-6) + var(--space-1));
+    max-width: 68ch;
+  }
+
+  .cta {
+    padding: clamp(72px, 10vw, 124px) 0;
+    background: var(--color-base);
+  }
+
+  .cta-card {
+    display: grid;
+    justify-items: center;
+    gap: var(--space-6);
+    padding: clamp(40px, 6vw, 72px);
+    text-align: center;
+  }
+
+  .cta-card h2 {
+    max-width: 760px;
+  }
+
+  .cta-card p {
+    max-width: 60ch;
+  }
+
+  .cta-flags {
+    justify-content: center;
+    color: var(--color-text-muted);
+    font-family: var(--font-mono);
+    font-size: var(--type-caption);
+  }
+
+  @media (max-width: 980px) {
+    .logo-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  @media (max-width: 768px) {
+    .container {
+      padding: 0 var(--space-4);
+    }
+
+    .graph-topline {
+      align-items: flex-start;
+      flex-direction: column;
+    }
+
+    .example-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .hero-actions .btn,
+    .cta-actions .btn {
+      width: 100%;
+    }
+  }
+
+  @media (max-width: 520px) {
+    .status-chip {
+      align-items: flex-start;
+      flex-direction: column;
+    }
+
+    .logo-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .status-dot {
+      animation: none;
+    }
+
+    .btn,
+    .terminal-card,
+    .logo-card,
+    .node-box,
+    .node-status,
+    .faq-item summary span:first-child {
+      transition: none;
+    }
+  }
+</style>
+
+<script>
+  import { initScrollReveal, initCounters, SCROLL_REVEAL_CSS } from '../../scripts/scroll-reveal.ts';
+  import { initChatDrawer } from '../../scripts/chat-drawer.ts';
+  import { initAutomationDemo } from '../../scripts/automation-demo.ts';
+
+  if (!document.getElementById('scroll-reveal-css')) {
+    const style = document.createElement('style');
+    style.id = 'scroll-reveal-css';
+    style.textContent = SCROLL_REVEAL_CSS;
+    document.head.appendChild(style);
+  }
+
+  initScrollReveal();
+  initCounters();
+  initChatDrawer();
+  initAutomationDemo();
+
+  document.querySelectorAll<HTMLElement>('[data-chat-open]').forEach((button) => {
+    button.addEventListener('click', () => {
+      const service = button.dataset.chatOpen;
+      if (service && window.__openChatDrawer) {
+        window.__openChatDrawer(service as any);
+      }
+    });
+  });
+</script>

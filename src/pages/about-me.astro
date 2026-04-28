@@ -1,134 +1,471 @@
 ---
 import Layout from '../layouts/Layout.astro';
-import { TYPEWRITER_CSS, initTypewriters } from '../scripts/typewriter.ts';
-import { SCROLL_REVEAL_CSS, initScrollReveal } from '../scripts/scroll-reveal.ts';
+import StarfieldHero from '../components/StarfieldHero.astro';
+
+const lastUpdated = new Date().toISOString().slice(0, 10);
+
+interface Role {
+  hash: string;
+  date: string;
+  company: string;
+  companySlug: string;
+  title: string;
+  summary: string;
+  body: string[];
+  tags: string[];
+  tag?: string;
+}
+
+const roles: Role[] = [
+  {
+    hash: 'a4f9d2c',
+    date: 'Jan 2024 — Present',
+    company: 'Fairplay Sports Media',
+    companySlug: 'fairplay',
+    title: 'Tech Lead, Subscriptions',
+    summary: 'feat(career): scaled subs from zero to £55k MRR',
+    body: [
+      'Launched a new subscription business from the ground up, driving it to £55k MRR in under a year.',
+      'Lead the frontend strategy for the global subscriptions team, balancing new commercial features with the modernisation of a 15-year-old legacy stack.',
+      'AI advocate within the business — designing and deploying agents in n8n + ADK to automate internal workflows.',
+      'Architect scalable frontend solutions that let marketing iterate quickly on pricing and bundles.',
+    ],
+    tags: ['Tech Lead', 'AI Agents', 'n8n', 'Subscriptions', 'Legacy Modernisation'],
+    tag: 'tech-lead',
+  },
+  {
+    hash: '8c2b1a7',
+    date: 'Oct 2022 — Jan 2024',
+    company: 'Trainline',
+    companySlug: 'trainline',
+    title: 'Senior Web Engineer',
+    summary: 'feat(a11y): full screen-reader-compliant booking flow',
+    body: [
+      'Maintained and enhanced the web infrastructure for one of Europe\'s largest rail platforms.',
+      'Spearheaded critical accessibility improvements, enabling a fully compliant end-to-end booking flow for screen reader users.',
+      'Implemented Playwright for automated E2E testing across the platform — significantly reducing regression defects in production.',
+      'On-call rotation, resolving high-priority customer issues to keep service running.',
+    ],
+    tags: ['Playwright', 'Accessibility', 'CI/CD', 'On-call'],
+    tag: 'senior-eng',
+  },
+  {
+    hash: '3f1e7b9',
+    date: 'Feb 2021 — Oct 2022',
+    company: 'Just Eat Takeaway',
+    companySlug: 'just-eat',
+    title: 'Senior Web Engineer',
+    summary: 'feat(i18n): unified global checkout — 500k+ daily users',
+    body: [
+      'Pivotal in building a unified global checkout used by 500,000+ customers daily across international markets.',
+      'Led the i18n of core components, enabling expansion into new territories with bespoke language and currency requirements.',
+      'Devised and ran rigorous A/B tests on checkout flows — directly impacting Gross Transaction Value.',
+      'Mentored junior engineers and led code reviews in a high-traffic environment.',
+    ],
+    tags: ['i18n', 'A/B Testing', 'Checkout', 'Mentorship'],
+  },
+  {
+    hash: 'b29c4a1',
+    date: 'Jul 2019 — Feb 2021',
+    company: 'Oddschecker',
+    companySlug: 'oddschecker',
+    title: 'Senior Frontend Developer',
+    summary: 'feat(launch): scaled UK + US sites through 800x traffic surge',
+    body: [
+      'Led the frontend rebrand of the Oddschecker website — handled a traffic surge from 500 unique views to 400,000+ daily.',
+      'Oversaw the US site launch and growth strategy, scaling from 60 daily users to a peak of 400,000.',
+      'Established consistent dev processes and a component library — reducing tech debt and speeding feature delivery.',
+      'Managed the frontend release lifecycle through periods of explosive concurrent traffic.',
+    ],
+    tags: ['Frontend Lead', 'Component Library', 'Release Management'],
+  },
+  {
+    hash: 'e7d34f2',
+    date: 'Oct 2017 — Jan 2019',
+    company: 'BBC (Editorial Services)',
+    companySlug: 'bbc',
+    title: 'Web Developer',
+    summary: 'feat: video catalogue + EPG scheduling tools',
+    body: [
+      'Developed critical internal software managing the BBC\'s entire online video content library and EPG scheduling.',
+      'Delivered robust, scalable tools supporting digital content delivery for internal production teams and external partners.',
+    ],
+    tags: ['Internal Tooling', 'Content Systems'],
+  },
+  {
+    hash: '5a08b6d',
+    date: 'Jul 2016 — Oct 2017',
+    company: 'Blue Bridge Solutions',
+    companySlug: 'blue-bridge',
+    title: 'Junior Full Stack Developer',
+    summary: 'feat: web POS system with SQL Server reporting',
+    body: [
+      'Designed a web-based point-of-sale system in AngularJS + C# ASP.NET, including complex reporting features over SQL Server data.',
+      'Managed the full application lifecycle — translating client business requirements into technical solutions.',
+    ],
+    tags: ['AngularJS', 'C#', 'SQL Server', 'Full Stack'],
+  },
+  {
+    hash: '0000000',
+    date: '2013 — 2016',
+    company: 'University of Plymouth',
+    companySlug: 'plymouth',
+    title: 'BSc Computer Science (2:1)',
+    summary: 'root-commit: where it started',
+    body: [
+      'BSc Computer Science, University of Plymouth (2:1).',
+      'First-class grade on final year project. Academic Award of Excellence (Plymouth University & BCS).',
+      '2012 — 2013: Cornwall College — Access to Computing (Distinction). Academic Award of Excellence for distinctions in all modules.',
+    ],
+    tags: ['Computer Science', '2:1', 'Awards'],
+    tag: 'root-commit',
+  },
+];
+
+interface Project {
+  slug: string;
+  title: string;
+  status: 'live' | 'in-submission' | 'in-development' | 'open-source' | 'work';
+  blurb: string;
+  longBlurb: string;
+  tags: string[];
+  link?: { label: string; href: string };
+}
+
+const projects: Project[] = [
+  {
+    slug: 'football-iq',
+    title: 'Football IQ',
+    status: 'live',
+    blurb: 'Daily football trivia with 8+ game modes. AI-generated content nightly.',
+    longBlurb: 'A Wordle-style daily football trivia app with 8+ game modes — Career Path, Transfer Guess, Goalscorer Recall, Starting XI and more. Built with React Native + Expo, running on Supabase. AI agent pipeline auto-generates fresh puzzles nightly from real match data. Free for the last 7 days, with a one-time premium unlock for the growing archive.',
+    tags: ['React Native', 'Expo', 'Supabase', 'AI agents', 'PostHog', 'RevenueCat'],
+    link: { label: 'apps.apple.com', href: 'https://apps.apple.com/us/app/football-iq-daily-quiz-game/id6757344691' },
+  },
+  {
+    slug: 'jodz',
+    title: 'Jodz',
+    status: 'in-submission',
+    blurb: 'Privacy-first cashflow forecasting for iPhone & Mac.',
+    longBlurb: 'Jodz answers "where will my money be?" instead of "where did it go?". A single continuous timeline projects every bill, payday, subscription and scheduled event months ahead. Built end-to-end in Swift 6 + SwiftUI with SwiftData and CloudKit private database — no third-party SDKs, no analytics, no tracking. Universal Purchase across iPhone and Mac with a Home Screen widget.',
+    tags: ['Swift 6', 'SwiftUI', 'SwiftData', 'CloudKit', 'Swift Charts', 'Universal Purchase'],
+  },
+  {
+    slug: 'bio-core',
+    title: 'bio-core',
+    status: 'in-development',
+    blurb: 'Specialist consumer e-commerce platform with AI support.',
+    longBlurb: 'A high-performance specialist consumer e-commerce platform. Next.js 15 + Supabase + Tailwind, with a custom WebGL aurora hero, full admin dashboard for inventory, orders and content, and an AI-powered support chatbot with a configurable knowledge base. Adaptive performance tiering keeps the experience smooth from low-end Android to high-DPR desktop.',
+    tags: ['Next.js 15', 'Supabase', 'WebGL', 'TanStack Query', 'AI Chatbot', 'Stripe'],
+  },
+  {
+    slug: 'clippin',
+    title: 'ClipPin',
+    status: 'open-source',
+    blurb: 'Open-source Mac clipboard history manager.',
+    longBlurb: 'A native Mac clipboard history manager. Open source on GitHub. Built for the kind of person who copies twelve things in a row and needs them all back later.',
+    tags: ['Swift', 'macOS', 'Open Source'],
+    link: { label: 'github.com/charliearlie/ClipPin', href: 'https://github.com/charliearlie/ClipPin' },
+  },
+  {
+    slug: 'plus-ai',
+    title: 'Plus AI Tools Suite',
+    status: 'work',
+    blurb: 'WhoScored Plus, Oddschecker Plus, Gazzetta AI Predictor.',
+    longBlurb: 'A suite of AI-assisted sports analysis tools shipped to high-volume audiences across WhoScored, Oddschecker and La Gazzetta dello Sport. Architected to support rapid experimentation on pricing, bundles and content surfaces.',
+    tags: ['Subscriptions', 'AI', 'Sports Analytics'],
+  },
+  {
+    slug: 'qa-systems',
+    title: 'AI-Native QA Systems',
+    status: 'work',
+    blurb: 'AI-driven browser automation with Playwright.',
+    longBlurb: 'Playwright-based testing systems augmented with AI — tests that understand what they\'re looking at, not just what they\'re clicking. Built early as a productivity layer and shipped into production before most teams were paying attention.',
+    tags: ['Playwright', 'AI Testing', 'Browser Automation', 'CI/CD'],
+  },
+];
+
+interface Skill {
+  name: string;
+  context: string;
+}
+
+interface SkillGroup {
+  key: string;
+  skills: Skill[];
+}
+
+const skillGroups: SkillGroup[] = [
+  {
+    key: 'ai_automation',
+    skills: [
+      { name: 'Claude Code', context: 'Daily driver — subagents, skills, hooks, agent SDK.' },
+      { name: 'n8n', context: 'Production agent fleets at Fairplay; client automations at Camber Co.' },
+      { name: 'ADK', context: 'Google\'s Agent Development Kit for multi-agent orchestration.' },
+      { name: 'LLM Integration', context: 'OpenAI, Anthropic, local models — RAG, tool use, evals.' },
+      { name: 'AI Agents', context: 'Autonomous and semi-autonomous workflows in production.' },
+    ],
+  },
+  {
+    key: 'frontend',
+    skills: [
+      { name: 'React', context: '10+ years across web — used at every company since Oddschecker.' },
+      { name: 'Astro', context: 'Building this site, plus content-heavy work for clients.' },
+      { name: 'TypeScript', context: 'Default for new projects — strict mode always.' },
+      { name: 'React Native', context: 'Built and shipped Football IQ to the App Store. Second app on the way.' },
+      { name: 'Swift / SwiftUI', context: 'Built Jodz end-to-end for iPhone + Mac with no third-party deps.' },
+    ],
+  },
+  {
+    key: 'testing_devops',
+    skills: [
+      { name: 'Playwright', context: 'Spearheaded E2E coverage at Trainline; cut regression defects significantly.' },
+      { name: 'CI/CD', context: 'GitHub Actions pipelines across teams — tested and deployed.' },
+      { name: 'SQL Server', context: 'Reporting layer for the POS system at Blue Bridge.' },
+      { name: 'Accessibility', context: 'Led screen-reader-compliant booking flow at Trainline.' },
+    ],
+  },
+  {
+    key: 'leadership',
+    skills: [
+      { name: 'Legacy Modernisation', context: 'Modernising a 15-year-old subscription stack at Fairplay.' },
+      { name: 'Internationalisation', context: 'i18n core components for Just Eat\'s global checkout.' },
+      { name: 'A/B Testing', context: 'Iterated checkout at Just Eat — directly drove GTV.' },
+      { name: 'SEO', context: 'Technical and content SEO for client work at Camber Co.' },
+      { name: 'Mentorship', context: 'Mentored juniors at Just Eat; coach non-technical founders today.' },
+    ],
+  },
+];
 
 const schema = JSON.stringify({
-  "@context": "https://schema.org",
-  "@type": "Person",
-  "@id": "https://camberco.co.uk/about-me#person",
-  "name": "Charlie W",
-  "jobTitle": "AI Engineer & Founder Coach",
-  "worksFor": { "@id": "https://camberco.co.uk/#organization" },
-  "url": "https://camberco.co.uk/about-me",
-  "knowsAbout": ["AI Automation", "N8n", "Workflow Automation", "Solo Founder Coaching", "OpenClaw"],
-  "address": {
-    "@type": "PostalAddress",
-    "addressLocality": "London",
-    "addressCountry": "GB"
-  }
+  '@context': 'https://schema.org',
+  '@type': 'Person',
+  '@id': 'https://camberco.co.uk/about-me#person',
+  name: 'Charlie Waite',
+  alternateName: 'Charlie W',
+  jobTitle: 'Tech Lead & AI Engineer',
+  worksFor: { '@id': 'https://camberco.co.uk/#organization' },
+  url: 'https://camberco.co.uk/about-me',
+  sameAs: [
+    'https://uk.linkedin.com/in/charlie-waite',
+    'https://github.com/charliearlie',
+  ],
+  knowsAbout: [
+    'AI Automation', 'n8n', 'Workflow Automation', 'React Native',
+    'Subscriptions', 'Playwright', 'Solo Founder Coaching',
+  ],
+  address: {
+    '@type': 'PostalAddress',
+    addressLocality: 'London',
+    addressCountry: 'GB',
+  },
 });
 ---
 
 <Layout
-  title="Charlie W — AI Engineer & Founder Coach | Camber Co"
-  description="Charlie W is a London-based AI engineer with 12 years of experience. Founder of Camber Co, coach to non-technical founders, and builder of AI systems that ship."
+  title="Charlie Waite — Tech Lead & AI Engineer | Camber Co"
+  description="Charlie Waite — London-based Tech Lead with 12 years shipping software. Currently leading subscriptions at Fairplay Sports Media (£55k MRR) and running Camber Co — AI automation for SMBs."
   canonicalUrl="https://camberco.co.uk/about-me"
   schema={schema}
 >
-  <main>
+  <StarfieldHero />
 
-    <!-- ===== HERO ===== -->
-    <section class="hero" id="hero">
+  <main class="about-page">
+
+    <!-- ===== HERO TERMINAL ===== -->
+    <section class="hero">
       <div class="container">
-        <div class="hero-inner">
 
-          <div class="hero-copy">
-            <div class="status-chip" data-reveal>
-              <span class="status-dot" aria-hidden="true"></span>
-              <span class="status-label">[ ACTIVE ]</span>
-              <span class="status-path">camber/about</span>
+        <div class="hero-meta" data-reveal>
+          <div class="status-chip">
+            <span class="status-dot" aria-hidden="true"></span>
+            <span class="status-label">[ ACTIVE ]</span>
+            <span class="status-path">camber/about</span>
+          </div>
+          <h1 class="hero-h1">Charlie Waite</h1>
+          <p class="hero-tagline">
+            Tech Lead. AI engineer. Founder of <a href="/" class="hero-link">Camber Co</a>.
+            <br />
+            <span class="hero-tagline-muted">12 years shipping software · London, UK</span>
+          </p>
+        </div>
+
+        <div class="hero-terminal" data-reveal>
+          <div class="terminal-readout" id="aboutTerminal">
+            <div class="terminal-titlebar">
+              <span class="dot dot-red"></span>
+              <span class="dot dot-yellow"></span>
+              <span class="dot dot-green-tc"></span>
+              <span class="terminal-title">~/charlie</span>
+              <span class="terminal-status"><span class="status-dot-sm"></span> ONLINE</span>
             </div>
+            <div
+              class="terminal-body terminal-body--interactive"
+              role="log"
+              aria-label="Interactive terminal. Type help for available commands."
+              aria-live="polite"
+            >
+              <div class="terminal-output" id="aboutTerminalOutput"></div>
+              <div class="terminal-input-line">
+                <span class="terminal-prompt" aria-hidden="true">$</span>
+                <div class="terminal-input-wrap">
+                  <span class="terminal-ghost" id="aboutTerminalGhost" aria-hidden="true"></span>
+                  <input
+                    type="text"
+                    id="aboutTerminalInput"
+                    class="terminal-input"
+                    autocomplete="off"
+                    autocorrect="off"
+                    autocapitalize="off"
+                    spellcheck="false"
+                    placeholder="type a command..."
+                    aria-label="Terminal command input"
+                  />
+                </div>
+                <span class="terminal-tab-hint" aria-hidden="true">tab</span>
+              </div>
+            </div>
+          </div>
+        </div>
 
-            <h1 class="hero-title" data-reveal>Charlie W</h1>
+      </div>
+    </section>
 
-            <p class="hero-sub" data-reveal>
-              Software engineer for 12 years. Building AI systems that ship.
-            </p>
+    <!-- ===== STATS ===== -->
+    <section class="stats" aria-label="Career stats">
+      <div class="container">
+        <div class="stats-grid" data-reveal>
+
+          <div class="stat">
+            <span class="stat-num"><span data-count-to="12">0</span><span class="stat-suffix">yrs</span></span>
+            <span class="stat-label">shipping software</span>
           </div>
 
-          <div class="hero-terminal" data-reveal>
-            <div class="tw-bar" aria-hidden="true">
-              <span class="tw-dot tw-dot--red"></span>
-              <span class="tw-dot tw-dot--yellow"></span>
-              <span class="tw-dot tw-dot--green"></span>
-              <span class="tw-label">camber — about.ts</span>
-            </div>
-            <div class="tw-body">
-              <p class="tw-line"><span class="tw-prompt">$</span> <span class="tw-cmd">cat ./founder-origin.md</span></p>
-              <div
-                class="tw-output"
-                data-typewriter
-                data-lines='["2024: founded Camber Co to turn AI potential into working systems."]'
-                data-speed="28"
-                data-start-delay="600"
-                aria-label="2024: founded Camber Co to turn AI potential into working systems."
-              ></div>
-            </div>
+          <div class="stat">
+            <span class="stat-num"><span data-count-to="7">0</span></span>
+            <span class="stat-label">companies · 12 yrs</span>
+          </div>
+
+          <div class="stat">
+            <span class="stat-num"><span data-count-to="55">0</span><span class="stat-suffix">k</span></span>
+            <span class="stat-label">MRR built (£)</span>
+          </div>
+
+          <div class="stat">
+            <span class="stat-num"><span data-count-to="500">0</span><span class="stat-suffix">k+</span></span>
+            <span class="stat-label">daily users impacted</span>
+          </div>
+
+          <div class="stat">
+            <span class="stat-num"><span data-count-to="4">0</span></span>
+            <span class="stat-label">personal apps shipped</span>
           </div>
 
         </div>
       </div>
     </section>
 
-    <!-- ===== JOURNEY ===== -->
-    <section class="journey" id="journey">
+    <!-- ===== CAREER ===== -->
+    <section class="career" id="career">
       <div class="container">
 
         <div class="section-header" data-reveal>
-          <p class="section-tag">journey</p>
-          <h2 class="section-title">The signal through the noise.</h2>
+          <p class="section-tag">$ git log --career</p>
+          <h2 class="section-title">12 years, 7 companies, one direction.</h2>
         </div>
 
-        <div class="timeline" data-reveal-stagger>
+        <ol class="git-log" data-reveal-stagger>
+          {roles.map((role, i) => (
+            <li class="commit">
+              <details class="commit-details" open={i === 0}>
+                <summary class="commit-summary">
+                  <span class="commit-graph" aria-hidden="true">
+                    <span class="commit-dot"></span>
+                    {i < roles.length - 1 && <span class="commit-line"></span>}
+                  </span>
+                  <span class="commit-text">
+                    <span class="commit-line-1">
+                      <span class="commit-hash">commit&nbsp;{role.hash}</span>
+                      {role.tag && (
+                        <span class="commit-tag">(tag: {role.tag}{i === 0 ? ', HEAD -> main' : ''})</span>
+                      )}
+                    </span>
+                    <span class="commit-line-2">
+                      <span class="commit-author">Author: <span class="commit-author-name">charlie@{role.companySlug}</span></span>
+                    </span>
+                    <span class="commit-line-3">
+                      <span class="commit-date">Date:&nbsp;&nbsp;&nbsp;{role.date}</span>
+                    </span>
+                    <span class="commit-message">{role.summary}</span>
+                    <span class="commit-role">
+                      <span class="commit-role-company">{role.company}</span>
+                      <span class="commit-role-sep">·</span>
+                      <span class="commit-role-title">{role.title}</span>
+                    </span>
+                  </span>
+                  <span class="commit-toggle" aria-hidden="true">[+]</span>
+                </summary>
+                <div class="commit-body">
+                  <div class="commit-graph commit-graph--body" aria-hidden="true">
+                    {i < roles.length - 1 && <span class="commit-line commit-line--full"></span>}
+                  </div>
+                  <div class="commit-body-inner">
+                    {role.body.map((line) => <p class="commit-line-body">{line}</p>)}
+                    <div class="commit-tags">
+                      {role.tags.map((tag) => <span class="commit-chip">{tag}</span>)}
+                    </div>
+                  </div>
+                </div>
+              </details>
+            </li>
+          ))}
+        </ol>
 
-          <article class="timeline-item">
-            <div class="tl-connector" aria-hidden="true">
-              <span class="tl-dot"></span>
-              <span class="tl-line"></span>
-            </div>
-            <div class="tl-content">
-              <span class="tl-date">Early AI Wave</span>
-              <h3 class="tl-heading">AI-Based Playwright Testing</h3>
-              <p class="tl-body">
-                Built AI-guided Playwright testing systems while AI was still early as a productivity
-                layer, proving the technology could handle complex automation — and shipping it into
-                production before most teams were paying attention.
-              </p>
-            </div>
-          </article>
+      </div>
+    </section>
 
-          <article class="timeline-item">
-            <div class="tl-connector" aria-hidden="true">
-              <span class="tl-dot"></span>
-              <span class="tl-line"></span>
-            </div>
-            <div class="tl-content">
-              <span class="tl-date">2024</span>
-              <h3 class="tl-heading">Founded Camber Co</h3>
-              <p class="tl-body">
-                Turned years of AI engineering into a service for founders and small businesses.
-                Camber Co exists to close the gap between AI potential and working product — fast,
-                pragmatic, no slide decks.
-              </p>
-            </div>
-          </article>
+    <!-- ===== SKILLS ===== -->
+    <section class="skills" id="skills">
+      <div class="container">
 
-          <article class="timeline-item">
-            <div class="tl-connector" aria-hidden="true">
-              <span class="tl-dot"></span>
-            </div>
-            <div class="tl-content">
-              <span class="tl-date">Current</span>
-              <h3 class="tl-heading">From Zero to App Store</h3>
-              <p class="tl-body">
-                Mentored non-technical founders — people with no prior coding experience — and guided
-                each one from first principles to shipping live AI products independently on the App Store.
-              </p>
-            </div>
-          </article>
-
+        <div class="section-header" data-reveal>
+          <p class="section-tag">$ cat skills.json</p>
+          <h2 class="section-title">What I work with.</h2>
         </div>
+
+        <div class="skills-card" data-reveal>
+          <div class="terminal-titlebar">
+            <span class="dot dot-red"></span>
+            <span class="dot dot-yellow"></span>
+            <span class="dot dot-green-tc"></span>
+            <span class="terminal-title">skills.json</span>
+          </div>
+          <div class="skills-body">
+            <p class="skills-line"><span class="skills-brace">&#123;</span></p>
+            {skillGroups.map((group, gi) => (
+              <div class="skills-group">
+                <p class="skills-line skills-line--key">
+                  <span class="skills-indent">&nbsp;&nbsp;</span><span class="skills-key">"{group.key}"</span>: [
+                </p>
+                <p class="skills-line skills-line--values">
+                  <span class="skills-indent">&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                  {group.skills.map((skill, si) => (
+                    <>
+                      <span class="skills-tag" data-context={skill.context} tabindex="0">
+                        "{skill.name}"
+                      </span>{si < group.skills.length - 1 ? ', ' : ''}
+                    </>
+                  ))}
+                </p>
+                <p class="skills-line"><span class="skills-indent">&nbsp;&nbsp;</span>]{gi < skillGroups.length - 1 ? ',' : ''}</p>
+              </div>
+            ))}
+            <p class="skills-line"><span class="skills-brace">&#125;</span></p>
+          </div>
+        </div>
+
+        <p class="skills-hint" data-reveal>hover any tag for context.</p>
+
       </div>
     </section>
 
@@ -137,135 +474,125 @@ const schema = JSON.stringify({
       <div class="container">
 
         <div class="section-header" data-reveal>
-          <p class="section-tag">projects</p>
-          <h2 class="section-title">What we've shipped.</h2>
+          <p class="section-tag">$ ls -la projects/</p>
+          <h2 class="section-title">Things I've shipped.</h2>
         </div>
 
         <div class="project-grid" data-reveal-stagger>
+          {projects.map((project) => (
+            <article class={`project-card project-card--${project.slug}`}>
+              <details class="project-details">
+                <summary class="project-summary">
+                  <div class="card-bar" aria-hidden="true">
+                    <span class="card-dot card-dot--red"></span>
+                    <span class="card-dot card-dot--yellow"></span>
+                    <span class="card-dot card-dot--green"></span>
+                    <span class="card-path">~/{project.slug}</span>
+                    <span class={`status-pill status-pill--${project.status}`}>
+                      {project.status === 'live' && '● live'}
+                      {project.status === 'in-submission' && '◐ in submission'}
+                      {project.status === 'in-development' && '○ in development'}
+                      {project.status === 'open-source' && '◇ open source'}
+                      {project.status === 'work' && '◆ work'}
+                    </span>
+                  </div>
+                  <div class="card-body">
+                    <div class="card-top">
+                      <h3 class="card-title">{project.title}</h3>
+                      <span class="card-toggle" aria-hidden="true">[+]</span>
+                    </div>
+                    <p class="card-desc">{project.blurb}</p>
+                    <div class="card-tags">
+                      {project.tags.slice(0, 4).map((tag) => <span class="card-tag">{tag}</span>)}
+                    </div>
+                  </div>
+                </summary>
 
-          <!-- Football IQ -->
-          <article class="project-card">
-            <div class="card-bar" aria-hidden="true">
-              <span class="card-dot card-dot--red"></span>
-              <span class="card-dot card-dot--yellow"></span>
-              <span class="card-dot card-dot--green"></span>
-              <span class="card-path">camber/football-iq</span>
-            </div>
-            <div class="card-body">
-              <h3 class="card-title">Football IQ</h3>
-              <p class="card-desc">
-                Trivia app with daily challenges, built and shipped to the App Store.
-              </p>
-              <a
-                href="https://www.football-iq.app/"
-                class="card-link"
-                target="_blank"
-                rel="noopener noreferrer"
-                aria-label="Visit Football IQ at www.football-iq.app"
-              >www.football-iq.app</a>
-            </div>
-          </article>
-
-          <!-- Plus AI -->
-          <article class="project-card">
-            <div class="card-bar" aria-hidden="true">
-              <span class="card-dot card-dot--red"></span>
-              <span class="card-dot card-dot--yellow"></span>
-              <span class="card-dot card-dot--green"></span>
-              <span class="card-path">camber/plus-ai</span>
-            </div>
-            <div class="card-body">
-              <h3 class="card-title">Plus AI Tools Suite</h3>
-              <p class="card-desc">
-                WhoScored Plus, Oddschecker Plus, Gazzetta AI Predictor — AI-assisted sports
-                analysis tools built for high-volume audiences.
-              </p>
-              <div class="card-tags">
-                <span class="card-tag">WhoScored Plus</span>
-                <span class="card-tag">Oddschecker Plus</span>
-                <span class="card-tag">Gazzetta AI</span>
-              </div>
-            </div>
-          </article>
-
-          <!-- QA Systems -->
-          <article class="project-card">
-            <div class="card-bar" aria-hidden="true">
-              <span class="card-dot card-dot--red"></span>
-              <span class="card-dot card-dot--yellow"></span>
-              <span class="card-dot card-dot--green"></span>
-              <span class="card-path">camber/qa-systems</span>
-            </div>
-            <div class="card-body">
-              <h3 class="card-title">AI-Native QA Systems</h3>
-              <p class="card-desc">
-                Browser automation with AI. Playwright-based testing that understands what
-                it's looking at — not just what it's clicking.
-              </p>
-              <div class="card-tags">
-                <span class="card-tag">Playwright</span>
-                <span class="card-tag">AI Testing</span>
-                <span class="card-tag">Browser Automation</span>
-              </div>
-            </div>
-          </article>
-
-          <!-- Founder Acceleration -->
-          <article class="project-card">
-            <div class="card-bar" aria-hidden="true">
-              <span class="card-dot card-dot--red"></span>
-              <span class="card-dot card-dot--yellow"></span>
-              <span class="card-dot card-dot--green"></span>
-              <span class="card-path">camber/founder-acceleration</span>
-            </div>
-            <div class="card-body">
-              <h3 class="card-title">Founder Acceleration</h3>
-              <p class="card-desc">
-                Non-technical founder mentorship. From zero knowledge to shipping products —
-                with reusable build systems and practical AI workflows.
-              </p>
-              <div class="card-tags">
-                <span class="card-tag">Mentorship</span>
-                <span class="card-tag">Solo Founders</span>
-                <span class="card-tag">AI Workflows</span>
-              </div>
-            </div>
-          </article>
-
+                <div class="card-expand">
+                  <div class="card-expand-inner">
+                    <p class="card-long">{project.longBlurb}</p>
+                    {project.tags.length > 4 && (
+                      <div class="card-tags">
+                        {project.tags.slice(4).map((tag) => <span class="card-tag">{tag}</span>)}
+                      </div>
+                    )}
+                    {project.link && (
+                      <a
+                        href={project.link.href}
+                        class="card-link"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >→ {project.link.label}</a>
+                    )}
+                  </div>
+                </div>
+              </details>
+            </article>
+          ))}
         </div>
+
       </div>
     </section>
 
-    <!-- ===== WRITING ===== -->
-    <section class="writing" id="writing">
+    <!-- ===== NOW ===== -->
+    <section class="now" id="now">
       <div class="container">
+
         <div class="section-header" data-reveal>
-          <p class="section-tag">writing</p>
-          <h2 class="section-title">What I'm thinking about.</h2>
+          <p class="section-tag">$ cat ~/.now</p>
+          <h2 class="section-title">What I'm currently doing.</h2>
         </div>
-        <p class="writing-body" data-reveal>
-          I write about AI strategy, automation, and the founder journey — lessons from building systems that ship.
-          <a href="/blog" class="writing-link">Read the blog →</a>
-        </p>
+
+        <div class="now-card" data-reveal>
+          <div class="terminal-titlebar">
+            <span class="dot dot-red"></span>
+            <span class="dot dot-yellow"></span>
+            <span class="dot dot-green-tc"></span>
+            <span class="terminal-title">~/.now</span>
+          </div>
+          <div class="now-body">
+            <p class="now-meta">last updated: <span class="now-date">{lastUpdated}</span></p>
+            <ul class="now-list">
+              <li>leading subscriptions @ <span class="t-pink">Fairplay Sports Media</span> — £55k MRR and growing</li>
+              <li>scaling <a href="/" class="now-link">Camber Co</a> — AI automation for SMBs</li>
+              <li>shipping <span class="t-pink">Jodz</span> to the App Store</li>
+              <li>building <span class="t-pink">bio-core</span></li>
+              <li>designing <span class="t-pink">n8n</span> agent fleets for clients</li>
+              <li>writing about all of it on the <a href="/blog" class="now-link">blog</a></li>
+            </ul>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ===== LINKS ===== -->
+    <section class="links">
+      <div class="container">
+        <div class="links-row" data-reveal>
+          <a href="https://uk.linkedin.com/in/charlie-waite" target="_blank" rel="noopener noreferrer" class="link-pill">
+            <span class="link-prompt">$</span> linkedin.com/in/charlie-waite
+          </a>
+          <a href="https://github.com/charliearlie" target="_blank" rel="noopener noreferrer" class="link-pill">
+            <span class="link-prompt">$</span> github.com/charliearlie
+          </a>
+          <a href="mailto:cw5790@gmail.com" class="link-pill">
+            <span class="link-prompt">$</span> cw5790@gmail.com
+          </a>
+        </div>
       </div>
     </section>
 
     <!-- ===== CTA ===== -->
-    <section class="cta" id="cta">
+    <section class="cta">
       <div class="container">
         <div class="cta-card" data-reveal>
-          <h2 class="cta-title">Ready to build?</h2>
+          <h2 class="cta-title">Want to build something together?</h2>
           <p class="cta-desc">
-            Book a free 30-minute audit. We'll look at your operations, identify the highest-impact
-            AI opportunities, and tell you honestly what's worth building. No pitch. No jargon.
-            Just a clear path forward.
+            Camber Co takes on a small number of clients each quarter. If you've got an
+            AI workflow, automation, or product idea you want shipped — let's talk.
           </p>
-          <a
-            href="/contact/"
-            class="btn btn-primary"
-          >
-            Get in Touch
-          </a>
+          <a href="/contact/" class="btn btn-primary">Get in Touch</a>
           <p class="cta-flags" aria-label="No commitment, no jargon, just signal">
             <span class="flag">--no-commitment</span>
             <span class="flag">--no-jargon</span>
@@ -276,12 +603,18 @@ const schema = JSON.stringify({
     </section>
 
   </main>
+
+  <div id="skill-tooltip" role="tooltip" aria-hidden="true"></div>
 </Layout>
 
 <style>
   /* ============================================================
-     Shared Layout
+     Layout
      ============================================================ */
+  .about-page {
+    position: relative;
+    z-index: 2;
+  }
 
   .container {
     max-width: 1280px;
@@ -289,38 +622,51 @@ const schema = JSON.stringify({
     padding: 0 var(--space-8);
   }
 
+  .section-header {
+    margin-bottom: var(--space-12);
+  }
+
+  .section-tag {
+    font-family: var(--font-mono);
+    font-size: var(--type-caption);
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    color: var(--color-green-500);
+    margin: 0 0 var(--space-3);
+  }
+
+  .section-title {
+    font-family: var(--font-mono);
+    font-size: var(--type-h1);
+    font-weight: 700;
+    letter-spacing: -0.03em;
+    color: var(--color-text-primary);
+    margin: 0;
+    line-height: 1.1;
+  }
+
   /* ============================================================
      Hero
      ============================================================ */
-
   .hero {
-    min-height: 50vh;
-    display: flex;
-    align-items: center;
-    padding: clamp(80px, 12vw, 128px) 0;
-    border-bottom: 1px solid var(--color-border-subtle);
+    padding: clamp(80px, 12vw, 140px) 0 clamp(60px, 8vw, 100px);
   }
 
-  .hero-inner {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: var(--space-12);
-    align-items: center;
-  }
-
-  .hero-copy {
+  .hero-meta {
     display: flex;
     flex-direction: column;
-    gap: var(--space-6);
+    gap: var(--space-4);
+    margin-bottom: var(--space-10);
   }
 
-  /* Status chip */
   .status-chip {
     display: inline-flex;
     align-items: center;
     gap: var(--space-2);
     padding: 6px 12px;
-    background: var(--color-surface-01);
+    background: rgba(17, 17, 17, 0.7);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
     border: 1px solid var(--color-border-subtle);
     border-radius: var(--radius-sm);
     width: fit-content;
@@ -333,6 +679,17 @@ const schema = JSON.stringify({
     background: var(--color-green-500);
     box-shadow: 0 0 6px var(--color-green-500);
     animation: status-pulse 2.4s ease-in-out infinite;
+  }
+
+  .status-dot-sm {
+    display: inline-block;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--color-green-500);
+    box-shadow: 0 0 4px var(--color-green-500);
+    animation: status-pulse 2.4s ease-in-out infinite;
+    margin-right: 4px;
   }
 
   @keyframes status-pulse {
@@ -353,216 +710,603 @@ const schema = JSON.stringify({
     color: var(--color-text-muted);
   }
 
-  /* H1 */
-  .hero-title {
+  .hero-h1 {
     font-family: var(--font-mono);
     font-size: var(--type-display);
     font-weight: 800;
     line-height: 1;
-    letter-spacing: -0.03em;
+    letter-spacing: -0.04em;
     color: var(--color-text-primary);
     margin: 0;
   }
 
-  /* Sub */
-  .hero-sub {
+  .hero-tagline {
     font-family: var(--font-sans);
     font-size: var(--type-body-lg);
     color: var(--color-text-secondary);
     line-height: 1.6;
     margin: 0;
-    max-width: 48ch;
+    max-width: 60ch;
   }
 
-  /* Terminal panel */
+  .hero-tagline-muted {
+    color: var(--color-text-muted);
+    font-size: var(--type-body-sm);
+    font-family: var(--font-mono);
+  }
+
+  .hero-link {
+    color: var(--color-green-500);
+    border-bottom: 1px solid transparent;
+    transition: border-color var(--duration-quick) var(--easing-smooth);
+  }
+
+  .hero-link:hover {
+    border-bottom-color: var(--color-green-500);
+  }
+
+  /* Hero terminal */
   .hero-terminal {
-    background: var(--color-surface-01);
-    border: 1px solid var(--color-border-subtle);
-    border-radius: var(--radius-lg);
-    overflow: hidden;
+    position: relative;
   }
 
-  .tw-bar {
+  .terminal-readout {
+    background: rgba(10, 10, 10, 0.85);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid var(--color-border-muted);
+    border-radius: var(--radius-md);
+    overflow: hidden;
+    box-shadow: 0 0 60px rgba(34, 197, 94, 0.04);
+  }
+
+  .terminal-titlebar {
     display: flex;
     align-items: center;
-    gap: var(--space-2);
-    padding: 10px var(--space-4);
+    gap: 8px;
+    padding: 10px 14px;
     background: var(--color-surface-02);
     border-bottom: 1px solid var(--color-border-subtle);
   }
 
-  .tw-dot {
+  .dot {
     width: 10px;
     height: 10px;
     border-radius: 50%;
     flex-shrink: 0;
   }
 
-  .tw-dot--red    { background: #ff5f57; }
-  .tw-dot--yellow { background: #ffbd2e; }
-  .tw-dot--green  { background: #28c940; }
+  .dot-red { background: #ff5f57; }
+  .dot-yellow { background: #ffbd2e; }
+  .dot-green-tc { background: #28c940; }
 
-  .tw-label {
+  .terminal-title {
     font-family: var(--font-mono);
     font-size: var(--type-caption);
     color: var(--color-text-muted);
     margin-left: var(--space-2);
   }
 
-  .tw-body {
-    padding: var(--space-6);
+  .terminal-status {
+    margin-left: auto;
+    font-family: var(--font-mono);
+    font-size: 10px;
+    color: var(--color-green-500);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    display: inline-flex;
+    align-items: center;
+  }
+
+  /* Interactive terminal body — copied from homepage pattern */
+  .terminal-body--interactive {
     display: flex;
     flex-direction: column;
-    gap: var(--space-3);
-    min-height: 100px;
-  }
-
-  .tw-line {
-    display: flex;
-    align-items: baseline;
-    gap: var(--space-2);
-    margin: 0;
-  }
-
-  .tw-prompt {
+    height: 480px;
+    padding: 0;
     font-family: var(--font-mono);
-    font-size: var(--type-body-sm);
+    font-size: 13px;
+    line-height: 1.7;
+    color: var(--color-text-secondary);
+  }
+
+  .terminal-output {
+    flex: 1;
+    overflow-y: auto;
+    padding: 16px 20px 8px;
+    scrollbar-width: thin;
+    scrollbar-color: var(--color-border-subtle) transparent;
+  }
+
+  .terminal-output::-webkit-scrollbar { width: 4px; }
+  .terminal-output::-webkit-scrollbar-thumb {
+    background: var(--color-border-subtle);
+    border-radius: 2px;
+  }
+
+  :global(.tl) {
+    min-height: 1.7em;
+    white-space: pre-wrap;
+    word-break: break-word;
+  }
+
+  :global(.tl-fadein) {
+    animation: tl-fade 60ms ease-out both;
+  }
+
+  @keyframes tl-fade {
+    from { opacity: 0.4; }
+    to { opacity: 1; }
+  }
+
+  :global(.tl-cmd) {
+    color: var(--color-text-primary);
+    margin-top: 2px;
+  }
+
+  :global(.t-prompt) {
     color: var(--color-green-500);
+    user-select: none;
+  }
+
+  :global(.tl-block) { margin: 2px 0 0; }
+  :global(.tl-spacer) { height: 8px; }
+  :global(.tl-boot) { color: var(--color-text-muted); }
+
+  :global(.t-green) { color: var(--color-green-500); }
+  :global(.t-pink) { color: var(--color-pink-500); }
+  :global(.t-muted) { color: var(--color-text-muted); }
+  :global(.t-link) {
+    color: var(--color-green-500);
+    border-bottom: 1px solid currentColor;
+  }
+
+  .terminal-input-line {
+    display: flex;
+    align-items: center;
+    padding: 10px 20px 14px;
+    border-top: 1px solid var(--color-border-subtle);
+    background: rgba(10, 10, 10, 0.6);
+    flex-shrink: 0;
+    gap: 8px;
+  }
+
+  .terminal-prompt {
+    color: var(--color-green-500);
+    font-family: var(--font-mono);
+    font-size: 13px;
     user-select: none;
     flex-shrink: 0;
   }
 
-  .tw-cmd {
-    font-family: var(--font-mono);
-    font-size: var(--type-body-sm);
-    color: var(--color-text-secondary);
+  .terminal-input-wrap {
+    flex: 1;
+    position: relative;
+    min-width: 0;
   }
 
-  .tw-output {
+  .terminal-ghost {
+    position: absolute;
+    top: 0;
+    left: 0;
     font-family: var(--font-mono);
-    font-size: var(--type-body-sm);
-    color: var(--color-green-400);
-    line-height: 1.6;
-    min-height: 1.4em;
-    padding-left: calc(var(--space-4) + 2px); /* align with cmd */
+    font-size: 13px;
+    line-height: 1.7;
+    color: var(--color-text-muted);
+    opacity: 0.4;
+    pointer-events: none;
+    white-space: nowrap;
   }
 
-  /* ============================================================
-     Section shared
-     ============================================================ */
-
-  .section-header {
-    margin-bottom: var(--space-12);
-  }
-
-  .section-tag {
-    font-family: var(--font-mono);
-    font-size: var(--type-caption);
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.12em;
-    color: var(--color-green-500);
-    margin: 0 0 var(--space-3);
-  }
-
-  .section-title {
-    font-family: var(--font-mono);
-    font-size: var(--type-h1);
-    font-weight: 700;
-    letter-spacing: -0.03em;
+  .terminal-input {
+    width: 100%;
+    background: none;
+    border: none;
+    outline: none;
     color: var(--color-text-primary);
-    margin: 0;
-    line-height: 1.1;
+    font-family: var(--font-mono);
+    font-size: 13px;
+    line-height: 1.7;
+    caret-color: var(--color-green-500);
+    padding: 0;
+    position: relative;
+    z-index: 1;
+  }
+
+  .terminal-input::placeholder {
+    color: var(--color-text-muted);
+    opacity: 0.5;
+  }
+
+  .terminal-tab-hint {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    color: var(--color-text-muted);
+    opacity: 0.5;
+    background: var(--color-surface-01);
+    border: 1px solid var(--color-border-subtle);
+    border-radius: 3px;
+    padding: 1px 6px;
+    flex-shrink: 0;
+    user-select: none;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
   }
 
   /* ============================================================
-     Journey
+     Stats
      ============================================================ */
-
-  .journey {
-    padding: clamp(80px, 12vw, 128px) 0;
+  .stats {
+    padding: var(--space-12) 0;
+    border-top: 1px solid var(--color-border-subtle);
     border-bottom: 1px solid var(--color-border-subtle);
+    background: rgba(10, 10, 10, 0.6);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
   }
 
-  .timeline {
+  .stats-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: var(--space-6);
+  }
+
+  .stat {
     display: flex;
     flex-direction: column;
-    gap: 0;
+    gap: var(--space-2);
+    padding: var(--space-4);
+    border-left: 2px solid var(--color-green-500);
+    padding-left: var(--space-4);
   }
 
-  .timeline-item {
-    display: grid;
-    grid-template-columns: 24px 1fr;
-    gap: var(--space-6);
+  .stat-num {
+    font-family: var(--font-mono);
+    font-size: clamp(28px, 4vw, 44px);
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    color: var(--color-text-primary);
+    line-height: 1;
+    display: inline-flex;
+    align-items: baseline;
+    gap: 2px;
+  }
+
+  .stat-suffix {
+    color: var(--color-green-500);
+    font-size: 0.6em;
+  }
+
+  .stat-label {
+    font-family: var(--font-mono);
+    font-size: var(--type-caption);
+    letter-spacing: 0.05em;
+    color: var(--color-text-muted);
+    text-transform: uppercase;
+  }
+
+  /* ============================================================
+     Career — git log
+     ============================================================ */
+  .career {
+    padding: clamp(80px, 12vw, 128px) 0;
+    border-bottom: 1px solid var(--color-border-subtle);
+    background: var(--color-base);
+  }
+
+  .git-log {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .commit {
+    list-style: none;
+  }
+
+  .commit-details {
     position: relative;
   }
 
-  .tl-connector {
+  .commit-summary {
+    display: grid;
+    grid-template-columns: 32px 1fr auto;
+    gap: var(--space-4);
+    padding: var(--space-4) 0;
+    cursor: pointer;
+    list-style: none;
+    align-items: start;
+    transition: background var(--duration-quick) var(--easing-smooth);
+    border-radius: var(--radius-sm);
+  }
+
+  .commit-summary::-webkit-details-marker { display: none; }
+  .commit-summary::marker { display: none; }
+
+  .commit-summary:hover {
+    background: rgba(34, 197, 94, 0.03);
+  }
+
+  .commit-graph {
     display: flex;
     flex-direction: column;
     align-items: center;
-    padding-top: 4px;
-  }
-
-  .tl-dot {
-    width: 10px;
-    height: 10px;
-    border-radius: 50%;
-    background: var(--color-green-500);
-    box-shadow: 0 0 8px var(--color-green-glow);
-    flex-shrink: 0;
-    z-index: 1;
+    height: 100%;
+    padding-top: 6px;
     position: relative;
   }
 
-  .tl-line {
+  .commit-dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: var(--color-base);
+    border: 2px solid var(--color-green-500);
+    box-shadow: 0 0 12px var(--color-green-glow);
+    flex-shrink: 0;
+    z-index: 1;
+    transition: background var(--duration-quick) var(--easing-smooth),
+                box-shadow var(--duration-quick) var(--easing-smooth);
+  }
+
+  .commit-details[open] .commit-dot {
+    background: var(--color-green-500);
+    box-shadow: 0 0 16px var(--color-green-500);
+  }
+
+  .commit-line {
     width: 1px;
     flex: 1;
-    min-height: 40px;
-    background: var(--color-border-subtle);
+    min-height: 30px;
+    background: var(--color-border-muted);
     margin-top: var(--space-2);
   }
 
-  .tl-content {
-    padding-bottom: clamp(32px, 5vw, 56px);
+  .commit-line--full {
+    min-height: 100%;
   }
 
-  .tl-date {
-    display: inline-block;
+  .commit-text {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
     font-family: var(--font-mono);
-    font-size: var(--type-caption);
+    font-size: 13px;
+    line-height: 1.6;
+  }
+
+  .commit-line-1 {
+    color: var(--color-pink-500);
+  }
+
+  .commit-hash {
+    color: var(--color-pink-500);
     font-weight: 600;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    color: var(--color-green-500);
-    margin-bottom: var(--space-2);
   }
 
-  .tl-heading {
-    font-family: var(--font-mono);
-    font-size: var(--type-h3);
-    font-weight: 700;
+  .commit-tag {
+    color: var(--color-text-muted);
+    margin-left: 8px;
+  }
+
+  .commit-line-2,
+  .commit-line-3 {
+    color: var(--color-text-muted);
+    font-size: 12px;
+  }
+
+  .commit-author-name {
+    color: var(--color-text-secondary);
+  }
+
+  .commit-message {
     color: var(--color-text-primary);
-    margin: 0 0 var(--space-3);
-    letter-spacing: -0.01em;
+    margin-top: 8px;
+    margin-bottom: 4px;
+    font-size: 14px;
   }
 
-  .tl-body {
+  .commit-role {
+    color: var(--color-green-500);
+    font-size: 13px;
+    display: inline-flex;
+    gap: 8px;
+    align-items: baseline;
+  }
+
+  .commit-role-company {
+    font-weight: 700;
+  }
+
+  .commit-role-sep {
+    color: var(--color-text-muted);
+  }
+
+  .commit-role-title {
+    color: var(--color-text-secondary);
+    font-weight: 500;
+  }
+
+  .commit-toggle {
+    font-family: var(--font-mono);
+    font-size: 14px;
+    color: var(--color-green-500);
+    user-select: none;
+    align-self: center;
+    transition: transform var(--duration-quick) var(--easing-smooth);
+  }
+
+  .commit-details[open] .commit-toggle::before { content: '[−]'; }
+  .commit-details[open] .commit-toggle { font-size: 0; }
+  .commit-details[open] .commit-toggle::before { font-size: 14px; }
+
+  .commit-body {
+    display: grid;
+    grid-template-columns: 32px 1fr auto;
+    gap: var(--space-4);
+    padding: 0 0 var(--space-6);
+  }
+
+  .commit-graph--body {
+    display: flex;
+    height: auto;
+  }
+
+  .commit-body-inner {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+    padding-top: var(--space-2);
+    grid-column: 2 / 3;
+  }
+
+  .commit-line-body {
     font-family: var(--font-sans);
     font-size: var(--type-body);
     color: var(--color-text-secondary);
-    line-height: 1.75;
+    line-height: 1.7;
     margin: 0;
-    max-width: 60ch;
+    max-width: 65ch;
+    position: relative;
+    padding-left: var(--space-4);
+  }
+
+  .commit-line-body::before {
+    content: '|';
+    position: absolute;
+    left: 0;
+    color: var(--color-border-visible);
+    font-family: var(--font-mono);
+  }
+
+  .commit-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+    margin-top: var(--space-2);
+  }
+
+  .commit-chip {
+    font-family: var(--font-mono);
+    font-size: var(--type-caption);
+    color: var(--color-green-500);
+    background: rgba(34, 197, 94, 0.06);
+    border: 1px solid rgba(34, 197, 94, 0.2);
+    border-radius: var(--radius-sm);
+    padding: 3px 9px;
+    letter-spacing: 0.02em;
+  }
+
+  /* ============================================================
+     Skills
+     ============================================================ */
+  .skills {
+    padding: clamp(80px, 12vw, 128px) 0;
+    border-bottom: 1px solid var(--color-border-subtle);
+    background: var(--color-base);
+  }
+
+  .skills-card {
+    background: var(--color-surface-00);
+    border: 1px solid var(--color-border-muted);
+    border-radius: var(--radius-md);
+    overflow: hidden;
+  }
+
+  .skills-body {
+    padding: var(--space-6);
+    font-family: var(--font-mono);
+    font-size: 14px;
+    line-height: 1.9;
+    overflow-x: auto;
+  }
+
+  .skills-line {
+    margin: 0;
+    color: var(--color-text-secondary);
+    white-space: pre-wrap;
+  }
+
+  .skills-line--key {
+    color: var(--color-text-muted);
+  }
+
+  .skills-line--values {
+    padding-left: 0;
+  }
+
+  .skills-brace {
+    color: var(--color-green-500);
+    font-weight: 600;
+  }
+
+  .skills-key {
+    color: var(--color-pink-500);
+  }
+
+  .skills-tag {
+    display: inline-block;
+    color: var(--color-green-500);
+    background: rgba(34, 197, 94, 0.04);
+    border: 1px solid rgba(34, 197, 94, 0.18);
+    border-radius: var(--radius-sm);
+    padding: 1px 8px;
+    margin: 1px 0;
+    cursor: help;
+    transition: background var(--duration-quick) var(--easing-smooth),
+                border-color var(--duration-quick) var(--easing-smooth),
+                box-shadow var(--duration-quick) var(--easing-smooth);
+    position: relative;
+  }
+
+  .skills-tag:hover,
+  .skills-tag:focus-visible {
+    background: rgba(34, 197, 94, 0.12);
+    border-color: var(--color-green-500);
+    box-shadow: 0 0 12px rgba(34, 197, 94, 0.2);
+    outline: none;
+  }
+
+  /* Floating tooltip — positioned by JS, clamped to viewport */
+  :global(#skill-tooltip) {
+    position: fixed;
+    background: var(--color-surface-02);
+    border: 1px solid var(--color-border-visible);
+    border-radius: var(--radius-sm);
+    padding: 8px 12px;
+    font-family: var(--font-sans);
+    font-size: 12px;
+    line-height: 1.5;
+    color: var(--color-text-primary);
+    max-width: min(280px, calc(100vw - 24px));
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.6);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity var(--duration-quick) var(--easing-smooth);
+    z-index: 100;
+    top: 0;
+    left: 0;
+  }
+
+  :global(#skill-tooltip.is-visible) {
+    opacity: 1;
+  }
+
+  .skills-hint {
+    margin-top: var(--space-4);
+    font-family: var(--font-mono);
+    font-size: var(--type-caption);
+    color: var(--color-text-muted);
+    letter-spacing: 0.04em;
+    text-align: center;
   }
 
   /* ============================================================
      Projects
      ============================================================ */
-
   .projects {
     padding: clamp(80px, 12vw, 128px) 0;
     border-bottom: 1px solid var(--color-border-subtle);
+    background: var(--color-base);
   }
 
   .project-grid {
@@ -571,7 +1315,6 @@ const schema = JSON.stringify({
     gap: var(--space-6);
   }
 
-  /* Terminal window card */
   .project-card {
     background: var(--color-surface-01);
     border: 1px solid var(--color-border-subtle);
@@ -586,9 +1329,22 @@ const schema = JSON.stringify({
 
   .project-card:hover {
     border-color: var(--color-border-visible);
-    box-shadow: 0 0 32px rgba(34, 197, 94, 0.06);
+    box-shadow: 0 0 32px rgba(34, 197, 94, 0.08);
     transform: translateY(-2px);
   }
+
+  .project-details {
+    width: 100%;
+  }
+
+  .project-summary {
+    cursor: pointer;
+    list-style: none;
+    display: block;
+  }
+
+  .project-summary::-webkit-details-marker { display: none; }
+  .project-summary::marker { display: none; }
 
   .card-bar {
     display: flex;
@@ -606,9 +1362,9 @@ const schema = JSON.stringify({
     flex-shrink: 0;
   }
 
-  .card-dot--red    { background: #ff5f57; }
+  .card-dot--red { background: #ff5f57; }
   .card-dot--yellow { background: #ffbd2e; }
-  .card-dot--green  { background: #28c940; }
+  .card-dot--green { background: #28c940; }
 
   .card-path {
     font-family: var(--font-mono);
@@ -617,11 +1373,58 @@ const schema = JSON.stringify({
     margin-left: var(--space-2);
   }
 
+  .status-pill {
+    margin-left: auto;
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    padding: 2px 8px;
+    border-radius: var(--radius-sm);
+    border: 1px solid;
+  }
+
+  .status-pill--live {
+    color: var(--color-green-500);
+    background: rgba(34, 197, 94, 0.08);
+    border-color: rgba(34, 197, 94, 0.3);
+  }
+
+  .status-pill--in-submission {
+    color: #f59e0b;
+    background: rgba(245, 158, 11, 0.08);
+    border-color: rgba(245, 158, 11, 0.3);
+  }
+
+  .status-pill--in-development {
+    color: var(--color-pink-500);
+    background: rgba(236, 72, 153, 0.08);
+    border-color: rgba(236, 72, 153, 0.3);
+  }
+
+  .status-pill--open-source {
+    color: var(--color-text-secondary);
+    background: rgba(208, 208, 208, 0.04);
+    border-color: var(--color-border-muted);
+  }
+
+  .status-pill--work {
+    color: var(--color-text-muted);
+    background: rgba(138, 138, 138, 0.04);
+    border-color: var(--color-border-muted);
+  }
+
   .card-body {
     padding: var(--space-6);
     display: flex;
     flex-direction: column;
     gap: var(--space-4);
+  }
+
+  .card-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
   }
 
   .card-title {
@@ -633,26 +1436,23 @@ const schema = JSON.stringify({
     letter-spacing: -0.01em;
   }
 
+  .card-toggle {
+    font-family: var(--font-mono);
+    font-size: 14px;
+    color: var(--color-green-500);
+    user-select: none;
+  }
+
+  .project-details[open] .card-toggle::before { content: '[−]'; }
+  .project-details[open] .card-toggle { font-size: 0; }
+  .project-details[open] .card-toggle::before { font-size: 14px; }
+
   .card-desc {
     font-family: var(--font-sans);
     font-size: var(--type-body-sm);
     color: var(--color-text-secondary);
     line-height: 1.7;
     margin: 0;
-  }
-
-  .card-link {
-    font-family: var(--font-mono);
-    font-size: var(--type-body-sm);
-    color: var(--color-green-500);
-    text-decoration: none;
-    border-bottom: 1px solid transparent;
-    transition: border-color var(--duration-quick) var(--easing-smooth);
-    width: fit-content;
-  }
-
-  .card-link:hover {
-    border-bottom-color: var(--color-green-500);
   }
 
   .card-tags {
@@ -672,44 +1472,172 @@ const schema = JSON.stringify({
     letter-spacing: 0.04em;
   }
 
-  /* ============================================================
-     Writing
-     ============================================================ */
-
-  .writing {
-    padding: clamp(80px, 12vw, 128px) 0;
-    border-bottom: 1px solid var(--color-border-subtle);
+  /* Expand area */
+  .card-expand {
+    display: grid;
+    grid-template-rows: 0fr;
+    transition: grid-template-rows var(--duration-slow) var(--easing-spring);
   }
 
-  .writing-body {
+  .project-details[open] .card-expand {
+    grid-template-rows: 1fr;
+  }
+
+  .card-expand-inner {
+    overflow: hidden;
+    padding: 0 var(--space-6) var(--space-6);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-4);
+    border-top: 1px solid var(--color-border-subtle);
+    margin-top: 0;
+  }
+
+  .project-details[open] .card-expand-inner {
+    padding-top: var(--space-6);
+  }
+
+  .card-long {
     font-family: var(--font-sans);
-    font-size: var(--type-body-lg);
+    font-size: var(--type-body-sm);
     color: var(--color-text-secondary);
-    line-height: 1.7;
-    max-width: 56ch;
+    line-height: 1.75;
     margin: 0;
   }
 
-  .writing-link {
+  .card-link {
     font-family: var(--font-mono);
     font-size: var(--type-body-sm);
     color: var(--color-green-500);
     text-decoration: none;
-    display: inline-block;
-    margin-top: var(--space-4);
-    transition: color var(--duration-quick) var(--easing-smooth);
+    border-bottom: 1px solid transparent;
+    transition: border-color var(--duration-quick) var(--easing-smooth);
+    width: fit-content;
   }
 
-  .writing-link:hover {
-    color: var(--color-green-400);
+  .card-link:hover {
+    border-bottom-color: var(--color-green-500);
+  }
+
+  /* ============================================================
+     Now
+     ============================================================ */
+  .now {
+    padding: clamp(80px, 12vw, 128px) 0;
+    border-bottom: 1px solid var(--color-border-subtle);
+    background: var(--color-base);
+  }
+
+  .now-card {
+    background: var(--color-surface-00);
+    border: 1px solid var(--color-border-muted);
+    border-radius: var(--radius-md);
+    overflow: hidden;
+    max-width: 720px;
+  }
+
+  .now-body {
+    padding: var(--space-6);
+    font-family: var(--font-mono);
+    font-size: 14px;
+    line-height: 1.9;
+    color: var(--color-text-secondary);
+  }
+
+  .now-meta {
+    color: var(--color-text-muted);
+    font-size: 12px;
+    margin: 0 0 var(--space-4);
+    padding-bottom: var(--space-3);
+    border-bottom: 1px dashed var(--color-border-subtle);
+  }
+
+  .now-date {
+    color: var(--color-green-500);
+  }
+
+  .now-list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  .now-list li {
+    position: relative;
+    padding-left: 24px;
+  }
+
+  .now-list li::before {
+    content: '→';
+    position: absolute;
+    left: 0;
+    color: var(--color-green-500);
+    font-weight: 700;
+  }
+
+  .now-link {
+    color: var(--color-green-500);
+    border-bottom: 1px solid transparent;
+    transition: border-color var(--duration-quick) var(--easing-smooth);
+  }
+
+  .now-link:hover {
+    border-bottom-color: var(--color-green-500);
+  }
+
+  /* ============================================================
+     Links row
+     ============================================================ */
+  .links {
+    padding: var(--space-12) 0;
+    border-bottom: 1px solid var(--color-border-subtle);
+    background: var(--color-base);
+  }
+
+  .links-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-3);
+    justify-content: center;
+  }
+
+  .link-pill {
+    font-family: var(--font-mono);
+    font-size: var(--type-body-sm);
+    color: var(--color-text-secondary);
+    background: var(--color-surface-01);
+    border: 1px solid var(--color-border-muted);
+    border-radius: var(--radius-md);
+    padding: 10px 16px;
+    transition:
+      border-color var(--duration-quick) var(--easing-smooth),
+      transform var(--duration-quick) var(--easing-spring),
+      box-shadow var(--duration-quick) var(--easing-smooth);
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .link-pill:hover {
+    border-color: var(--color-green-500);
+    color: var(--color-text-primary);
+    transform: translateY(-2px);
+    box-shadow: 0 0 20px rgba(34, 197, 94, 0.12);
+  }
+
+  .link-prompt {
+    color: var(--color-green-500);
   }
 
   /* ============================================================
      CTA
      ============================================================ */
-
   .cta {
     padding: clamp(80px, 12vw, 128px) 0;
+    background: var(--color-base);
   }
 
   .cta-card {
@@ -743,7 +1671,6 @@ const schema = JSON.stringify({
     margin: 0;
   }
 
-  /* CTA Button */
   .btn {
     display: inline-flex;
     align-items: center;
@@ -792,19 +1719,30 @@ const schema = JSON.stringify({
   /* ============================================================
      Responsive
      ============================================================ */
-
-  @media (max-width: 768px) {
-    .hero-inner {
-      grid-template-columns: 1fr;
-      gap: var(--space-10);
+  @media (max-width: 960px) {
+    .stats-grid {
+      grid-template-columns: repeat(2, 1fr);
     }
-
-    .hero-sub {
-      max-width: 100%;
-    }
-
     .project-grid {
       grid-template-columns: 1fr;
+    }
+  }
+
+  @media (max-width: 768px) {
+    .terminal-body--interactive {
+      height: 380px;
+    }
+    .terminal-input { font-size: 16px; }
+    .terminal-tab-hint { display: none; }
+
+    .commit-summary {
+      grid-template-columns: 24px 1fr auto;
+    }
+
+    .skills-body { font-size: 12px; }
+
+    .skills-tag::after {
+      max-width: 220px;
     }
 
     .cta-card {
@@ -818,26 +1756,78 @@ const schema = JSON.stringify({
   }
 
   @media (max-width: 480px) {
-    .hero-title {
-      font-size: clamp(40px, 12vw, 64px);
+    .stats-grid {
+      grid-template-columns: 1fr;
     }
-
-    .tl-body {
-      max-width: 100%;
+    .hero-h1 {
+      font-size: clamp(40px, 12vw, 64px);
     }
   }
 </style>
 
 <script>
-  import { initTypewriters, TYPEWRITER_CSS } from '../scripts/typewriter.ts';
-  import { initScrollReveal, SCROLL_REVEAL_CSS } from '../scripts/scroll-reveal.ts';
+  import { initScrollReveal, initCounters, SCROLL_REVEAL_CSS } from '../scripts/scroll-reveal.ts';
+  import { initAboutTerminal } from '../scripts/about-terminal.ts';
 
-  // Inject animation CSS
   const style = document.createElement('style');
-  style.textContent = TYPEWRITER_CSS + SCROLL_REVEAL_CSS;
+  style.textContent = SCROLL_REVEAL_CSS;
   document.head.appendChild(style);
 
-  // Boot animations
-  initTypewriters();
   initScrollReveal();
+  initCounters();
+  initAboutTerminal();
+
+  // Skill tooltip — single floating element, viewport-clamped.
+  (function initSkillTooltip() {
+    const tooltip = document.getElementById('skill-tooltip');
+    if (!tooltip) return;
+
+    const PAD = 8;
+    const GAP = 10;
+
+    function show(tag: HTMLElement) {
+      const text = tag.dataset['context'];
+      if (!text) return;
+      tooltip!.textContent = text;
+      tooltip!.classList.add('is-visible');
+      tooltip!.setAttribute('aria-hidden', 'false');
+      position(tag);
+    }
+
+    function hide() {
+      tooltip!.classList.remove('is-visible');
+      tooltip!.setAttribute('aria-hidden', 'true');
+    }
+
+    function position(tag: HTMLElement) {
+      const tagRect = tag.getBoundingClientRect();
+      const tipRect = tooltip!.getBoundingClientRect();
+      const vw = window.innerWidth;
+      const vh = window.innerHeight;
+
+      // Horizontal: centred on tag, clamped to viewport with PAD margin.
+      let left = tagRect.left + tagRect.width / 2 - tipRect.width / 2;
+      left = Math.max(PAD, Math.min(left, vw - tipRect.width - PAD));
+
+      // Vertical: above the tag if there's room, otherwise below.
+      let top = tagRect.top - tipRect.height - GAP;
+      if (top < PAD) {
+        top = tagRect.bottom + GAP;
+      }
+      top = Math.min(top, vh - tipRect.height - PAD);
+
+      tooltip!.style.left = `${left}px`;
+      tooltip!.style.top = `${top}px`;
+    }
+
+    document.querySelectorAll<HTMLElement>('.skills-tag').forEach((tag) => {
+      tag.addEventListener('mouseenter', () => show(tag));
+      tag.addEventListener('focus', () => show(tag));
+      tag.addEventListener('mouseleave', hide);
+      tag.addEventListener('blur', hide);
+    });
+
+    window.addEventListener('scroll', hide, { passive: true });
+    window.addEventListener('resize', hide, { passive: true });
+  })();
 </script>

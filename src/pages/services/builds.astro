@@ -1,0 +1,1083 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import StarfieldHero from '../../components/StarfieldHero.astro';
+import ChatDrawer from '../../components/ChatDrawer.astro';
+
+const buildTypes = [
+  {
+    slug: 'landing-pages',
+    title: 'Landing pages',
+    desc: 'Single-purpose pages for launch, lead capture, waitlists, or paid campaigns.',
+    tags: ['copy', 'conversion', 'speed'],
+  },
+  {
+    slug: 'marketing-sites',
+    title: 'Marketing sites',
+    desc: 'Clear, fast company sites that explain what you do and make the next step obvious.',
+    tags: ['Astro', 'CMS-ready', 'SEO'],
+  },
+  {
+    slug: 'webapps',
+    title: 'Webapps',
+    desc: 'Focused dashboards, portals, calculators, and authenticated tools for real workflows.',
+    tags: ['TypeScript', 'PostgreSQL', 'auth'],
+  },
+  {
+    slug: 'mvps',
+    title: 'MVPs',
+    desc: 'The smallest useful version of the thing, shipped quickly enough to learn from.',
+    tags: ['prototype', 'iterate', 'launch'],
+  },
+];
+
+const processSteps = [
+  {
+    hash: 'b17d101',
+    label: 'Discover',
+    message: 'feat(scope): define the action the page needs to drive',
+    body: 'We map the audience, offer, content, and one primary conversion path before design starts.',
+  },
+  {
+    hash: 'c4a9e82',
+    label: 'Design',
+    message: 'feat(ui): turn the offer into a focused interface',
+    body: 'Wireframes, copy structure, visual direction, and responsive states are shaped together.',
+  },
+  {
+    hash: 'e08f443',
+    label: 'Build',
+    message: 'feat(ship): code the site with performance baked in',
+    body: 'Astro, React, or Next.js when needed; vanilla where possible; analytics and forms wired properly.',
+  },
+  {
+    hash: 'f9a2b60',
+    label: 'Launch',
+    message: 'chore(release): deploy, measure, and hand over cleanly',
+    body: 'You get a fast deployment, clear handover notes, and a site that is easy to update.',
+  },
+];
+
+const stack = ['Astro', 'Next.js', 'React', 'Tailwind', 'Cloudflare', 'PostgreSQL'];
+
+const faqs = [
+  {
+    q: 'Can you work with an existing brand?',
+    a: 'Yes. If you already have a brand, copy, or design system, the build will respect it. If not, we can create a lean visual direction as part of the project.',
+  },
+  {
+    q: 'Do you only build Astro sites?',
+    a: 'No. Astro is often the right fit for fast content and marketing sites, but Next.js, React, and PostgreSQL all make sense when the product needs richer app behavior.',
+  },
+  {
+    q: 'Will I be able to edit the site?',
+    a: 'Yes. The handover depends on the project, but the goal is always a site you can operate without needing a developer for small content changes.',
+  },
+  {
+    q: 'Can you connect forms, payments, or dashboards?',
+    a: 'Yes. Lightweight backend work, CRM handoff, Stripe, PostgreSQL, and admin views are all normal parts of build projects.',
+  },
+];
+
+const schema = JSON.stringify({
+  '@context': 'https://schema.org',
+  '@type': 'Service',
+  '@id': 'https://camberco.co.uk/services/builds#service',
+  name: 'Website and Web App Builds',
+  serviceType: 'Web development',
+  provider: { '@id': 'https://camberco.co.uk/#organization' },
+  areaServed: {
+    '@type': 'Country',
+    name: 'United Kingdom',
+  },
+  url: 'https://camberco.co.uk/services/builds',
+  description: 'Clean, fast websites, landing pages, web apps, and MVPs for UK founders and small businesses.',
+});
+---
+
+<Layout
+  title="Website & Web App Builds | Camber Co"
+  description="Clean, fast websites, landing pages, web apps, and MVPs for founders and small businesses. Built by Camber Co in London."
+  canonicalUrl="https://camberco.co.uk/services/builds"
+  schema={schema}
+>
+  <StarfieldHero />
+
+  <main class="service-page">
+    <section class="hero">
+      <div class="container">
+        <div class="hero-copy" data-reveal>
+          <div class="status-chip">
+            <span class="status-dot" aria-hidden="true"></span>
+            <span class="status-label">[ BUILD MODE ]</span>
+            <span class="status-path">camber/services/builds</span>
+          </div>
+          <h1>Tune a landing page live.</h1>
+          <p>
+            A constrained website builder preview: change the offer, audience, style,
+            accent, and sections, then see a polished landing page slice update instantly.
+          </p>
+          <div class="hero-actions">
+            <a href="/contact/" class="btn btn-primary">&gt; Start a build</a>
+            <button type="button" class="btn btn-secondary" data-chat-open="builds">&gt; Chat about it</button>
+          </div>
+        </div>
+
+        <div class="build-demo" data-build-demo data-reveal>
+          <div class="build-demo-grid">
+            <div class="terminal-window builder-window">
+              <div class="window-bar">
+                <span class="window-dot window-dot--red"></span>
+                <span class="window-dot window-dot--yellow"></span>
+                <span class="window-dot window-dot--green"></span>
+                <span class="window-title">~/site-composer</span>
+              </div>
+              <div class="builder-panel">
+                <label class="builder-field">
+                  <span>Offer</span>
+                  <input
+                    type="text"
+                    value="AI operations audit"
+                    maxlength="54"
+                    data-builder-offer
+                    aria-label="Landing page offer"
+                  />
+                </label>
+
+                <label class="builder-field">
+                  <span>Audience</span>
+                  <select data-builder-audience aria-label="Landing page audience">
+                    <option value="founders">Solo founders</option>
+                    <option value="studios">Creative studios</option>
+                    <option value="saas">SaaS teams</option>
+                    <option value="local">Local operators</option>
+                  </select>
+                </label>
+
+                <div class="builder-group" aria-label="Landing page style">
+                  <span>Style</span>
+                  <div class="builder-segments">
+                    <label>
+                      <input type="radio" name="builder-style" value="studio" data-builder-style checked />
+                      <span>studio</span>
+                    </label>
+                    <label>
+                      <input type="radio" name="builder-style" value="product" data-builder-style />
+                      <span>product</span>
+                    </label>
+                    <label>
+                      <input type="radio" name="builder-style" value="editorial" data-builder-style />
+                      <span>editorial</span>
+                    </label>
+                  </div>
+                </div>
+
+                <div class="builder-group" aria-label="Landing page accent">
+                  <span>Accent</span>
+                  <div class="builder-swatches">
+                    <label class="builder-swatch builder-swatch--split">
+                      <input type="radio" name="builder-accent" value="split" data-builder-accent checked />
+                      <span aria-hidden="true"></span>
+                      <em>split</em>
+                    </label>
+                    <label class="builder-swatch builder-swatch--green">
+                      <input type="radio" name="builder-accent" value="green" data-builder-accent />
+                      <span aria-hidden="true"></span>
+                      <em>green</em>
+                    </label>
+                    <label class="builder-swatch builder-swatch--pink">
+                      <input type="radio" name="builder-accent" value="pink" data-builder-accent />
+                      <span aria-hidden="true"></span>
+                      <em>pink</em>
+                    </label>
+                  </div>
+                </div>
+
+                <fieldset class="builder-group builder-sections">
+                  <legend>Sections</legend>
+                  <label>
+                    <input type="checkbox" value="proof" data-builder-section checked />
+                    proof strip
+                  </label>
+                  <label>
+                    <input type="checkbox" value="cards" data-builder-section checked />
+                    feature cards
+                  </label>
+                  <label>
+                    <input type="checkbox" value="cta" data-builder-section checked />
+                    bottom CTA
+                  </label>
+                </fieldset>
+
+                <button type="button" class="builder-generate" data-build-generate>
+                  &gt; Generate example
+                </button>
+              </div>
+            </div>
+
+            <div class="browser-window">
+              <div class="window-bar">
+                <span class="window-dot window-dot--red"></span>
+                <span class="window-dot window-dot--yellow"></span>
+                <span class="window-dot window-dot--green"></span>
+                <span class="browser-url">https://your-next-launch.com</span>
+              </div>
+              <div class="browser-body">
+                <div class="preview-root" data-build-preview aria-label="Live site preview"></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="demo-actions">
+            <button type="button" class="btn btn-secondary btn-small" data-build-reset>&gt; Reset demo</button>
+            <span class="demo-note">Scoped landing section · instant updates</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section-block">
+      <div class="container">
+        <div class="section-header" data-reveal>
+          <p class="section-tag">$ ls builds/</p>
+          <h2>What we build.</h2>
+        </div>
+
+        <div class="card-grid" data-reveal-stagger>
+          {buildTypes.map((item) => (
+            <article class="terminal-card">
+              <div class="card-bar">
+                <span class="window-dot window-dot--red"></span>
+                <span class="window-dot window-dot--yellow"></span>
+                <span class="window-dot window-dot--green"></span>
+                <span class="card-path">~/{item.slug}</span>
+              </div>
+              <div class="card-body">
+                <h3>{item.title}</h3>
+                <p>{item.desc}</p>
+                <div class="card-tags">
+                  {item.tags.map((tag) => <span>{tag}</span>)}
+                </div>
+              </div>
+            </article>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <section class="section-block section-block--split">
+      <div class="container">
+        <div class="section-header" data-reveal>
+          <p class="section-tag">$ git log --process</p>
+          <h2>How the build ships.</h2>
+        </div>
+
+        <ol class="git-log" data-reveal-stagger>
+          {processSteps.map((step, i) => (
+            <li class="commit">
+              <div class="commit-graph" aria-hidden="true">
+                <span class="commit-dot"></span>
+                {i < processSteps.length - 1 && <span class="commit-line"></span>}
+              </div>
+              <div class="commit-text">
+                <span class="commit-line-1"><span class="commit-hash">commit&nbsp;{step.hash}</span></span>
+                <span class="commit-line-2">Author: <span>camber@{step.label.toLowerCase()}</span></span>
+                <span class="commit-message">{step.message}</span>
+                <span class="commit-role">{step.label}</span>
+                <p>{step.body}</p>
+              </div>
+            </li>
+          ))}
+        </ol>
+      </div>
+    </section>
+
+    <section class="section-block">
+      <div class="container">
+        <div class="section-header" data-reveal>
+          <p class="section-tag">$ cat stack.txt</p>
+          <h2>The usual stack.</h2>
+        </div>
+        <div class="pill-row" data-reveal>
+          {stack.map((item) => <span>{item}</span>)}
+        </div>
+      </div>
+    </section>
+
+    <section class="section-block">
+      <div class="container">
+        <div class="section-header" data-reveal>
+          <p class="section-tag">$ man builds</p>
+          <h2>Questions founders ask.</h2>
+        </div>
+
+        <div class="faq-list" data-reveal>
+          {faqs.map((item, i) => (
+            <details class="faq-item" open={i === 0}>
+              <summary>
+                <span aria-hidden="true">&gt;</span>
+                <span>{item.q}</span>
+              </summary>
+              <p>{item.a}</p>
+            </details>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <section class="cta">
+      <div class="container">
+        <div class="cta-card" data-reveal>
+          <h2>Ready to ship the thing?</h2>
+          <p>Bring the idea, the messy brief, or the half-built site. We will turn it into a clean build path.</p>
+          <div class="cta-actions">
+            <a href="/contact/" class="btn btn-primary">&gt; Get in touch</a>
+            <button type="button" class="btn btn-secondary" data-chat-open="builds">&gt; Chat about it</button>
+          </div>
+          <p class="cta-flags">
+            <span>--fast</span>
+            <span>--focused</span>
+            <span>--built-to-convert</span>
+          </p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <ChatDrawer />
+</Layout>
+
+<style>
+  .service-page {
+    position: relative;
+    z-index: 2;
+    background: transparent;
+  }
+
+  .container {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 0 var(--space-8);
+  }
+
+  .hero {
+    padding: clamp(96px, 13vw, 148px) 0 clamp(72px, 9vw, 112px);
+  }
+
+  .hero-copy {
+    display: grid;
+    gap: var(--space-4);
+    margin-bottom: var(--space-10);
+    max-width: 760px;
+  }
+
+  .status-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    width: fit-content;
+    padding: var(--space-2) var(--space-3);
+    background: color-mix(in srgb, var(--color-surface-01) 76%, transparent);
+    border: 1px solid var(--color-border-subtle);
+    border-radius: var(--radius-sm);
+    font-family: var(--font-mono);
+  }
+
+  .status-dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--color-green-500);
+    box-shadow: 0 0 10px var(--color-green-glow);
+    animation: status-pulse 2.4s var(--easing-smooth) infinite;
+  }
+
+  @keyframes status-pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.45; }
+  }
+
+  .status-label,
+  .status-path {
+    font-size: var(--type-label);
+    letter-spacing: 0;
+  }
+
+  .status-label {
+    color: var(--color-green-500);
+  }
+
+  .status-path {
+    color: var(--color-text-muted);
+  }
+
+  h1 {
+    margin: 0;
+    font-family: var(--font-mono);
+    font-size: var(--type-display);
+    line-height: 1;
+    letter-spacing: 0;
+    color: var(--color-text-primary);
+  }
+
+  .hero-copy p,
+  .section-header p {
+    font-size: var(--type-body-lg);
+    color: var(--color-text-secondary);
+    line-height: 1.7;
+    max-width: 64ch;
+  }
+
+  .hero-actions,
+  .cta-actions,
+  .demo-actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-3);
+  }
+
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 44px;
+    border-radius: var(--radius-sm);
+    padding: var(--space-3) var(--space-6);
+    font-family: var(--font-mono);
+    font-size: var(--type-label);
+    font-weight: 700;
+    letter-spacing: 0;
+    transition:
+      transform var(--duration-quick) var(--easing-spring),
+      background var(--duration-quick) var(--easing-smooth),
+      border-color var(--duration-quick) var(--easing-smooth),
+      color var(--duration-quick) var(--easing-smooth),
+      box-shadow var(--duration-quick) var(--easing-smooth);
+  }
+
+  .btn:hover {
+    transform: translateY(-1px);
+  }
+
+  .btn-primary {
+    background: var(--color-green-500);
+    color: var(--color-text-inverse);
+  }
+
+  .btn-primary:hover {
+    background: var(--color-green-400);
+    box-shadow: 0 0 24px var(--color-green-glow);
+  }
+
+  .btn-secondary {
+    color: var(--color-text-secondary);
+    border: 1px solid var(--color-border-muted);
+    background: var(--color-surface-00);
+  }
+
+  .btn-secondary:hover {
+    color: var(--color-text-primary);
+    border-color: var(--color-border-visible);
+    background: var(--color-surface-01);
+  }
+
+  .btn-small {
+    min-height: 36px;
+    padding: var(--space-2) var(--space-4);
+    font-size: var(--type-caption);
+  }
+
+  .build-demo {
+    background: color-mix(in srgb, var(--color-surface-00) 86%, transparent);
+    border: 1px solid var(--color-border-subtle);
+    border-radius: var(--radius-md);
+    padding: var(--space-4);
+    box-shadow: 0 0 52px color-mix(in srgb, var(--color-green-500) 8%, transparent);
+  }
+
+  .build-demo-grid {
+    display: grid;
+    grid-template-columns: minmax(280px, 0.8fr) minmax(0, 1.2fr);
+    gap: var(--space-4);
+    align-items: stretch;
+  }
+
+  .terminal-window,
+  .browser-window,
+  .terminal-card,
+  .cta-card {
+    border: 1px solid var(--color-border-subtle);
+    border-radius: var(--radius-md);
+    background: var(--color-surface-00);
+    overflow: hidden;
+  }
+
+  .window-bar,
+  .card-bar {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    min-height: 38px;
+    padding: 0 var(--space-3);
+    background: var(--color-surface-02);
+    border-bottom: 1px solid var(--color-border-subtle);
+  }
+
+  .window-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  .window-dot--red {
+    background: var(--color-error);
+  }
+
+  .window-dot--yellow {
+    background: var(--color-warning);
+  }
+
+  .window-dot--green {
+    background: var(--color-success);
+  }
+
+  .window-title,
+  .card-path,
+  .browser-url,
+  .demo-note {
+    font-family: var(--font-mono);
+    font-size: var(--type-caption);
+    color: var(--color-text-muted);
+  }
+
+  .window-title,
+  .card-path {
+    margin-left: var(--space-2);
+  }
+
+  .browser-url {
+    flex: 1;
+    min-width: 0;
+    margin-left: var(--space-2);
+    padding: var(--space-1) var(--space-3);
+    border: 1px solid var(--color-border-subtle);
+    border-radius: var(--radius-sm);
+    background: var(--color-surface-00);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .builder-panel {
+    display: grid;
+    align-content: start;
+    gap: var(--space-6);
+    height: 560px;
+    overflow: auto;
+    padding: var(--space-6);
+    scrollbar-width: thin;
+    scrollbar-color: var(--color-border-muted) transparent;
+  }
+
+  .builder-field,
+  .builder-group {
+    display: grid;
+    gap: var(--space-2);
+  }
+
+  .builder-generate {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 44px;
+    width: 100%;
+    border: 1px solid var(--color-green-500);
+    border-radius: var(--radius-sm);
+    background: var(--color-green-500);
+    color: var(--color-text-inverse);
+    padding: var(--space-3) var(--space-4);
+    font-family: var(--font-mono);
+    font-size: var(--type-label);
+    font-weight: 800;
+    transition:
+      background var(--duration-quick) var(--easing-smooth),
+      box-shadow var(--duration-quick) var(--easing-smooth),
+      transform var(--duration-quick) var(--easing-spring);
+  }
+
+  .builder-generate:hover {
+    background: var(--color-green-400);
+    box-shadow: 0 0 24px var(--color-green-glow);
+    transform: translateY(-1px);
+  }
+
+  .builder-field > span,
+  .builder-group > span,
+  .builder-group legend {
+    font-family: var(--font-mono);
+    font-size: var(--type-caption);
+    color: var(--color-green-500);
+  }
+
+  .builder-field input,
+  .builder-field select {
+    width: 100%;
+    min-height: 44px;
+    border: 1px solid var(--color-border-muted);
+    border-radius: var(--radius-sm);
+    background: var(--color-surface-01);
+    color: var(--color-text-primary);
+    padding: var(--space-3);
+    font-family: var(--font-mono);
+    font-size: var(--type-label);
+    outline: none;
+    transition:
+      border-color var(--duration-quick) var(--easing-smooth),
+      box-shadow var(--duration-quick) var(--easing-smooth);
+  }
+
+  .builder-field input:focus,
+  .builder-field select:focus {
+    border-color: var(--color-green-500);
+    box-shadow: 0 0 0 2px var(--color-green-glow);
+  }
+
+  .builder-segments,
+  .builder-swatches {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+  }
+
+  .builder-segments label,
+  .builder-swatch {
+    display: inline-flex;
+    position: relative;
+    align-items: center;
+    gap: var(--space-2);
+    min-height: 38px;
+    border: 1px solid var(--color-border-muted);
+    border-radius: var(--radius-sm);
+    background: var(--color-surface-01);
+    color: var(--color-text-secondary);
+    padding: var(--space-2) var(--space-3);
+    font-family: var(--font-mono);
+    font-size: var(--type-caption);
+    cursor: pointer;
+    transition:
+      background var(--duration-quick) var(--easing-smooth),
+      border-color var(--duration-quick) var(--easing-smooth),
+      color var(--duration-quick) var(--easing-smooth),
+      box-shadow var(--duration-quick) var(--easing-smooth);
+  }
+
+  .builder-segments input,
+  .builder-swatch input {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    cursor: pointer;
+  }
+
+  .builder-segments label:has(input:checked),
+  .builder-swatch:has(input:checked) {
+    border-color: var(--color-green-500);
+    color: var(--color-text-primary);
+    background: color-mix(in srgb, var(--color-green-500) 10%, var(--color-surface-01));
+    box-shadow: 0 0 18px var(--color-green-glow);
+  }
+
+  .builder-swatch span {
+    width: var(--space-3);
+    height: var(--space-3);
+    border-radius: 50%;
+    background: var(--swatch-color);
+    box-shadow: 0 0 12px color-mix(in srgb, var(--swatch-color) 50%, transparent);
+  }
+
+  .builder-swatch em {
+    font-style: normal;
+  }
+
+  .builder-swatch--green {
+    --swatch-color: var(--color-green-500);
+  }
+
+  .builder-swatch--pink {
+    --swatch-color: var(--color-pink-500);
+  }
+
+  .builder-swatch--split {
+    --swatch-color: var(--color-green-500);
+  }
+
+  .builder-swatch--split span {
+    background: linear-gradient(135deg, var(--color-green-500), var(--color-pink-500));
+  }
+
+  .builder-sections {
+    margin: 0;
+    padding: 0;
+    border: none;
+  }
+
+  .builder-sections legend {
+    padding: 0 0 var(--space-2);
+  }
+
+  .builder-sections label {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    min-height: 38px;
+    border: 1px solid var(--color-border-subtle);
+    border-radius: var(--radius-sm);
+    background: var(--color-surface-01);
+    padding: var(--space-2) var(--space-3);
+    color: var(--color-text-secondary);
+    font-family: var(--font-mono);
+    font-size: var(--type-caption);
+  }
+
+  .builder-sections input {
+    accent-color: var(--color-green-500);
+  }
+
+  .browser-body {
+    height: 560px;
+    padding: var(--space-4);
+    background:
+      linear-gradient(0deg, color-mix(in srgb, var(--color-text-primary) 2%, transparent) 1px, transparent 1px),
+      var(--color-surface-01);
+    background-size: 100% var(--space-4);
+  }
+
+  .preview-root {
+    min-height: 100%;
+  }
+
+  .demo-actions {
+    justify-content: space-between;
+    padding-top: var(--space-4);
+  }
+
+  .demo-note {
+    color: var(--color-text-muted);
+  }
+
+  .section-block {
+    padding: clamp(72px, 10vw, 124px) 0;
+    border-top: 1px solid var(--color-border-subtle);
+    background: var(--color-base);
+  }
+
+  .section-header {
+    margin-bottom: var(--space-10);
+  }
+
+  .section-tag {
+    margin: 0 0 var(--space-3);
+    font-family: var(--font-mono);
+    font-size: var(--type-caption);
+    color: var(--color-green-500);
+  }
+
+  h2 {
+    margin: 0;
+    font-family: var(--font-mono);
+    font-size: var(--type-h1);
+    line-height: 1.12;
+    letter-spacing: 0;
+  }
+
+  .card-grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: var(--space-4);
+  }
+
+  .terminal-card {
+    transition:
+      transform var(--duration-normal) var(--easing-spring),
+      border-color var(--duration-normal) var(--easing-smooth),
+      box-shadow var(--duration-normal) var(--easing-smooth);
+  }
+
+  .terminal-card:hover {
+    transform: translateY(-2px);
+    border-color: color-mix(in srgb, var(--color-green-500) 48%, var(--color-border-muted));
+    box-shadow: 0 0 28px color-mix(in srgb, var(--color-green-500) 8%, transparent);
+  }
+
+  .card-body {
+    display: grid;
+    gap: var(--space-3);
+    padding: var(--space-6);
+  }
+
+  .card-body h3 {
+    margin: 0;
+    font-family: var(--font-mono);
+    font-size: var(--type-h3);
+    letter-spacing: 0;
+  }
+
+  .card-body p,
+  .commit-text p,
+  .faq-item p,
+  .cta-card p {
+    margin: 0;
+    color: var(--color-text-secondary);
+    line-height: 1.7;
+  }
+
+  .card-tags,
+  .pill-row,
+  .cta-flags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+  }
+
+  .card-tags span,
+  .pill-row span {
+    border: 1px solid var(--color-border-subtle);
+    border-radius: var(--radius-sm);
+    background: var(--color-surface-02);
+    color: var(--color-text-muted);
+    padding: var(--space-1) var(--space-2);
+    font-family: var(--font-mono);
+    font-size: var(--type-caption);
+  }
+
+  .git-log {
+    display: grid;
+    gap: 0;
+    max-width: 860px;
+  }
+
+  .commit {
+    display: grid;
+    grid-template-columns: 32px minmax(0, 1fr);
+    gap: var(--space-4);
+    list-style: none;
+  }
+
+  .commit-graph {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-top: var(--space-2);
+  }
+
+  .commit-dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: var(--color-green-500);
+    box-shadow: 0 0 16px var(--color-green-glow);
+    border: 2px solid var(--color-green-500);
+  }
+
+  .commit-line {
+    width: 1px;
+    flex: 1;
+    min-height: 96px;
+    margin-top: var(--space-2);
+    background: var(--color-border-muted);
+  }
+
+  .commit-text {
+    display: grid;
+    gap: var(--space-2);
+    padding-bottom: var(--space-8);
+    font-family: var(--font-mono);
+    font-size: var(--type-label);
+  }
+
+  .commit-line-1,
+  .commit-hash {
+    color: var(--color-pink-500);
+    font-weight: 700;
+  }
+
+  .commit-line-2 {
+    color: var(--color-text-muted);
+  }
+
+  .commit-line-2 span,
+  .commit-role {
+    color: var(--color-green-500);
+  }
+
+  .commit-message {
+    color: var(--color-text-primary);
+  }
+
+  .commit-text p {
+    font-family: var(--font-sans);
+    max-width: 66ch;
+  }
+
+  .pill-row span {
+    color: var(--color-green-500);
+    border-color: color-mix(in srgb, var(--color-green-500) 32%, var(--color-border-subtle));
+    background: color-mix(in srgb, var(--color-green-500) 7%, var(--color-surface-00));
+    padding: var(--space-2) var(--space-3);
+  }
+
+  .faq-list {
+    max-width: 820px;
+  }
+
+  .faq-item {
+    border-top: 1px solid var(--color-border-subtle);
+  }
+
+  .faq-item:last-child {
+    border-bottom: 1px solid var(--color-border-subtle);
+  }
+
+  .faq-item summary {
+    display: flex;
+    gap: var(--space-3);
+    padding: var(--space-6) 0;
+    cursor: pointer;
+    list-style: none;
+    color: var(--color-text-primary);
+    font-weight: 700;
+  }
+
+  .faq-item summary::-webkit-details-marker {
+    display: none;
+  }
+
+  .faq-item summary span:first-child {
+    color: var(--color-green-500);
+    font-family: var(--font-mono);
+    transition: transform var(--duration-quick) var(--easing-smooth);
+  }
+
+  .faq-item[open] summary span:first-child {
+    transform: rotate(90deg);
+  }
+
+  .faq-item p {
+    padding: 0 0 var(--space-6) calc(var(--space-6) + var(--space-1));
+    max-width: 68ch;
+  }
+
+  .cta {
+    padding: clamp(72px, 10vw, 124px) 0;
+    background: var(--color-base);
+  }
+
+  .cta-card {
+    display: grid;
+    justify-items: center;
+    gap: var(--space-6);
+    padding: clamp(40px, 6vw, 72px);
+    text-align: center;
+  }
+
+  .cta-card h2 {
+    max-width: 720px;
+  }
+
+  .cta-card p {
+    max-width: 58ch;
+  }
+
+  .cta-flags {
+    justify-content: center;
+    color: var(--color-text-muted);
+    font-family: var(--font-mono);
+    font-size: var(--type-caption);
+  }
+
+  @media (max-width: 1100px) {
+    .card-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  @media (max-width: 768px) {
+    .container {
+      padding: 0 var(--space-4);
+    }
+
+    .build-demo-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .builder-panel,
+    .browser-body {
+      height: auto;
+    }
+
+    .browser-body {
+      min-height: 520px;
+    }
+
+    .hero-actions .btn,
+    .cta-actions .btn {
+      width: 100%;
+    }
+
+    .demo-actions {
+      align-items: flex-start;
+      flex-direction: column;
+    }
+  }
+
+  @media (max-width: 560px) {
+    .card-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .status-chip {
+      align-items: flex-start;
+      flex-direction: column;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .status-dot {
+      animation: none;
+    }
+
+    .btn,
+    .terminal-card,
+    .faq-item summary span:first-child {
+      transition: none;
+    }
+  }
+</style>
+
+<script>
+  import { initScrollReveal, initCounters, SCROLL_REVEAL_CSS } from '../../scripts/scroll-reveal.ts';
+  import { initChatDrawer } from '../../scripts/chat-drawer.ts';
+  import { initBuildDemo } from '../../scripts/build-demo.ts';
+
+  if (!document.getElementById('scroll-reveal-css')) {
+    const style = document.createElement('style');
+    style.id = 'scroll-reveal-css';
+    style.textContent = SCROLL_REVEAL_CSS;
+    document.head.appendChild(style);
+  }
+
+  initScrollReveal();
+  initCounters();
+  initChatDrawer();
+  initBuildDemo();
+
+  document.querySelectorAll<HTMLElement>('[data-chat-open]').forEach((button) => {
+    button.addEventListener('click', () => {
+      const service = button.dataset.chatOpen;
+      if (service && window.__openChatDrawer) {
+        window.__openChatDrawer(service as any);
+      }
+    });
+  });
+</script>
