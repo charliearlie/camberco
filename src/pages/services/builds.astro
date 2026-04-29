@@ -111,10 +111,10 @@ const schema = JSON.stringify({
             <span class="status-label">[ BUILD MODE ]</span>
             <span class="status-path">camber/services/builds</span>
           </div>
-          <h1>Tune a landing page live.</h1>
+          <h1>Websites that make the offer obvious.</h1>
           <p>
-            A constrained website builder preview: change the offer, audience, style,
-            accent, and sections, then see a polished landing page slice update instantly.
+            No toy generator. The work is sharper positioning, cleaner structure,
+            faster pages, and conversion paths that feel intentional from the first screen.
           </p>
           <div class="hero-actions">
             <a href="/contact/" class="btn btn-primary">&gt; Start a build</a>
@@ -122,115 +122,79 @@ const schema = JSON.stringify({
           </div>
         </div>
 
-        <div class="build-demo" data-build-demo data-reveal>
-          <div class="build-demo-grid">
-            <div class="terminal-window builder-window">
-              <div class="window-bar">
-                <span class="window-dot window-dot--red"></span>
-                <span class="window-dot window-dot--yellow"></span>
-                <span class="window-dot window-dot--green"></span>
-                <span class="window-title">~/site-composer</span>
-              </div>
-              <div class="builder-panel">
-                <label class="builder-field">
-                  <span>Offer</span>
-                  <input
-                    type="text"
-                    value="AI operations audit"
-                    maxlength="54"
-                    data-builder-offer
-                    aria-label="Landing page offer"
-                  />
-                </label>
-
-                <label class="builder-field">
-                  <span>Audience</span>
-                  <select data-builder-audience aria-label="Landing page audience">
-                    <option value="founders">Solo founders</option>
-                    <option value="studios">Creative studios</option>
-                    <option value="saas">SaaS teams</option>
-                    <option value="local">Local operators</option>
-                  </select>
-                </label>
-
-                <div class="builder-group" aria-label="Landing page style">
-                  <span>Style</span>
-                  <div class="builder-segments">
-                    <label>
-                      <input type="radio" name="builder-style" value="studio" data-builder-style checked />
-                      <span>studio</span>
-                    </label>
-                    <label>
-                      <input type="radio" name="builder-style" value="product" data-builder-style />
-                      <span>product</span>
-                    </label>
-                    <label>
-                      <input type="radio" name="builder-style" value="editorial" data-builder-style />
-                      <span>editorial</span>
-                    </label>
-                  </div>
-                </div>
-
-                <div class="builder-group" aria-label="Landing page accent">
-                  <span>Accent</span>
-                  <div class="builder-swatches">
-                    <label class="builder-swatch builder-swatch--split">
-                      <input type="radio" name="builder-accent" value="split" data-builder-accent checked />
-                      <span aria-hidden="true"></span>
-                      <em>split</em>
-                    </label>
-                    <label class="builder-swatch builder-swatch--green">
-                      <input type="radio" name="builder-accent" value="green" data-builder-accent />
-                      <span aria-hidden="true"></span>
-                      <em>green</em>
-                    </label>
-                    <label class="builder-swatch builder-swatch--pink">
-                      <input type="radio" name="builder-accent" value="pink" data-builder-accent />
-                      <span aria-hidden="true"></span>
-                      <em>pink</em>
-                    </label>
-                  </div>
-                </div>
-
-                <fieldset class="builder-group builder-sections">
-                  <legend>Sections</legend>
-                  <label>
-                    <input type="checkbox" value="proof" data-builder-section checked />
-                    proof strip
-                  </label>
-                  <label>
-                    <input type="checkbox" value="cards" data-builder-section checked />
-                    feature cards
-                  </label>
-                  <label>
-                    <input type="checkbox" value="cta" data-builder-section checked />
-                    bottom CTA
-                  </label>
-                </fieldset>
-
-                <button type="button" class="builder-generate" data-build-generate>
-                  &gt; Generate example
-                </button>
-              </div>
+        <div class="site-proof-demo" data-reveal>
+          <div class="proof-browser">
+            <div class="window-bar">
+              <span class="window-dot window-dot--red"></span>
+              <span class="window-dot window-dot--yellow"></span>
+              <span class="window-dot window-dot--green"></span>
+              <span class="browser-url">https://client-site.com/offer</span>
             </div>
+            <div class="proof-browser-body">
+              <div class="proof-site">
+                <nav class="proof-site-nav" aria-label="Preview site navigation">
+                  <span>Northstar Studio</span>
+                  <span>availability open</span>
+                </nav>
 
-            <div class="browser-window">
-              <div class="window-bar">
-                <span class="window-dot window-dot--red"></span>
-                <span class="window-dot window-dot--yellow"></span>
-                <span class="window-dot window-dot--green"></span>
-                <span class="browser-url">https://your-next-launch.com</span>
-              </div>
-              <div class="browser-body">
-                <div class="preview-root" data-build-preview aria-label="Live site preview"></div>
+                <section class="proof-site-hero">
+                  <span class="proof-kicker">Service page rebuild</span>
+                  <h2>Turn visitor confusion into booked calls.</h2>
+                  <p>
+                    A focused page system for a premium consultancy: clearer offer,
+                    sharper proof, faster load, and one obvious next step.
+                  </p>
+                  <div class="proof-site-actions" aria-label="Preview site actions">
+                    <span>Book strategy call</span>
+                    <span>View proof</span>
+                  </div>
+                </section>
+
+                <div class="proof-metrics" aria-label="Preview quality signals">
+                  <span><strong>95+</strong> performance target</span>
+                  <span><strong>1</strong> primary conversion path</span>
+                  <span><strong>0</strong> bloated plugins</span>
+                </div>
               </div>
             </div>
           </div>
 
-          <div class="demo-actions">
-            <button type="button" class="btn btn-secondary btn-small" data-build-reset>&gt; Reset demo</button>
-            <span class="demo-note">Scoped landing section · instant updates</span>
-          </div>
+          <aside class="launch-board" aria-label="Website build diagnosis">
+            <div class="launch-board-head">
+              <span class="section-tag">$ camber audit --build</span>
+              <strong>Launch board</strong>
+            </div>
+            <ol class="launch-checks">
+              <li>
+                <span>01</span>
+                <div>
+                  <strong>Positioning</strong>
+                  <p>Lead with the commercial promise, not a vague capability list.</p>
+                </div>
+              </li>
+              <li>
+                <span>02</span>
+                <div>
+                  <strong>Conversion</strong>
+                  <p>One primary action, repeated at natural decision points.</p>
+                </div>
+              </li>
+              <li>
+                <span>03</span>
+                <div>
+                  <strong>Performance</strong>
+                  <p>Fast static delivery first, richer app behaviour only where it pays.</p>
+                </div>
+              </li>
+              <li>
+                <span>04</span>
+                <div>
+                  <strong>Handoff</strong>
+                  <p>Clean code, documented edits, and a site you can actually operate.</p>
+                </div>
+              </li>
+            </ol>
+          </aside>
         </div>
       </div>
     </section>
@@ -428,8 +392,7 @@ const schema = JSON.stringify({
   }
 
   .hero-actions,
-  .cta-actions,
-  .demo-actions {
+  .cta-actions {
     display: flex;
     flex-wrap: wrap;
     align-items: center;
@@ -487,7 +450,11 @@ const schema = JSON.stringify({
     font-size: var(--type-caption);
   }
 
-  .build-demo {
+  .site-proof-demo {
+    display: grid;
+    grid-template-columns: minmax(0, 1.3fr) minmax(320px, 0.7fr);
+    gap: var(--space-4);
+    align-items: stretch;
     background: color-mix(in srgb, var(--color-surface-00) 86%, transparent);
     border: 1px solid var(--color-border-subtle);
     border-radius: var(--radius-md);
@@ -495,15 +462,9 @@ const schema = JSON.stringify({
     box-shadow: 0 0 52px color-mix(in srgb, var(--color-green-500) 8%, transparent);
   }
 
-  .build-demo-grid {
-    display: grid;
-    grid-template-columns: minmax(280px, 0.8fr) minmax(0, 1.2fr);
-    gap: var(--space-4);
-    align-items: stretch;
-  }
-
   .terminal-window,
-  .browser-window,
+  .proof-browser,
+  .launch-board,
   .terminal-card,
   .cta-card {
     border: 1px solid var(--color-border-subtle);
@@ -544,8 +505,7 @@ const schema = JSON.stringify({
 
   .window-title,
   .card-path,
-  .browser-url,
-  .demo-note {
+  .browser-url {
     font-family: var(--font-mono);
     font-size: var(--type-caption);
     color: var(--color-text-muted);
@@ -569,183 +529,8 @@ const schema = JSON.stringify({
     text-overflow: ellipsis;
   }
 
-  .builder-panel {
-    display: grid;
-    align-content: start;
-    gap: var(--space-6);
-    height: 560px;
-    overflow: auto;
-    padding: var(--space-6);
-    scrollbar-width: thin;
-    scrollbar-color: var(--color-border-muted) transparent;
-  }
-
-  .builder-field,
-  .builder-group {
-    display: grid;
-    gap: var(--space-2);
-  }
-
-  .builder-generate {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    min-height: 44px;
-    width: 100%;
-    border: 1px solid var(--color-green-500);
-    border-radius: var(--radius-sm);
-    background: var(--color-green-500);
-    color: var(--color-text-inverse);
-    padding: var(--space-3) var(--space-4);
-    font-family: var(--font-mono);
-    font-size: var(--type-label);
-    font-weight: 800;
-    transition:
-      background var(--duration-quick) var(--easing-smooth),
-      box-shadow var(--duration-quick) var(--easing-smooth),
-      transform var(--duration-quick) var(--easing-spring);
-  }
-
-  .builder-generate:hover {
-    background: var(--color-green-400);
-    box-shadow: 0 0 24px var(--color-green-glow);
-    transform: translateY(-1px);
-  }
-
-  .builder-field > span,
-  .builder-group > span,
-  .builder-group legend {
-    font-family: var(--font-mono);
-    font-size: var(--type-caption);
-    color: var(--color-green-500);
-  }
-
-  .builder-field input,
-  .builder-field select {
-    width: 100%;
-    min-height: 44px;
-    border: 1px solid var(--color-border-muted);
-    border-radius: var(--radius-sm);
-    background: var(--color-surface-01);
-    color: var(--color-text-primary);
-    padding: var(--space-3);
-    font-family: var(--font-mono);
-    font-size: var(--type-label);
-    outline: none;
-    transition:
-      border-color var(--duration-quick) var(--easing-smooth),
-      box-shadow var(--duration-quick) var(--easing-smooth);
-  }
-
-  .builder-field input:focus,
-  .builder-field select:focus {
-    border-color: var(--color-green-500);
-    box-shadow: 0 0 0 2px var(--color-green-glow);
-  }
-
-  .builder-segments,
-  .builder-swatches {
-    display: flex;
-    flex-wrap: wrap;
-    gap: var(--space-2);
-  }
-
-  .builder-segments label,
-  .builder-swatch {
-    display: inline-flex;
-    position: relative;
-    align-items: center;
-    gap: var(--space-2);
-    min-height: 38px;
-    border: 1px solid var(--color-border-muted);
-    border-radius: var(--radius-sm);
-    background: var(--color-surface-01);
-    color: var(--color-text-secondary);
-    padding: var(--space-2) var(--space-3);
-    font-family: var(--font-mono);
-    font-size: var(--type-caption);
-    cursor: pointer;
-    transition:
-      background var(--duration-quick) var(--easing-smooth),
-      border-color var(--duration-quick) var(--easing-smooth),
-      color var(--duration-quick) var(--easing-smooth),
-      box-shadow var(--duration-quick) var(--easing-smooth);
-  }
-
-  .builder-segments input,
-  .builder-swatch input {
-    position: absolute;
-    inset: 0;
-    opacity: 0;
-    cursor: pointer;
-  }
-
-  .builder-segments label:has(input:checked),
-  .builder-swatch:has(input:checked) {
-    border-color: var(--color-green-500);
-    color: var(--color-text-primary);
-    background: color-mix(in srgb, var(--color-green-500) 10%, var(--color-surface-01));
-    box-shadow: 0 0 18px var(--color-green-glow);
-  }
-
-  .builder-swatch span {
-    width: var(--space-3);
-    height: var(--space-3);
-    border-radius: 50%;
-    background: var(--swatch-color);
-    box-shadow: 0 0 12px color-mix(in srgb, var(--swatch-color) 50%, transparent);
-  }
-
-  .builder-swatch em {
-    font-style: normal;
-  }
-
-  .builder-swatch--green {
-    --swatch-color: var(--color-green-500);
-  }
-
-  .builder-swatch--pink {
-    --swatch-color: var(--color-pink-500);
-  }
-
-  .builder-swatch--split {
-    --swatch-color: var(--color-green-500);
-  }
-
-  .builder-swatch--split span {
-    background: linear-gradient(135deg, var(--color-green-500), var(--color-pink-500));
-  }
-
-  .builder-sections {
-    margin: 0;
-    padding: 0;
-    border: none;
-  }
-
-  .builder-sections legend {
-    padding: 0 0 var(--space-2);
-  }
-
-  .builder-sections label {
-    display: flex;
-    align-items: center;
-    gap: var(--space-2);
-    min-height: 38px;
-    border: 1px solid var(--color-border-subtle);
-    border-radius: var(--radius-sm);
-    background: var(--color-surface-01);
-    padding: var(--space-2) var(--space-3);
-    color: var(--color-text-secondary);
-    font-family: var(--font-mono);
-    font-size: var(--type-caption);
-  }
-
-  .builder-sections input {
-    accent-color: var(--color-green-500);
-  }
-
-  .browser-body {
-    height: 560px;
+  .proof-browser-body {
+    min-height: 600px;
     padding: var(--space-4);
     background:
       linear-gradient(0deg, color-mix(in srgb, var(--color-text-primary) 2%, transparent) 1px, transparent 1px),
@@ -753,17 +538,185 @@ const schema = JSON.stringify({
     background-size: 100% var(--space-4);
   }
 
-  .preview-root {
-    min-height: 100%;
+  .proof-site {
+    min-height: 568px;
+    display: grid;
+    align-content: space-between;
+    gap: var(--space-10);
+    padding: clamp(var(--space-6), 5vw, var(--space-12));
+    border: 1px solid color-mix(in srgb, var(--color-text-inverse) 14%, transparent);
+    border-radius: var(--radius-md);
+    background:
+      radial-gradient(circle at 86% 12%, color-mix(in srgb, var(--color-pink-500) 22%, transparent), transparent 30%),
+      linear-gradient(140deg, color-mix(in srgb, var(--color-text-primary) 94%, var(--color-green-500)), color-mix(in srgb, var(--color-text-primary) 90%, var(--color-pink-500)));
+    color: var(--color-text-inverse);
+    box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--color-text-inverse) 6%, transparent);
   }
 
-  .demo-actions {
+  .proof-site-nav,
+  .proof-site-actions,
+  .proof-metrics {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: var(--space-3);
+  }
+
+  .proof-site-nav {
     justify-content: space-between;
-    padding-top: var(--space-4);
+    font-size: var(--type-caption);
+    font-weight: 800;
   }
 
-  .demo-note {
-    color: var(--color-text-muted);
+  .proof-site-nav span:last-child,
+  .proof-kicker,
+  .proof-site-actions span,
+  .proof-metrics span {
+    border: 1px solid color-mix(in srgb, var(--color-text-inverse) 14%, transparent);
+    border-radius: var(--radius-sm);
+    background: color-mix(in srgb, var(--color-text-primary) 66%, transparent);
+    box-shadow: 0 var(--space-2) var(--space-8) color-mix(in srgb, var(--color-text-inverse) 7%, transparent);
+  }
+
+  .proof-site-nav span:last-child {
+    padding: var(--space-2) var(--space-3);
+    color: color-mix(in srgb, var(--color-text-inverse) 70%, var(--color-green-500));
+  }
+
+  .proof-site-hero {
+    display: grid;
+    gap: var(--space-6);
+    max-width: 680px;
+  }
+
+  .proof-kicker {
+    width: fit-content;
+    padding: var(--space-2) var(--space-3);
+    color: color-mix(in srgb, var(--color-text-inverse) 70%, var(--color-pink-500));
+    font-size: var(--type-caption);
+    font-weight: 900;
+  }
+
+  .proof-site h2 {
+    margin: 0;
+    max-width: 11ch;
+    font-family: var(--font-sans);
+    font-size: clamp(var(--space-12), 7vw, var(--space-24));
+    line-height: 0.95;
+    letter-spacing: 0;
+  }
+
+  .proof-site p {
+    max-width: 48ch;
+    margin: 0;
+    color: color-mix(in srgb, var(--color-text-inverse) 68%, var(--color-text-muted));
+    font-size: var(--type-body-lg);
+    line-height: 1.65;
+  }
+
+  .proof-site-actions span {
+    min-height: 42px;
+    display: inline-flex;
+    align-items: center;
+    padding: var(--space-2) var(--space-4);
+    font-size: var(--type-caption);
+    font-weight: 900;
+  }
+
+  .proof-site-actions span:first-child {
+    border-color: var(--color-green-500);
+    background: var(--color-green-500);
+  }
+
+  .proof-metrics {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .proof-metrics span {
+    min-height: 92px;
+    display: grid;
+    align-content: start;
+    gap: var(--space-2);
+    padding: var(--space-4);
+    color: color-mix(in srgb, var(--color-text-inverse) 68%, var(--color-text-muted));
+    font-size: var(--type-caption);
+    line-height: 1.35;
+  }
+
+  .proof-metrics strong {
+    display: block;
+    color: var(--color-text-inverse);
+    font-size: var(--type-h2);
+    line-height: 1;
+  }
+
+  .launch-board {
+    display: grid;
+    align-content: start;
+    gap: var(--space-6);
+    padding: var(--space-6);
+  }
+
+  .launch-board-head {
+    display: grid;
+    gap: var(--space-2);
+    padding-bottom: var(--space-4);
+    border-bottom: 1px solid var(--color-border-subtle);
+  }
+
+  .launch-board-head .section-tag {
+    margin: 0;
+  }
+
+  .launch-board-head strong {
+    font-family: var(--font-mono);
+    font-size: var(--type-h3);
+    color: var(--color-text-primary);
+  }
+
+  .launch-checks {
+    display: grid;
+    gap: var(--space-3);
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .launch-checks li {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    gap: var(--space-4);
+    padding: var(--space-4);
+    border: 1px solid var(--color-border-subtle);
+    border-radius: var(--radius-sm);
+    background:
+      linear-gradient(90deg, color-mix(in srgb, var(--color-green-500) 7%, transparent), transparent 56%),
+      var(--color-surface-01);
+  }
+
+  .launch-checks li > span {
+    font-family: var(--font-mono);
+    color: var(--color-pink-500);
+    font-weight: 800;
+  }
+
+  .launch-checks strong {
+    display: block;
+    margin-bottom: var(--space-1);
+    color: var(--color-text-primary);
+  }
+
+  .launch-checks p {
+    margin: 0;
+    color: var(--color-text-secondary);
+    line-height: 1.6;
+    font-size: var(--type-body-sm);
+  }
+
+  .launch-checks li:hover {
+    border-color: color-mix(in srgb, var(--color-green-500) 42%, var(--color-border-muted));
+    box-shadow: 0 0 24px color-mix(in srgb, var(--color-green-500) 7%, transparent);
   }
 
   .section-block {
@@ -1007,17 +960,12 @@ const schema = JSON.stringify({
       padding: 0 var(--space-4);
     }
 
-    .build-demo-grid {
+    .site-proof-demo {
       grid-template-columns: 1fr;
     }
 
-    .builder-panel,
-    .browser-body {
-      height: auto;
-    }
-
-    .browser-body {
-      min-height: 520px;
+    .proof-browser-body {
+      min-height: auto;
     }
 
     .hero-actions .btn,
@@ -1025,9 +973,12 @@ const schema = JSON.stringify({
       width: 100%;
     }
 
-    .demo-actions {
-      align-items: flex-start;
-      flex-direction: column;
+    .proof-site {
+      min-height: 520px;
+    }
+
+    .proof-metrics {
+      grid-template-columns: 1fr;
     }
   }
 
@@ -1058,7 +1009,6 @@ const schema = JSON.stringify({
 <script>
   import { initScrollReveal, initCounters, SCROLL_REVEAL_CSS } from '../../scripts/scroll-reveal.ts';
   import { initChatDrawer } from '../../scripts/chat-drawer.ts';
-  import { initBuildDemo } from '../../scripts/build-demo.ts';
 
   if (!document.getElementById('scroll-reveal-css')) {
     const style = document.createElement('style');
@@ -1070,7 +1020,6 @@ const schema = JSON.stringify({
   initScrollReveal();
   initCounters();
   initChatDrawer();
-  initBuildDemo();
 
   document.querySelectorAll<HTMLElement>('[data-chat-open]').forEach((button) => {
     button.addEventListener('click', () => {

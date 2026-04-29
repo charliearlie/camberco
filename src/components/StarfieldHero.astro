@@ -51,6 +51,13 @@
       rgba(0, 0, 0, 0.6) 100%
     );
   }
+
+  /* Light theme — hide the dark starfield; the white body background reads clean. */
+  :root[data-theme='light'] #starfield-canvas,
+  :root[data-theme='light'] #scanline-overlay,
+  :root[data-theme='light'] #vignette-overlay {
+    display: none;
+  }
 </style>
 
 <script>

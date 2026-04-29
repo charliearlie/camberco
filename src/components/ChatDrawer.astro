@@ -147,7 +147,7 @@
 
   :global(.chat-msg--user) {
     background: var(--color-green-500, #22c55e);
-    color: #000;
+    color: var(--color-on-accent);
     align-self: flex-end;
     font-weight: 500;
   }
@@ -162,7 +162,7 @@
   }
 
   :global(.chat-msg--user a) {
-    color: #000;
+    color: var(--color-on-accent);
   }
 
   @keyframes chatFadeIn {
@@ -215,7 +215,7 @@
 
   .chat-send:hover {
     background: var(--color-green-500, #22c55e);
-    color: #000;
+    color: var(--color-on-accent);
   }
 
   @media (max-width: 600px) {

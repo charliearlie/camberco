@@ -45,6 +45,34 @@ const ogImageAlt = ogImageAltProp ?? 'Camber Co — AI services for founders who
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
+    <script is:inline>
+      (function () {
+        try {
+          var stored = localStorage.getItem('camber-theme');
+          var systemLight =
+            window.matchMedia &&
+            window.matchMedia('(prefers-color-scheme: light)').matches;
+          var theme =
+            stored === 'light' || stored === 'dark'
+              ? stored
+              : systemLight
+              ? 'light'
+              : 'dark';
+          document.documentElement.setAttribute('data-theme', theme);
+          // Defer meta update until after the <meta name="theme-color"> tag is parsed.
+          document.addEventListener('DOMContentLoaded', function () {
+            var meta = document.querySelector('meta[name="theme-color"]');
+            if (meta) {
+              meta.setAttribute(
+                'content',
+                theme === 'light' ? '#ffffff' : '#000000',
+              );
+            }
+          });
+        } catch (e) {}
+      })();
+    </script>
+
     <!-- View Transitions -->
     <meta name="view-transition" content="same-origin" />
 

@@ -39,6 +39,13 @@
   --color-error: #ef4444;
   --color-warning: #f59e0b;
 
+  /* Text colour for buttons/badges sitting on a green/pink accent fill.
+     Black retains AA contrast against both the dark-mode and light-mode accents. */
+  --color-on-accent: #000000;
+
+  /* Translucent nav backdrop when the page has scrolled */
+  --nav-scrolled-bg: rgba(0, 0, 0, 0.85);
+
   /* Page accent — overrideable per service page */
   --page-accent: var(--color-green-500);
 
@@ -87,6 +94,53 @@
 }
 
 /* ============================================================
+   Light Theme
+   Applied when <html data-theme="light"> is set by the inline
+   init script in Layout.astro. Mirrors every colour token from
+   :root above so all var(--color-*) references switch atomically.
+   ============================================================ */
+
+:root[data-theme='light'] {
+  /* Surfaces */
+  --color-base: #ffffff;
+  --color-surface-00: #fafafa;
+  --color-surface-01: #f4f4f4;
+  --color-surface-02: #ebebeb;
+
+  /* Green accent — darker for AA contrast on white surfaces */
+  --color-green-500: #16a34a;
+  --color-green-400: #15803d;
+  --color-green-300: #22c55e;
+  --color-green-900: #dcfce7;
+  --color-green-glow: rgba(22, 163, 74, 0.12);
+
+  /* Pink accent — darker for AA contrast on white surfaces */
+  --color-pink-500: #db2777;
+  --color-pink-400: #be185d;
+  --color-pink-900: #fce7f3;
+  --color-pink-glow: rgba(219, 39, 119, 0.1);
+
+  /* Text */
+  --color-text-primary: #0a0a0a;
+  --color-text-secondary: #2a2a2a;
+  --color-text-muted: #6a6a6a;
+  --color-text-inverse: #ffffff;
+
+  /* Borders */
+  --color-border-subtle: #ececec;
+  --color-border-muted: #d4d4d4;
+  --color-border-visible: #a3a3a3;
+
+  /* Semantic */
+  --color-success: #16a34a;
+  --color-error: #dc2626;
+  --color-warning: #d97706;
+
+  /* Translucent nav backdrop when the page has scrolled */
+  --nav-scrolled-bg: rgba(255, 255, 255, 0.85);
+}
+
+/* ============================================================
    Minimal Reset
    ============================================================ */
 
@@ -111,6 +165,9 @@ body {
   line-height: 1.6;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  transition:
+    background-color var(--duration-normal) var(--easing-smooth),
+    color var(--duration-normal) var(--easing-smooth);
 }
 
 img,

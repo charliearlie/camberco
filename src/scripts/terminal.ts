@@ -150,7 +150,7 @@ const COMMANDS: Record<string, Command> = {
     <span class="t-muted">  automation:</span>  n8n, Make, Zapier
     <span class="t-muted">  ai/ml:</span>       OpenAI, Anthropic, local LLMs
     <span class="t-muted">  platforms:</span>   WhatsApp, Slack, Discord, Telegram
-    <span class="t-muted">  infra:</span>       Vercel, Supabase, Cloudflare
+    <span class="t-muted">  infra:</span>       Cloudflare, PostgreSQL, serverless
     <span class="t-muted">  frontend:</span>    Astro, vanilla JS
     <span class="t-muted">  languages:</span>   TypeScript, Python
 

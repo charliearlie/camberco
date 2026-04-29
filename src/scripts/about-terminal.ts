@@ -74,8 +74,10 @@ const COMMANDS: Record<string, Command> = {
 
     12 years shipping software. Currently leading
     the subscriptions team at Fairplay Sports Media
-    (£55k MRR and growing) and running <span class="t-pink">Camber Co</span>
-    on the side — AI automation for SMBs.
+    and running <span class="t-pink">Camber Co</span> on the side.
+
+    Helped generate millions in revenue across product,
+    subscriptions, marketplaces, and ecommerce.
 
     Based in London, UK. Available for select work.
     `,
@@ -143,7 +145,8 @@ const COMMANDS: Record<string, Command> = {
       return L`
       <span class="t-muted">$ cat ~/.now</span>
 
-      → leading subscriptions @ Fairplay (£55k MRR)
+      → leading subscriptions @ Fairplay
+      → career revenue impact in the millions
       → scaling Camber Co — AI consultancy for SMBs
       → shipping Jodz to the App Store
       → building bio-core
@@ -223,7 +226,7 @@ const COMMANDS: Record<string, Command> = {
         Author: charlie@fairplay
         Date:   Jan 2024 — Present
 
-            feat(career): scaled subscriptions to £55k MRR
+            feat(career): helped generate millions in revenue
 
         <span class="t-pink">commit 8c2b1a7</span>
         Author: charlie@trainline

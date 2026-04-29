@@ -14,6 +14,34 @@ const { title } = Astro.props;
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <script is:inline>
+      (function () {
+        try {
+          var stored = localStorage.getItem('camber-theme');
+          var systemLight =
+            window.matchMedia &&
+            window.matchMedia('(prefers-color-scheme: light)').matches;
+          var theme =
+            stored === 'light' || stored === 'dark'
+              ? stored
+              : systemLight
+              ? 'light'
+              : 'dark';
+          document.documentElement.setAttribute('data-theme', theme);
+          document.addEventListener('DOMContentLoaded', function () {
+            var meta = document.querySelector('meta[name="theme-color"]');
+            if (meta) {
+              meta.setAttribute(
+                'content',
+                theme === 'light' ? '#ffffff' : '#000000',
+              );
+            }
+          });
+        } catch (e) {}
+      })();
+    </script>
+
     <title>{title} — Camber Admin</title>
     <meta name="robots" content="noindex, nofollow" />
     <meta name="theme-color" content="#000000" />
@@ -37,8 +65,42 @@ const { title } = Astro.props;
         <a href="/admin/enquiries" class="admin-topbar-link">enquiries</a>
         <a href="/admin/settings" class="admin-topbar-link">settings</a>
         <a href="/" class="admin-topbar-link">← back to site</a>
+        <button
+          type="button"
+          class="admin-theme-toggle"
+          aria-label="Toggle colour theme"
+          data-admin-theme-toggle
+        >
+          <span data-admin-theme-label-dark>theme --light</span>
+          <span data-admin-theme-label-light>theme --dark</span>
+        </button>
       </nav>
     </header>
+
+    <script is:inline>
+      (function () {
+        function toggle() {
+          var current = document.documentElement.getAttribute('data-theme');
+          var next = current === 'light' ? 'dark' : 'light';
+          document.documentElement.setAttribute('data-theme', next);
+          try {
+            localStorage.setItem('camber-theme', next);
+          } catch (e) {}
+          var meta = document.querySelector('meta[name="theme-color"]');
+          if (meta) {
+            meta.setAttribute(
+              'content',
+              next === 'light' ? '#ffffff' : '#000000',
+            );
+          }
+        }
+        document
+          .querySelectorAll('[data-admin-theme-toggle]')
+          .forEach(function (btn) {
+            btn.addEventListener('click', toggle);
+          });
+      })();
+    </script>
 
     <!-- Page content -->
     <slot />
@@ -56,5 +118,32 @@ const { title } = Astro.props;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     min-height: 100vh;
+  }
+
+  .admin-theme-toggle {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    color: var(--color-text-muted);
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+  }
+
+  .admin-theme-toggle:hover {
+    color: var(--color-text-primary);
+  }
+
+  [data-admin-theme-label-dark],
+  [data-admin-theme-label-light] {
+    display: none;
+  }
+
+  :root:not([data-theme='light']) [data-admin-theme-label-dark] {
+    display: inline;
+  }
+
+  :root[data-theme='light'] [data-admin-theme-label-light] {
+    display: inline;
   }
 </style>
