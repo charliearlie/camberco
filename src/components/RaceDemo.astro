@@ -1,0 +1,207 @@
+---
+// RaceDemo.astro
+// Split-panel race: manual process vs automated workflow. Self-initialising.
+---
+
+<div class="race-demo" data-race-demo>
+  <div class="race-head">
+    <p class="race-scenario">Scenario: a new lead emails asking for a quote.</p>
+    <button type="button" class="race-play" data-race-play>&gt; Run the race</button>
+  </div>
+
+  <div class="race-panels">
+    <section class="race-panel" aria-label="Manual process">
+      <div class="race-bar">
+        <span class="race-dot race-dot--red"></span>
+        <span class="race-dot race-dot--yellow"></span>
+        <span class="race-dot race-dot--green"></span>
+        <span class="race-title">manual/you-doing-it</span>
+        <span class="race-clock" data-race-manual-clock aria-label="Simulated time spent">00:00</span>
+      </div>
+      <ol class="race-steps" data-race-manual-steps></ol>
+      <p class="race-footnote">Simulated clock. Seven steps, about 22 minutes, every single lead.</p>
+    </section>
+
+    <section class="race-panel race-panel--auto" aria-label="Automated process">
+      <div class="race-bar">
+        <span class="race-dot race-dot--red"></span>
+        <span class="race-dot race-dot--yellow"></span>
+        <span class="race-dot race-dot--green"></span>
+        <span class="race-title">automated/workflow</span>
+        <span class="race-clock race-clock--auto" data-race-auto-clock aria-label="Time taken by the workflow">0.0s</span>
+      </div>
+      <ol class="race-steps" data-race-auto-steps></ol>
+      <p class="race-footnote">Same job. The workflow does it in seconds, every time.</p>
+    </section>
+  </div>
+</div>
+
+<style>
+  .race-demo {
+    display: grid;
+    gap: var(--space-4);
+  }
+
+  .race-head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-3);
+  }
+
+  .race-scenario {
+    margin: 0;
+    font-family: var(--font-mono);
+    font-size: var(--type-body-sm);
+    color: var(--color-text-secondary);
+  }
+
+  .race-play {
+    min-height: 44px;
+    padding: var(--space-3) var(--space-6);
+    background: var(--color-green-500);
+    color: var(--color-on-accent);
+    border-radius: var(--radius-sm);
+    font-family: var(--font-mono);
+    font-size: var(--type-label);
+    font-weight: 700;
+    transition: background var(--duration-quick) var(--easing-smooth);
+  }
+
+  .race-play:hover {
+    background: var(--color-green-400);
+  }
+
+  .race-play:disabled {
+    opacity: 0.6;
+    cursor: wait;
+  }
+
+  .race-panels {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-4);
+    align-items: stretch;
+  }
+
+  .race-panel {
+    display: grid;
+    grid-template-rows: auto 1fr auto;
+    border: 1px solid var(--color-border-subtle);
+    border-radius: var(--radius-md);
+    background: var(--color-surface-00);
+    overflow: hidden;
+  }
+
+  .race-panel--auto {
+    border-color: color-mix(in srgb, var(--color-green-500) 42%, var(--color-border-subtle));
+  }
+
+  .race-bar {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    min-height: 38px;
+    padding: 0 var(--space-3);
+    background: var(--color-surface-02);
+    border-bottom: 1px solid var(--color-border-subtle);
+  }
+
+  .race-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  .race-dot--red { background: var(--color-error); }
+  .race-dot--yellow { background: var(--color-warning); }
+  .race-dot--green { background: var(--color-success); }
+
+  .race-title {
+    margin-left: var(--space-2);
+    flex: 1;
+    font-family: var(--font-mono);
+    font-size: var(--type-caption);
+    color: var(--color-text-muted);
+  }
+
+  .race-clock {
+    font-family: var(--font-mono);
+    font-size: var(--type-label);
+    font-weight: 700;
+    color: var(--color-warning);
+    font-variant-numeric: tabular-nums;
+  }
+
+  .race-clock--auto {
+    color: var(--color-green-500);
+  }
+
+  .race-steps {
+    display: grid;
+    align-content: start;
+    gap: var(--space-2);
+    min-height: 260px;
+    margin: 0;
+    padding: var(--space-4);
+    list-style: none;
+  }
+
+  :global(.race-step) {
+    font-family: var(--font-mono);
+    font-size: var(--type-body-sm);
+    color: var(--color-text-secondary);
+    line-height: 1.5;
+    padding-left: var(--space-4);
+    position: relative;
+  }
+
+  :global(.race-step)::before {
+    content: '·';
+    position: absolute;
+    left: 0;
+    color: var(--color-text-muted);
+  }
+
+  :global(.race-step.is-done)::before {
+    content: '✓';
+    color: var(--color-green-500);
+  }
+
+  :global(.race-step--auto) {
+    color: var(--color-text-primary);
+  }
+
+  .race-footnote {
+    margin: 0;
+    padding: var(--space-3) var(--space-4);
+    border-top: 1px solid var(--color-border-subtle);
+    font-family: var(--font-mono);
+    font-size: var(--type-caption);
+    color: var(--color-text-muted);
+  }
+
+  @media (max-width: 768px) {
+    .race-panels {
+      grid-template-columns: 1fr;
+    }
+
+    .race-steps {
+      min-height: 0;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .race-play {
+      transition: none;
+    }
+  }
+</style>
+
+<script>
+  import { initRaceDemos } from '../scripts/race-demo.ts';
+
+  initRaceDemos();
+</script>

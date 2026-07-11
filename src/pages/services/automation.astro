@@ -3,6 +3,7 @@ import Layout from '../../layouts/Layout.astro';
 import StarfieldHero from '../../components/StarfieldHero.astro';
 import ChatDrawer from '../../components/ChatDrawer.astro';
 import RoiCalculator from '../../components/RoiCalculator.astro';
+import RaceDemo from '../../components/RaceDemo.astro';
 import { services } from '../../data/services';
 import { AUDIT_CTA_LABEL, BOOKING_URL } from '../../lib/site';
 
@@ -237,6 +238,19 @@ const schema = JSON.stringify([
         </div>
         <div data-reveal>
           <RoiCalculator />
+        </div>
+      </div>
+    </section>
+
+    <section class="section-block" id="race">
+      <div class="container">
+        <div class="section-header" data-reveal>
+          <p class="section-tag">$ time manual vs automated</p>
+          <h2>Manual vs automated. Same job.</h2>
+          <p>Seven steps a human does every time a lead comes in, against one workflow.</p>
+        </div>
+        <div data-reveal>
+          <RaceDemo />
         </div>
       </div>
     </section>
