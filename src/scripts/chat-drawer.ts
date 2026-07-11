@@ -106,7 +106,7 @@ async function streamResponse(messagesEl: HTMLElement): Promise<void> {
   } catch {
     msgEl.classList.remove('chat-msg--streaming');
     msgEl.innerHTML =
-      'connection lost. <a href="/contact/">get in touch directly</a>';
+      'connection lost. <a href="/contact">get in touch directly</a>';
   }
 
   isStreaming = false;

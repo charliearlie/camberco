@@ -5,9 +5,10 @@ import react from '@astrojs/react';
 
 export default defineConfig({
   site: 'https://camberco.co.uk',
+  trailingSlash: 'never',
   integrations: [
     sitemap({
-      filter: (page) => !page.includes('/admin/'),
+      filter: (page) => !new URL(page).pathname.startsWith('/admin'),
     }),
     react(),
   ],

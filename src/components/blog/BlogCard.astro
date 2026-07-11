@@ -17,7 +17,7 @@ const formattedDate = publishedAt.toLocaleDateString('en-GB', {
   month: 'short',
   year: 'numeric',
 });
-const postUrl = `/blog/${post.slug}/`;
+const postUrl = `/blog/${post.slug}`;
 ---
 
 <article class:list={['blog-card', { featured }]}>

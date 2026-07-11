@@ -27,7 +27,7 @@ const related = posts
         });
         return (
           <li class="related-card">
-            <a href={`/blog/${post.slug}/`} class="related-link">
+            <a href={`/blog/${post.slug}`} class="related-link">
               <div class="related-meta">
                 <CategoryBadge category={post.category} small />
                 <time datetime={post.publishedAt.toISOString()} class="related-date">
