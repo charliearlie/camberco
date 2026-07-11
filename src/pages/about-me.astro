@@ -1,6 +1,25 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import StarfieldHero from '../components/StarfieldHero.astro';
+import { projects, type Project } from '../data/projects';
+import { AUDIT_CTA_LABEL, BOOKING_URL } from '../lib/site';
+
+const auditHref = BOOKING_URL ?? '/contact';
+
+const statusMeta: Record<Project['status'], string> = {
+  live: '● live',
+  'in-submission': '◐ in submission',
+  'in-development': '○ in development',
+  'open-source': '◇ open source',
+  'professional-work': '◆ professional work',
+};
+
+function projectLink(p: Project): { label: string; href: string } | null {
+  if (p.links.appStore) return { label: 'View on the App Store', href: p.links.appStore };
+  if (p.links.github) return { label: p.links.github.replace('https://', ''), href: p.links.github };
+  if (p.links.web) return { label: p.links.web.replace('https://', ''), href: p.links.web };
+  return null;
+}
 
 const lastUpdated = new Date().toISOString().slice(0, 10);
 
@@ -122,69 +141,6 @@ const roles: Role[] = [
   },
 ];
 
-interface Project {
-  slug: string;
-  title: string;
-  status: 'live' | 'in-submission' | 'in-development' | 'open-source' | 'work';
-  blurb: string;
-  longBlurb: string;
-  tags: string[];
-  link?: { label: string; href: string };
-}
-
-const projects: Project[] = [
-  {
-    slug: 'football-iq',
-    title: 'Football IQ',
-    status: 'live',
-    blurb: 'Daily football trivia with 8+ game modes. AI-generated content nightly.',
-    longBlurb: 'A Wordle-style daily football trivia app with 8+ game modes — Career Path, Transfer Guess, Goalscorer Recall, Starting XI and more. Built with React Native + Expo, running on Supabase. AI agent pipeline auto-generates fresh puzzles nightly from real match data. Free for the last 7 days, with a one-time premium unlock for the growing archive.',
-    tags: ['React Native', 'Expo', 'Supabase', 'AI agents', 'PostHog', 'RevenueCat'],
-    link: { label: 'apps.apple.com', href: 'https://apps.apple.com/us/app/football-iq-daily-quiz-game/id6757344691' },
-  },
-  {
-    slug: 'jodz',
-    title: 'Jodz',
-    status: 'in-submission',
-    blurb: 'Privacy-first cashflow forecasting for iPhone & Mac.',
-    longBlurb: 'Jodz answers "where will my money be?" instead of "where did it go?". A single continuous timeline projects every bill, payday, subscription and scheduled event months ahead. Built end-to-end in Swift 6 + SwiftUI with SwiftData and CloudKit private database — no third-party SDKs, no analytics, no tracking. Universal Purchase across iPhone and Mac with a Home Screen widget.',
-    tags: ['Swift 6', 'SwiftUI', 'SwiftData', 'CloudKit', 'Swift Charts', 'Universal Purchase'],
-  },
-  {
-    slug: 'bio-core',
-    title: 'bio-core',
-    status: 'in-development',
-    blurb: 'Specialist consumer e-commerce platform with AI support.',
-    longBlurb: 'A high-performance specialist consumer e-commerce platform. Next.js 15 + Supabase + Tailwind, with a custom WebGL aurora hero, full admin dashboard for inventory, orders and content, and an AI-powered support chatbot with a configurable knowledge base. Adaptive performance tiering keeps the experience smooth from low-end Android to high-DPR desktop.',
-    tags: ['Next.js 15', 'Supabase', 'WebGL', 'TanStack Query', 'AI Chatbot', 'Stripe'],
-  },
-  {
-    slug: 'clippin',
-    title: 'ClipPin',
-    status: 'open-source',
-    blurb: 'Open-source Mac clipboard history manager.',
-    longBlurb: 'A native Mac clipboard history manager. Open source on GitHub. Built for the kind of person who copies twelve things in a row and needs them all back later.',
-    tags: ['Swift', 'macOS', 'Open Source'],
-    link: { label: 'github.com/charliearlie/ClipPin', href: 'https://github.com/charliearlie/ClipPin' },
-  },
-  {
-    slug: 'plus-ai',
-    title: 'Plus AI Tools Suite',
-    status: 'work',
-    blurb: 'WhoScored Plus, Oddschecker Plus, Gazzetta AI Predictor.',
-    longBlurb: 'A suite of AI-assisted sports analysis tools shipped to high-volume audiences across WhoScored, Oddschecker and La Gazzetta dello Sport. Architected to support rapid experimentation on pricing, bundles and content surfaces.',
-    tags: ['Subscriptions', 'AI', 'Sports Analytics'],
-  },
-  {
-    slug: 'qa-systems',
-    title: 'AI-Native QA Systems',
-    status: 'work',
-    blurb: 'AI-driven browser automation with Playwright.',
-    longBlurb: 'Playwright-based testing systems augmented with AI — tests that understand what they\'re looking at, not just what they\'re clicking. Built early as a productivity layer and shipped into production before most teams were paying attention.',
-    tags: ['Playwright', 'AI Testing', 'Browser Automation', 'CI/CD'],
-  },
-];
-
 interface Skill {
   name: string;
   context: string;
@@ -248,7 +204,7 @@ const schema = JSON.stringify([
   worksFor: { '@id': 'https://camberco.co.uk/#organization' },
   url: 'https://camberco.co.uk/about-me',
   sameAs: [
-    'https://uk.linkedin.com/in/charlie-waite',
+    'https://linkedin.com/in/charlie-waite',
     'https://github.com/charliearlie',
   ],
   knowsAbout: [
@@ -356,8 +312,8 @@ const schema = JSON.stringify([
           </div>
 
           <div class="stat">
-            <span class="stat-num"><span>£m+</span></span>
-            <span class="stat-label">revenue helped generate</span>
+            <span class="stat-num"><span data-count-to="40">40</span><span class="stat-suffix">+</span></span>
+            <span class="stat-label">automations shipped</span>
           </div>
 
           <div class="stat">
@@ -371,6 +327,37 @@ const schema = JSON.stringify([
           </div>
 
         </div>
+      </div>
+    </section>
+
+    <!-- ===== WHY FOUNDERS HIRE ME ===== -->
+    <section class="why-hire" id="why">
+      <div class="container">
+
+        <div class="section-header" data-reveal>
+          <p class="section-tag">$ man charlie</p>
+          <h2 class="section-title">Why founders hire me.</h2>
+        </div>
+
+        <div class="why-grid" data-reveal-stagger>
+          <div class="why-card">
+            <h3>Scale you can borrow</h3>
+            <p>I built checkout used by 500,000 people a day at Just Eat and kept Trainline's booking flow running for millions. Your lead form and booking system are a quiet Tuesday by comparison.</p>
+          </div>
+          <div class="why-card">
+            <h3>AI in production, not in slides</h3>
+            <p>At Fairplay Sports Media I design and run AI agent fleets that do real work every day. The same patterns power the automations I build for clients.</p>
+          </div>
+          <div class="why-card">
+            <h3>Boring, reliable software</h3>
+            <p>At the BBC I built the internal tools that ran the entire online video catalogue. Systems that quietly work are a speciality. That is exactly what your automation should be.</p>
+          </div>
+          <div class="why-card">
+            <h3>Deliberately small</h3>
+            <p>I take on a small number of clients each quarter and lead every project personally. You get the person who built the thing, not an account manager.</p>
+          </div>
+        </div>
+
       </div>
     </section>
 
@@ -488,57 +475,58 @@ const schema = JSON.stringify([
         </div>
 
         <div class="project-grid" data-reveal-stagger>
-          {projects.map((project) => (
-            <article class={`project-card project-card--${project.slug}`}>
-              <details class="project-details">
-                <summary class="project-summary">
-                  <div class="card-bar" aria-hidden="true">
-                    <span class="card-dot card-dot--red"></span>
-                    <span class="card-dot card-dot--yellow"></span>
-                    <span class="card-dot card-dot--green"></span>
-                    <span class="card-path">~/{project.slug}</span>
-                    <span class={`status-pill status-pill--${project.status}`}>
-                      {project.status === 'live' && '● live'}
-                      {project.status === 'in-submission' && '◐ in submission'}
-                      {project.status === 'in-development' && '○ in development'}
-                      {project.status === 'open-source' && '◇ open source'}
-                      {project.status === 'work' && '◆ work'}
-                    </span>
-                  </div>
-                  <div class="card-body">
-                    <div class="card-top">
-                      <h3 class="card-title">{project.title}</h3>
-                      <span class="card-toggle" aria-hidden="true">[+]</span>
+          {projects.map((project) => {
+            const link = projectLink(project);
+            return (
+              <article class={`project-card project-card--${project.slug}`}>
+                <details class="project-details">
+                  <summary class="project-summary">
+                    <div class="card-bar" aria-hidden="true">
+                      <span class="card-dot card-dot--red"></span>
+                      <span class="card-dot card-dot--yellow"></span>
+                      <span class="card-dot card-dot--green"></span>
+                      <span class="card-path">~/{project.slug}</span>
+                      <span class={`status-pill status-pill--${project.status}`}>
+                        {statusMeta[project.status]}
+                      </span>
                     </div>
-                    <p class="card-desc">{project.blurb}</p>
-                    <div class="card-tags">
-                      {project.tags.slice(0, 4).map((tag) => <span class="card-tag">{tag}</span>)}
-                    </div>
-                  </div>
-                </summary>
-
-                <div class="card-expand">
-                  <div class="card-expand-inner">
-                    <p class="card-long">{project.longBlurb}</p>
-                    {project.tags.length > 4 && (
-                      <div class="card-tags">
-                        {project.tags.slice(4).map((tag) => <span class="card-tag">{tag}</span>)}
+                    <div class="card-body">
+                      <div class="card-top">
+                        <h3 class="card-title">{project.name}</h3>
+                        <span class="card-toggle" aria-hidden="true">[+]</span>
                       </div>
-                    )}
-                    {project.link && (
-                      <a
-                        href={project.link.href}
-                        class="card-link"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                      >→ {project.link.label}</a>
-                    )}
+                      <p class="card-desc">{project.tagline}</p>
+                      <div class="card-tags">
+                        {project.tech.slice(0, 4).map((tag) => <span class="card-tag">{tag}</span>)}
+                      </div>
+                    </div>
+                  </summary>
+
+                  <div class="card-expand">
+                    <div class="card-expand-inner">
+                      <p class="card-long">{project.story}</p>
+                      {project.tech.length > 4 && (
+                        <div class="card-tags">
+                          {project.tech.slice(4).map((tag) => <span class="card-tag">{tag}</span>)}
+                        </div>
+                      )}
+                      {link && (
+                        <a
+                          href={link.href}
+                          class="card-link"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                        >→ {link.label}</a>
+                      )}
+                    </div>
                   </div>
-                </div>
-              </details>
-            </article>
-          ))}
+                </details>
+              </article>
+            );
+          })}
         </div>
+
+        <a href="/work" class="projects-more" data-reveal>Full showcase with screenshots → /work</a>
 
       </div>
     </section>
@@ -579,14 +567,14 @@ const schema = JSON.stringify([
     <section class="links">
       <div class="container">
         <div class="links-row" data-reveal>
-          <a href="https://uk.linkedin.com/in/charlie-waite" target="_blank" rel="noopener noreferrer" class="link-pill">
+          <a href="https://linkedin.com/in/charlie-waite" target="_blank" rel="noopener noreferrer" class="link-pill">
             <span class="link-prompt">$</span> linkedin.com/in/charlie-waite
           </a>
           <a href="https://github.com/charliearlie" target="_blank" rel="noopener noreferrer" class="link-pill">
             <span class="link-prompt">$</span> github.com/charliearlie
           </a>
-          <a href="mailto:cw5790@gmail.com" class="link-pill">
-            <span class="link-prompt">$</span> cw5790@gmail.com
+          <a href="mailto:hello@camberco.co.uk" class="link-pill">
+            <span class="link-prompt">$</span> hello@camberco.co.uk
           </a>
         </div>
       </div>
@@ -598,10 +586,11 @@ const schema = JSON.stringify([
         <div class="cta-card" data-reveal>
           <h2 class="cta-title">Want to build something together?</h2>
           <p class="cta-desc">
-            Camber Co takes on a small number of clients each quarter. If you've got an
-            AI workflow, automation, or product idea you want shipped — let's talk.
+            I lead subscriptions at Fairplay Sports Media by day and take on a
+            small number of Camber Co clients each quarter. The cap is deliberate.
+            Every project gets me personally, from first call to handover.
           </p>
-          <a href="/contact" class="btn btn-primary">Get in Touch</a>
+          <a href={auditHref} class="btn btn-primary">{AUDIT_CTA_LABEL}</a>
           <p class="cta-flags" aria-label="No commitment, no jargon, just signal">
             <span class="flag">--no-commitment</span>
             <span class="flag">--no-jargon</span>
@@ -1417,7 +1406,7 @@ const schema = JSON.stringify([
     border-color: var(--color-border-muted);
   }
 
-  .status-pill--work {
+  .status-pill--professional-work {
     color: var(--color-text-muted);
     background: rgba(138, 138, 138, 0.04);
     border-color: var(--color-border-muted);
@@ -1770,6 +1759,62 @@ const schema = JSON.stringify([
     }
     .hero-h1 {
       font-size: clamp(40px, 12vw, 64px);
+    }
+  }
+
+  /* ============================================================
+     Why founders hire me
+     ============================================================ */
+  .why-hire {
+    padding: clamp(80px, 12vw, 128px) 0;
+    border-bottom: 1px solid var(--color-border-subtle);
+    background: var(--color-base);
+  }
+
+  .why-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--space-4);
+  }
+
+  .why-card {
+    padding: var(--space-8);
+    background: var(--color-surface-00);
+    border-left: 2px solid var(--color-green-500);
+    border-radius: 0 var(--radius-md) var(--radius-md) 0;
+  }
+
+  .why-card h3 {
+    font-family: var(--font-mono);
+    font-size: var(--type-body);
+    font-weight: 600;
+    color: var(--color-text-primary);
+    margin: 0 0 var(--space-3);
+  }
+
+  .why-card p {
+    font-family: var(--font-sans);
+    font-size: var(--type-body-sm);
+    color: var(--color-text-secondary);
+    line-height: 1.65;
+    margin: 0;
+  }
+
+  .projects-more {
+    display: inline-block;
+    margin-top: var(--space-8);
+    font-family: var(--font-mono);
+    font-size: var(--type-body-sm);
+    color: var(--color-green-500);
+  }
+
+  .projects-more:hover {
+    text-decoration: underline;
+  }
+
+  @media (max-width: 768px) {
+    .why-grid {
+      grid-template-columns: 1fr;
     }
   }
 </style>

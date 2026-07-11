@@ -164,7 +164,7 @@ const COMMANDS: Record<string, Command> = {
 
       <span class="t-muted">linkedin:</span>  <span class="t-green">linkedin.com/in/charlie-waite</span>
       <span class="t-muted">github:</span>    <span class="t-green">github.com/charliearlie</span>
-      <span class="t-muted">email:</span>     <span class="t-green">cw5790@gmail.com</span>
+      <span class="t-muted">email:</span>     <span class="t-green">hello@camberco.co.uk</span>
       <span class="t-muted">work:</span>      <span class="t-green">hello@camberco.co.uk</span>
 
     <span class="t-pink">→ run "contact" to send a message</span>
