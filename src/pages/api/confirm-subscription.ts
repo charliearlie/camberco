@@ -69,7 +69,7 @@ export const GET: APIRoute = async ({ url }) => {
     return page(
       'Invalid link',
       '$ invalid link',
-      `<p>This confirmation link is invalid or has expired.</p><a href="/blog/">Back to blog</a>`,
+      `<p>This confirmation link is invalid or has expired.</p><a href="/blog">Back to blog</a>`,
       404,
     );
   }
@@ -78,7 +78,7 @@ export const GET: APIRoute = async ({ url }) => {
     return page(
       'Subscribed',
       '$ already confirmed',
-      `<p>You are already subscribed. New posts will land in your inbox.</p><a href="/blog/">Back to blog</a>`,
+      `<p>You are already subscribed. New posts will land in your inbox.</p><a href="/blog">Back to blog</a>`,
     );
   }
 
@@ -140,7 +140,7 @@ export const POST: APIRoute = async ({ request }) => {
       return page(
         'Invalid link',
         '$ invalid link',
-        `<p>This confirmation link is invalid or has expired.</p><a href="/blog/">Back to blog</a>`,
+        `<p>This confirmation link is invalid or has expired.</p><a href="/blog">Back to blog</a>`,
         404,
       );
     }
@@ -149,7 +149,7 @@ export const POST: APIRoute = async ({ request }) => {
       return page(
         'Subscribed',
         '$ already confirmed',
-        `<p>You are already subscribed. New posts will land in your inbox.</p><a href="/blog/">Back to blog</a>`,
+        `<p>You are already subscribed. New posts will land in your inbox.</p><a href="/blog">Back to blog</a>`,
       );
     }
 
@@ -178,6 +178,6 @@ export const POST: APIRoute = async ({ request }) => {
   return page(
     'Subscribed',
     '$ subscription confirmed',
-    `<p>You will receive new posts from Camber Co in your inbox. A welcome email is on its way.</p><a href="/blog/">Back to blog</a>`,
+    `<p>You will receive new posts from Camber Co in your inbox. A welcome email is on its way.</p><a href="/blog">Back to blog</a>`,
   );
 };
