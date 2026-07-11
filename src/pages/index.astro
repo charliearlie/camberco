@@ -5,6 +5,7 @@ import ChatDrawer from '../components/ChatDrawer.astro';
 import { getPublishedPosts } from '../lib/blog';
 import BlogCard from '../components/blog/BlogCard.astro';
 import { AUDIT_CTA_LABEL, BOOKING_URL } from '../lib/site';
+import { services } from '../data/services';
 
 const auditHref = BOOKING_URL ?? '/contact';
 
@@ -278,125 +279,32 @@ const schema = JSON.stringify([
     <div class="container">
       <div class="section-header" data-reveal>
         <span class="section-tag">services</span>
-        <h2>Everything your business needs to grow online.</h2>
-        <p>Strategy, builds, automation, and AI. Specific tools, specific outcomes.</p>
+        <h2>What we build.</h2>
+        <p>Seven services. Each has a page and a published starting price. No mystery quotes.</p>
       </div>
       <div class="service-grid" data-reveal-stagger>
-
-        <!-- Card 1: AI Consultations -->
-        <div class="terminal-card">
-          <div class="terminal-titlebar">
-            <span class="dot dot-red"></span>
-            <span class="dot dot-yellow"></span>
-            <span class="dot dot-green-tc"></span>
-            <span class="terminal-title">camber/consultations</span>
-            <span class="terminal-status"><span class="status-dot"></span> ACTIVE</span>
-          </div>
-          <div class="terminal-body">
-            <span class="terminal-comment">// strategic guidance</span>
-            <h3>A roadmap for AI in your business.</h3>
-            <p>60-minute sessions to audit where AI will actually move the needle. No fluff. Clear decisions, clear next steps.</p>
-            <div class="terminal-footer">
-              <button class="terminal-link" data-chat-open="consultations">→ explore</button>
+        {services.map((service) => (
+          <div class="terminal-card">
+            <div class="terminal-titlebar">
+              <span class="dot dot-red"></span>
+              <span class="dot dot-yellow"></span>
+              <span class="dot dot-green-tc"></span>
+              <span class="terminal-title">camber/{service.slug}</span>
+              <span class="terminal-status">{service.fromPrice}</span>
+            </div>
+            <div class="terminal-body">
+              <h3>{service.title}</h3>
+              <p>{service.blurb}</p>
+              {service.slug === 'builds' && (
+                <a href="/work" class="proof-strip">Shipped: Football IQ, WhoScored Plus, Jodz →</a>
+              )}
+              <div class="terminal-footer">
+                <button class="terminal-chat" type="button" data-chat-open={service.chat}>→ chat</button>
+                <a href={service.href} class="terminal-link">→ view service</a>
+              </div>
             </div>
           </div>
-        </div>
-
-        <!-- Card 2: SEO Services -->
-        <div class="terminal-card">
-          <div class="terminal-titlebar">
-            <span class="dot dot-red"></span>
-            <span class="dot dot-yellow"></span>
-            <span class="dot dot-green-tc"></span>
-            <span class="terminal-title">camber/seo</span>
-            <span class="terminal-status"><span class="status-dot"></span> ACTIVE</span>
-          </div>
-          <div class="terminal-body">
-            <span class="terminal-comment">// search visibility</span>
-            <h3>Get found by the people who matter.</h3>
-            <p>Technical audits, on-page optimisation, and keyword strategy that moves rankings. No vanity metrics. Traffic that converts.</p>
-            <div class="terminal-footer">
-              <button class="terminal-link" data-chat-open="seo">→ explore</button>
-            </div>
-          </div>
-        </div>
-
-        <!-- Card 3: App & Website Builds -->
-        <div class="terminal-card">
-          <div class="terminal-titlebar">
-            <span class="dot dot-red"></span>
-            <span class="dot dot-yellow"></span>
-            <span class="dot dot-green-tc"></span>
-            <span class="terminal-title">camber/builds</span>
-            <span class="terminal-status"><span class="status-dot"></span> ACTIVE</span>
-          </div>
-          <div class="terminal-body">
-            <span class="terminal-comment">// web development</span>
-            <h3>A site or app that actually ships.</h3>
-            <p>Clean, fast websites and simple web apps built to convert. From landing pages to full builds. No bloat, no delays.</p>
-            <div class="terminal-footer">
-              <button class="terminal-link" data-chat-open="builds">→ explore</button>
-            </div>
-          </div>
-        </div>
-
-        <!-- Card 4: N8n Workflow Automation -->
-        <div class="terminal-card">
-          <div class="terminal-titlebar">
-            <span class="dot dot-red"></span>
-            <span class="dot dot-yellow"></span>
-            <span class="dot dot-green-tc"></span>
-            <span class="terminal-title">camber/automation</span>
-            <span class="terminal-status"><span class="status-dot"></span> ACTIVE</span>
-          </div>
-          <div class="terminal-body">
-            <span class="terminal-comment">// workflow engineering</span>
-            <h3>Automate the work that's eating your week.</h3>
-            <p>Custom n8n pipelines that connect your tools, eliminate manual steps, and run without babysitting.</p>
-            <div class="terminal-footer">
-              <button class="terminal-link" data-chat-open="automation">→ explore</button>
-            </div>
-          </div>
-        </div>
-
-        <!-- Card 5: Solo Founder Training -->
-        <div class="terminal-card">
-          <div class="terminal-titlebar">
-            <span class="dot dot-red"></span>
-            <span class="dot dot-yellow"></span>
-            <span class="dot dot-green-tc"></span>
-            <span class="terminal-title">camber/training</span>
-            <span class="terminal-status terminal-status--available"><span class="status-dot status-dot--muted"></span> AVAILABLE</span>
-          </div>
-          <div class="terminal-body">
-            <span class="terminal-comment">// founder coaching</span>
-            <h3>Hands-on AI skills, no CS degree required.</h3>
-            <p>Coaching sessions for non-technical founders who want to actually use AI, not just read about it.</p>
-            <div class="terminal-footer">
-              <button class="terminal-link" data-chat-open="training">→ explore</button>
-            </div>
-          </div>
-        </div>
-
-        <!-- Card 6: OpenClaw Personal AI -->
-        <div class="terminal-card">
-          <div class="terminal-titlebar">
-            <span class="dot dot-red"></span>
-            <span class="dot dot-yellow"></span>
-            <span class="dot dot-green-tc"></span>
-            <span class="terminal-title">camber/openclaw</span>
-            <span class="terminal-status terminal-status--available"><span class="status-dot status-dot--muted"></span> AVAILABLE</span>
-          </div>
-          <div class="terminal-body">
-            <span class="terminal-comment">// personal AI</span>
-            <h3>Your business. Running on a private AI assistant.</h3>
-            <p>Pre-configured AI bots for WhatsApp, Telegram, Slack, and Discord. Built on openclaw.ai — local, private, yours.</p>
-            <div class="terminal-footer">
-              <button class="terminal-link" data-chat-open="personal-ai">→ explore</button>
-            </div>
-          </div>
-        </div>
-
+        ))}
       </div>
     </div>
   </section>
@@ -896,7 +804,7 @@ const schema = JSON.stringify([
   .terminal-footer {
     display: flex;
     align-items: center;
-    justify-content: flex-end;
+    justify-content: space-between;
     margin-top: 20px;
     padding-top: 16px;
     border-top: 1px solid var(--color-border-subtle);
@@ -918,6 +826,34 @@ const schema = JSON.stringify([
   .terminal-link:hover {
     background: var(--color-green-500);
     color: var(--color-on-accent);
+  }
+
+  .terminal-chat {
+    font-family: var(--font-mono);
+    font-size: var(--type-caption);
+    color: var(--color-text-muted);
+    background: none;
+    border: none;
+    padding: 6px 0;
+    cursor: pointer;
+    transition: color var(--duration-quick) var(--easing-smooth);
+  }
+
+  .terminal-chat:hover {
+    color: var(--color-text-primary);
+  }
+
+  .proof-strip {
+    display: block;
+    margin-top: var(--space-3);
+    font-family: var(--font-mono);
+    font-size: var(--type-caption);
+    color: var(--color-green-500);
+    text-decoration: none;
+  }
+
+  .proof-strip:hover {
+    text-decoration: underline;
   }
 
   /* ============================================================

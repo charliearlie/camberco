@@ -65,7 +65,7 @@ export const services: Service[] = [
     title: 'Personal AI',
     href: '/services/personal-ai',
     fromPrice: 'from £497',
-    blurb: 'Your own AI assistant, set up on your accounts and your data. Private by default.',
+    blurb: 'Your own AI assistant, set up around how you work. On-premises builds available for sensitive data.',
     chat: 'personal-ai',
   },
 ];
