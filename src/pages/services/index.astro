@@ -2,89 +2,32 @@
 import Layout from '../../layouts/Layout.astro';
 import StarfieldHero from '../../components/StarfieldHero.astro';
 import ChatDrawer from '../../components/ChatDrawer.astro';
+import { services } from '../../data/services';
+import { AUDIT_CTA_LABEL, BOOKING_URL, SITE_URL } from '../../lib/site';
 
-const services = [
-  {
-    slug: 'builds',
-    title: 'Website builds',
-    comment: '// landing pages, sites, MVPs',
-    desc: 'Clean, fast sites and web apps built around one clear conversion path.',
-    href: '/services/builds',
-    action: 'Open page',
-    status: 'page',
-  },
-  {
-    slug: 'apps',
-    title: 'Mobile apps',
-    comment: '// prototype to App Store',
-    desc: 'Native-feeling mobile products, from tappable idea to release-ready build.',
-    href: '/services/apps',
-    action: 'Open page',
-    status: 'page',
-  },
-  {
-    slug: 'automation',
-    title: 'Workflow automation',
-    comment: '// tools connected',
-    desc: 'Automations that route, classify, log, notify, and run without babysitting.',
-    href: '/services/automation',
-    action: 'Open page',
-    status: 'page',
-  },
-  {
-    slug: 'consultations',
-    title: 'AI consultations',
-    comment: '// strategy sessions',
-    desc: 'A focused audit of where AI can save time, reduce drag, or create leverage.',
-    chat: 'consultations',
-    action: 'Chat',
-    status: 'chat',
-  },
-  {
-    slug: 'seo',
-    title: 'SEO services',
-    comment: '// search visibility',
-    desc: 'Technical audits, on-page optimisation, and content strategy tied to real demand.',
-    chat: 'seo',
-    action: 'Chat',
-    status: 'chat',
-  },
-  {
-    slug: 'training',
-    title: 'Training & coaching',
-    comment: '// founder enablement',
-    desc: 'Hands-on AI coaching for non-technical founders who want practical capability.',
-    chat: 'training',
-    action: 'Chat',
-    status: 'chat',
-  },
-  {
-    slug: 'personal-ai',
-    title: 'Personal AI',
-    comment: '// private assistant',
-    desc: 'Custom assistants for WhatsApp, Telegram, Slack, Discord, or internal workflows.',
-    chat: 'personal-ai',
-    action: 'Chat',
-    status: 'chat',
-  },
-];
+const auditHref = BOOKING_URL ?? '/contact';
 
 const schema = JSON.stringify([
   {
-  '@context': 'https://schema.org',
-  '@type': 'ItemList',
-  '@id': 'https://camberco.co.uk/services#services',
-  name: 'Camber Co Services',
-  itemListElement: services.map((service, index) => ({
-    '@type': 'ListItem',
-    position: index + 1,
-    item: {
-      '@type': 'Service',
-      name: service.title,
-      url: service.href ? `https://camberco.co.uk${service.href}` : 'https://camberco.co.uk/services',
-      provider: { '@id': 'https://camberco.co.uk/#organization' },
-    },
-  })),
+    '@context': 'https://schema.org',
+    '@type': 'ItemList',
+    '@id': 'https://camberco.co.uk/services#services',
+    name: 'Camber Co Services',
+    itemListElement: services.map((service, index) => ({
+      '@type': 'ListItem',
+      position: index + 1,
+      item: {
+        '@type': 'Service',
+        name: service.title,
+        url: `${SITE_URL}${service.href}`,
+        provider: { '@id': 'https://camberco.co.uk/#organization' },
+        offers: {
+          '@type': 'Offer',
+          price: service.fromPrice.replace(/[^0-9]/g, ''),
+          priceCurrency: 'GBP',
+        },
+      },
+    })),
   },
   {
     '@context': 'https://schema.org',
@@ -115,33 +58,30 @@ const schema = JSON.stringify([
           </div>
           <h1>Choose the system you need next.</h1>
           <p>
-            Build the page, ship the app, automate the workflow, or get enough clarity
-            to pick the right first move.
+            Every service has a page and a published starting price. Pick the one
+            that fits, or start with the problem and we will point you at the
+            lightest useful next step.
           </p>
         </div>
 
         <div class="service-grid" data-reveal-stagger>
           {services.map((service) => (
-            <article class={`terminal-card terminal-card--${service.status}`}>
+            <article class="terminal-card">
               <div class="card-bar">
                 <span class="window-dot window-dot--red"></span>
                 <span class="window-dot window-dot--yellow"></span>
                 <span class="window-dot window-dot--green"></span>
                 <span class="card-path">camber/{service.slug}</span>
-                <span class="status-pill">{service.status}</span>
+                <span class="status-pill">{service.fromPrice}</span>
               </div>
               <div class="card-body">
-                <span class="card-comment">{service.comment}</span>
                 <h2>{service.title}</h2>
-                <p>{service.desc}</p>
+                <p>{service.blurb}</p>
                 <div class="card-footer">
-                  {service.href ? (
-                    <a href={service.href} class="card-action">&gt; {service.action}</a>
-                  ) : (
-                    <button type="button" class="card-action" data-chat-open={service.chat}>
-                      &gt; {service.action}
-                    </button>
-                  )}
+                  <a href={service.href} class="card-action">&gt; Open page</a>
+                  <button type="button" class="card-action card-action--chat" data-chat-open={service.chat}>
+                    &gt; Chat
+                  </button>
                 </div>
               </div>
             </article>
@@ -154,9 +94,9 @@ const schema = JSON.stringify([
       <div class="container">
         <div class="cta-card" data-reveal>
           <h2>Not sure which route fits?</h2>
-          <p>Start with the problem. We can point you toward the lightest useful next step.</p>
+          <p>Start with the problem. The free 30-minute audit call exists for exactly this.</p>
           <div class="cta-actions">
-            <a href="/contact" class="btn btn-primary">&gt; Get in touch</a>
+            <a href={auditHref} class="btn btn-primary">&gt; {AUDIT_CTA_LABEL}</a>
             <button type="button" class="btn btn-secondary" data-chat-open="general">&gt; Open chat</button>
           </div>
         </div>
@@ -317,10 +257,6 @@ const schema = JSON.stringify([
     color: var(--color-green-500);
   }
 
-  .terminal-card--chat .status-pill {
-    color: var(--color-pink-500);
-  }
-
   .card-body {
     display: grid;
     min-height: 260px;
@@ -348,6 +284,10 @@ const schema = JSON.stringify([
 
   .card-footer {
     align-self: end;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-3);
     padding-top: var(--space-4);
     border-top: 1px solid var(--color-border-subtle);
   }
@@ -359,8 +299,16 @@ const schema = JSON.stringify([
     font-weight: 700;
   }
 
-  .terminal-card--chat .card-action {
-    color: var(--color-pink-500);
+  .card-action--chat {
+    color: var(--color-text-muted);
+    background: none;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+  }
+
+  .card-action--chat:hover {
+    color: var(--color-text-primary);
   }
 
   .cta {
