@@ -2,6 +2,7 @@ export const prerender = false;
 
 import type { APIRoute } from 'astro';
 import { createClient } from '@supabase/supabase-js';
+import { waitUntil } from '@vercel/functions';
 import { sendBlogDigest } from '../../../lib/email';
 
 function serverSupabase() {
@@ -77,28 +78,42 @@ export const POST: APIRoute = async ({ request }) => {
     return jsonRes({ error: 'Failed to update draft status.' }, 500);
   }
 
-  // Trigger Vercel deploy hook (fire-and-forget)
+  // Trigger Vercel deploy hook; waitUntil keeps it alive past the response
   const deployHook = import.meta.env.VERCEL_DEPLOY_HOOK ?? '';
   if (deployHook) {
-    fetch(deployHook, { method: 'POST' }).catch(() => {});
+    waitUntil(fetch(deployHook, { method: 'POST' }).catch(() => {}));
   }
 
-  // Send blog digest to confirmed subscribers (fire-and-forget)
-  supabase
-    .from('subscribers')
-    .select('email, unsubscribe_token')
-    .eq('confirmed', true)
-    .then(({ data: subscribers }) => {
-      if (subscribers && subscribers.length > 0) {
-        sendBlogDigest(subscribers, {
-          title: title,
-          slug,
-          description: (draft.description as string) || '',
-          author: (draft.author as string) || 'Charlie',
-        }).catch((err) => console.error('Blog digest send failed:', err));
+  // Send blog digest to confirmed, active subscribers and stamp last_sent_at
+  waitUntil(
+    (async () => {
+      const { data: subscribers, error: subErr } = await supabase
+        .from('subscribers')
+        .select('email, unsubscribe_token')
+        .eq('confirmed', true)
+        .eq('status', 'active');
+
+      if (subErr) {
+        console.error('Failed to fetch subscribers:', subErr);
+        return;
       }
-    })
-    .catch((err) => console.error('Failed to fetch subscribers:', err));
+      if (!subscribers || subscribers.length === 0) return;
+
+      await sendBlogDigest(subscribers, {
+        title,
+        slug,
+        description: (draft.description as string) || '',
+        author: (draft.author as string) || 'Charlie',
+      });
+
+      const { error: sentErr } = await supabase
+        .from('subscribers')
+        .update({ last_sent_at: new Date().toISOString() })
+        .eq('confirmed', true)
+        .eq('status', 'active');
+      if (sentErr) console.error('Failed to update last_sent_at:', sentErr);
+    })().catch((err) => console.error('Blog digest send failed:', err)),
+  );
 
   return jsonRes({ ok: true, slug });
 };

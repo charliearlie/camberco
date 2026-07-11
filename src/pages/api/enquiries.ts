@@ -2,6 +2,7 @@ export const prerender = false;
 
 import type { APIRoute } from 'astro';
 import { createClient } from '@supabase/supabase-js';
+import { waitUntil } from '@vercel/functions';
 import { sendAdminNotification, sendSenderConfirmation } from '../../lib/email';
 import { checkRateLimit } from '../../lib/rate-limit';
 
@@ -95,12 +96,18 @@ export const POST: APIRoute = async ({ request }) => {
     return jsonRes({ error: 'Failed to submit enquiry.' }, 500);
   }
 
-  // Send emails (non-blocking — don't fail the response if email fails)
+  // Emails must survive the response: waitUntil keeps the function alive until they settle.
   const enquiryData = { name, email, company: company ?? undefined, service, message, source: source as 'form' | 'bot' };
-  Promise.all([
-    sendAdminNotification(enquiryData).catch((err) => console.error('Admin email failed:', err)),
-    sendSenderConfirmation(enquiryData).catch((err) => console.error('Confirmation email failed:', err)),
-  ]);
+  waitUntil(
+    Promise.allSettled([
+      sendAdminNotification(enquiryData),
+      sendSenderConfirmation(enquiryData),
+    ]).then((results) => {
+      for (const r of results) {
+        if (r.status === 'rejected') console.error('Enquiry email failed:', r.reason);
+      }
+    }),
+  );
 
   return jsonRes({ success: true });
 };
