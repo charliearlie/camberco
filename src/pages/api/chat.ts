@@ -7,7 +7,7 @@ import { sendAdminNotification, sendSenderConfirmation } from '../../lib/email';
 
 export const prerender = false;
 
-const VALID_SERVICES: ServiceKey[] = ['consultations', 'seo', 'builds', 'automation', 'training', 'personal-ai', 'general'];
+const VALID_SERVICES: ServiceKey[] = ['consultations', 'seo', 'builds', 'apps', 'automation', 'training', 'personal-ai', 'general'];
 const MAX_MESSAGES = 20;
 const MAX_MSG_LENGTH = 500;
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -23,7 +23,7 @@ const ENQUIRY_TOOL: OpenAI.ChatCompletionTool = {
         name: { type: 'string', description: "The prospect's full name" },
         email: { type: 'string', description: "The prospect's email address" },
         company: { type: 'string', description: "The prospect's company name (if mentioned)" },
-        service: { type: 'string', description: 'The service they are interested in (AI Strategy, SEO, App & Website Builds, Automation, Training, Personal AI, or Something else)' },
+        service: { type: 'string', description: 'The service they are interested in (Workflow automation, Website builds, Mobile apps, AI consultations, SEO services, Training & coaching, Personal AI, or Something else)' },
         message: { type: 'string', description: 'A brief summary of what the prospect needs, based on the conversation' },
       },
       required: ['name', 'email', 'service', 'message'],

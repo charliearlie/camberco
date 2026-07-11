@@ -121,12 +121,13 @@ function openDrawer(service: ServiceKey = 'general') {
   els.messagesEl.innerHTML = '';
 
   const titles: Record<ServiceKey, string> = {
-    consultations: 'camber/ai — consultations',
-    seo: 'camber/ai — seo',
-    builds: 'camber/ai — builds',
-    automation: 'camber/ai — automation',
-    training: 'camber/ai — training',
-    'personal-ai': 'camber/ai — personal ai',
+    consultations: 'camber/ai // consultations',
+    seo: 'camber/ai // seo',
+    builds: 'camber/ai // builds',
+    apps: 'camber/ai // apps',
+    automation: 'camber/ai // automation',
+    training: 'camber/ai // training',
+    'personal-ai': 'camber/ai // personal ai',
     general: 'camber/ai',
   };
   els.title.textContent = titles[service] || 'camber/ai';
