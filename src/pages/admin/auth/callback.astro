@@ -28,11 +28,17 @@ import AdminLayout from '../../../components/admin/AdminLayout.astro';
 
 <script>
   import { createClient } from '@supabase/supabase-js';
+  import { ADMIN_SESSION_COOKIE } from '../../../lib/admin-guard';
 
   const supabase = createClient(
     import.meta.env.PUBLIC_SUPABASE_URL,
     import.meta.env.PUBLIC_SUPABASE_ANON_KEY,
   );
+
+  function setSessionCookie(token: string, expiresIn?: number) {
+    const maxAge = expiresIn ?? 3600;
+    document.cookie = `${ADMIN_SESSION_COOKIE}=${token}; path=/; max-age=${maxAge}; SameSite=Lax; Secure`;
+  }
 
   async function handleCallback() {
     const statusEl = document.getElementById('callback-status') as HTMLParagraphElement;
@@ -43,8 +49,11 @@ import AdminLayout from '../../../components/admin/AdminLayout.astro';
       const code = params.get('code');
 
       if (code) {
-        const { error } = await supabase.auth.exchangeCodeForSession(code);
+        const { data, error } = await supabase.auth.exchangeCodeForSession(code);
         if (error) throw error;
+        if (data.session) {
+          setSessionCookie(data.session.access_token, data.session.expires_in);
+        }
         window.location.href = '/admin';
         return;
       }
@@ -56,6 +65,7 @@ import AdminLayout from '../../../components/admin/AdminLayout.astro';
         const { data, error } = await supabase.auth.getSession();
         if (error) throw error;
         if (data.session) {
+          setSessionCookie(data.session.access_token, data.session.expires_in);
           window.location.href = '/admin';
           return;
         }

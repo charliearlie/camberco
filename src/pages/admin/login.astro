@@ -1,4 +1,5 @@
 ---
+export const prerender = false;
 import AdminLayout from '../../components/admin/AdminLayout.astro';
 ---
 
@@ -107,10 +108,25 @@ import AdminLayout from '../../components/admin/AdminLayout.astro';
 
 <script>
   import { supabase } from '../../lib/supabase';
+  import { ADMIN_SESSION_COOKIE } from '../../lib/admin-guard';
 
   const form = document.getElementById('login-form') as HTMLFormElement;
   const errorEl = document.getElementById('login-error') as HTMLDivElement;
   const btn = document.getElementById('login-btn') as HTMLButtonElement;
+
+  function setSessionCookie(token: string, expiresIn?: number) {
+    const maxAge = expiresIn ?? 3600;
+    document.cookie = `${ADMIN_SESSION_COOKIE}=${token}; path=/; max-age=${maxAge}; SameSite=Lax; Secure`;
+  }
+
+  // Already signed in client-side (localStorage session): refresh the
+  // server cookie and continue to the dashboard.
+  supabase.auth.getSession().then(({ data: { session } }) => {
+    if (session) {
+      setSessionCookie(session.access_token, session.expires_in);
+      window.location.href = '/admin';
+    }
+  });
 
   function showError(msg: string) {
     errorEl.textContent = msg;
@@ -143,6 +159,7 @@ import AdminLayout from '../../components/admin/AdminLayout.astro';
         return;
       }
 
+      setSessionCookie(data.session.access_token, data.session.expires_in);
       window.location.href = '/admin';
     } catch (err) {
       showError((err as Error).message);
