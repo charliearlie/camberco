@@ -4,6 +4,9 @@ import StarfieldHero from '../components/StarfieldHero.astro';
 import ChatDrawer from '../components/ChatDrawer.astro';
 import { getPublishedPosts } from '../lib/blog';
 import BlogCard from '../components/blog/BlogCard.astro';
+import { AUDIT_CTA_LABEL, BOOKING_URL } from '../lib/site';
+
+const auditHref = BOOKING_URL ?? '/contact';
 
 const recentPosts = (await getPublishedPosts()).slice(0, 3);
 
@@ -248,23 +251,19 @@ const schema = JSON.stringify([
     <div class="hero-inner">
       <div class="status-chip">
         <span class="status-dot"></span>
-        CAMBER.CO // LONDON // EST. 2026
+        CAMBER.CO // LONDON // EST. 2024
       </div>
 
-      <h1 class="sr-only">AI Services for UK Founders and Small Businesses</h1>
+      <h1 class="hero-display" data-typewriter data-speed="32">
+        <span class="hero-line hero-line--lead">Get 10-30 hours a month back.</span>
+        <span class="hero-line hero-line--support">I build the AI systems that do your repetitive work.</span>
+      </h1>
 
-      <div
-        class="hero-display"
-        data-typewriter
-        data-lines='["Build faster.", "Think clearer.", "Ship smarter."]'
-        data-speed="40"
-      ></div>
-
-      <p class="hero-sub">AI systems, automation, SEO, and web development for founders who mean business. Based in London, working with businesses across the UK.</p>
+      <p class="hero-sub">The AI consultant who builds. Automation, AI systems, SEO and web development for UK founders and small businesses. Based in London.</p>
 
       <div class="hero-ctas">
-        <a href="/contact" class="btn-primary">&gt; Get in Touch</a>
-        <a href="#services" class="btn-ghost">&gt; See Services</a>
+        <a href={auditHref} class="btn-primary">&gt; {AUDIT_CTA_LABEL}</a>
+        <button type="button" class="btn-ghost" data-chat-open="general">&gt; Chat about it</button>
       </div>
 
       <div class="scroll-indicator" id="scrollIndicator">scroll to explore ↓</div>
@@ -548,18 +547,6 @@ const schema = JSON.stringify([
   /* ============================================================
      UTILITIES
      ============================================================ */
-  .sr-only {
-    position: absolute;
-    width: 1px;
-    height: 1px;
-    padding: 0;
-    margin: -1px;
-    overflow: hidden;
-    clip: rect(0, 0, 0, 0);
-    white-space: nowrap;
-    border-width: 0;
-  }
-
   .container {
     max-width: 1280px;
     margin: 0 auto;
@@ -672,28 +659,27 @@ const schema = JSON.stringify([
 
   .hero-display {
     font-family: var(--font-mono);
-    font-size: var(--type-display);
     letter-spacing: -0.03em;
-    line-height: 1.1;
-    margin-bottom: var(--space-8);
-    min-height: calc(var(--type-display) * 3.4);
+    line-height: 1.15;
+    margin: 0 0 var(--space-8);
+    min-height: calc(var(--type-display) * 2.4);
   }
 
-  /* Style each typewriter line differently */
-  .hero-display > div:nth-child(1) {
-    font-weight: 400;
-    color: var(--color-text-primary);
+  .hero-line {
+    display: block;
   }
 
-  .hero-display > div:nth-child(2) {
+  .hero-line--lead {
+    font-size: var(--type-display);
     font-weight: 700;
     color: var(--color-text-primary);
   }
 
-  .hero-display > div:nth-child(3) {
-    font-weight: 700;
-    font-style: italic;
+  .hero-line--support {
+    font-size: calc(var(--type-display) * 0.45);
+    font-weight: 500;
     color: var(--color-green-500);
+    margin-top: var(--space-3);
   }
 
   .hero-sub {

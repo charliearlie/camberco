@@ -152,6 +152,64 @@ export function typewrite(
 }
 
 /**
+ * Progressive enhancement: retypes text that is already server-rendered.
+ *
+ * `container`'s element children each hold one line of real text. With JS
+ * disabled or prefers-reduced-motion set, the server-rendered text is left
+ * untouched (static fallback). Otherwise each line is cleared and retyped
+ * in place, so crawlers and reduced-motion users always see the real copy.
+ */
+export function enhanceTypewrite(
+  container: HTMLElement,
+  options: TypewriterOptions = {}
+): void {
+  const {
+    speed = 40,
+    startDelay = 0,
+    cursorBlinkRate = 530,
+    onComplete,
+  } = options;
+
+  const lineEls = Array.from(container.children).filter(
+    (child): child is HTMLElement => child instanceof HTMLElement
+  );
+  if (lineEls.length === 0) return;
+
+  const texts = lineEls.map((el) => el.textContent?.trim() ?? "");
+
+  // The accessible name stays complete for the whole animation.
+  container.setAttribute("aria-label", texts.join(" "));
+
+  // Reduced motion: the server-rendered text is already correct. Done.
+  if (prefersReducedMotion()) {
+    onComplete?.();
+    return;
+  }
+
+  const cursor = createCursorSpan(cursorBlinkRate);
+  const LINE_GAP = 300; // ms pause between lines
+
+  async function run(): Promise<void> {
+    lineEls.forEach((el) => {
+      el.textContent = "";
+    });
+    for (let i = 0; i < lineEls.length; i++) {
+      await typeLine(lineEls[i], texts[i], cursor, speed);
+      if (i < lineEls.length - 1) {
+        await new Promise<void>((res) => setTimeout(res, LINE_GAP));
+      }
+    }
+    onComplete?.();
+  }
+
+  if (startDelay > 0) {
+    setTimeout(run, startDelay);
+  } else {
+    void run();
+  }
+}
+
+/**
  * Scans the document for `[data-typewriter]` elements and initialises a
  * typewriter effect on each one.
  *
@@ -168,6 +226,21 @@ export function typewrite(
  *     data-speed="40"
  *   ></div>
  */
+function readOptions(el: HTMLElement): TypewriterOptions {
+  const options: TypewriterOptions = {};
+
+  const rawSpeed = el.dataset["speed"];
+  if (rawSpeed !== undefined) options.speed = Number(rawSpeed);
+
+  const rawDelay = el.dataset["startDelay"];
+  if (rawDelay !== undefined) options.startDelay = Number(rawDelay);
+
+  const rawBlink = el.dataset["cursorBlink"];
+  if (rawBlink !== undefined) options.cursorBlinkRate = Number(rawBlink);
+
+  return options;
+}
+
 export function initTypewriters(): void {
   const elements = document.querySelectorAll<HTMLElement>("[data-typewriter]");
 
@@ -186,6 +259,13 @@ export function initTypewriters(): void {
       }
     }
 
+    // Enhancement mode: no data-lines, but server-rendered child elements.
+    // Retype the real text in place; without JS the real text just stays.
+    if (lines.length === 0 && el.children.length > 0) {
+      enhanceTypewrite(el, readOptions(el));
+      return;
+    }
+
     // Fallback: use the element's own text content as a single line.
     if (lines.length === 0 && el.textContent?.trim()) {
       lines = [el.textContent.trim()];
@@ -194,17 +274,6 @@ export function initTypewriters(): void {
 
     if (lines.length === 0) return;
 
-    const options: TypewriterOptions = {};
-
-    const rawSpeed = el.dataset["speed"];
-    if (rawSpeed !== undefined) options.speed = Number(rawSpeed);
-
-    const rawDelay = el.dataset["startDelay"];
-    if (rawDelay !== undefined) options.startDelay = Number(rawDelay);
-
-    const rawBlink = el.dataset["cursorBlink"];
-    if (rawBlink !== undefined) options.cursorBlinkRate = Number(rawBlink);
-
-    typewrite(el, lines, options);
+    typewrite(el, lines, readOptions(el));
   });
 }
