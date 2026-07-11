@@ -1,4 +1,8 @@
 ---
+import { BOOKING_URL } from '../lib/site';
+
+const auditHref = BOOKING_URL ?? '/contact';
+
 const navLinks = [
   { label: 'Services', href: '/services' },
   { label: 'Work', href: '/work' },
@@ -53,10 +57,10 @@ const navLinks = [
 
     <!-- CTA -->
     <a
-      href="/contact"
+      href={auditHref}
       class="cta-button"
     >
-      &gt;&nbsp;Get in Touch
+      &gt;&nbsp;Book a free audit
     </a>
 
     <!-- Mobile menu toggle -->
@@ -100,11 +104,11 @@ const navLinks = [
     ))}
     <li>
       <a
-        href="/contact"
+        href={auditHref}
         class="overlay-link overlay-cta"
       >
         <span class="overlay-cmd" aria-hidden="true">$ camber </span>
-        <span class="overlay-section">contact</span>
+        <span class="overlay-section">free audit</span>
       </a>
     </li>
     <li>
