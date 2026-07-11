@@ -59,14 +59,20 @@ export async function checkRateLimit(
     // Opportunistic cleanup: a small fraction of requests deletes rows whose
     // window started more than 24 hours ago. Fire-and-forget: never awaited,
     // so it cannot slow the request path, and failures are swallowed because
-    // the next gated request will sweep instead.
-    if (Math.random() < CLEANUP_PROBABILITY) {
-      const cutoff = new Date(Date.now() - CLEANUP_MAX_AGE_MS).toISOString();
-      void rpcClient
-        .from('rate_limits')
-        .delete()
-        .lt('window_started_at', cutoff)
-        .then(undefined, () => {});
+    // the next gated request will sweep instead. Isolated in its own
+    // try/catch so even a synchronous throw while building the delete chain
+    // cannot reach the outer catch and flip a "blocked" verdict to "allowed".
+    try {
+      if (Math.random() < CLEANUP_PROBABILITY) {
+        const cutoff = new Date(Date.now() - CLEANUP_MAX_AGE_MS).toISOString();
+        void rpcClient
+          .from('rate_limits')
+          .delete()
+          .lt('window_started_at', cutoff)
+          .then(undefined, () => {});
+      }
+    } catch {
+      // cleanup must never affect the verdict
     }
 
     if (error) {

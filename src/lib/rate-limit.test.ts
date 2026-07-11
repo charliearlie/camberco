@@ -152,5 +152,26 @@ describe('checkRateLimit', () => {
       expect(deletes).toHaveLength(1);
       expect(allowed).toBe(false);
     });
+
+    it('preserves a blocked verdict when from() throws synchronously', async () => {
+      vi.spyOn(Math, 'random').mockReturnValue(0.001);
+      const syncThrowing: RateLimitClient = {
+        rpc() {
+          return Promise.resolve({ data: false, error: null });
+        },
+        from() {
+          throw new Error('synchronous chain failure');
+        },
+      };
+
+      const allowed = await checkRateLimit(
+        { key: 'enquiries:1.2.3.4', limit: 5, windowMinutes: 60 },
+        syncThrowing,
+      );
+
+      // The sync throw is contained by the cleanup's own try/catch; it must
+      // not reach the outer fail-open catch and flip blocked to allowed.
+      expect(allowed).toBe(false);
+    });
   });
 });
