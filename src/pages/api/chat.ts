@@ -2,12 +2,15 @@ import type { APIRoute } from 'astro';
 import OpenAI from 'openai';
 import { SYSTEM_PROMPTS, type ServiceKey } from '../../scripts/chat-prompts';
 import { checkRateLimit } from '../../lib/rate-limit';
+import { waitUntil } from '@vercel/functions';
+import { sendAdminNotification, sendSenderConfirmation } from '../../lib/email';
 
 export const prerender = false;
 
 const VALID_SERVICES: ServiceKey[] = ['consultations', 'seo', 'builds', 'automation', 'training', 'personal-ai', 'general'];
 const MAX_MESSAGES = 20;
 const MAX_MSG_LENGTH = 500;
+const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 const ENQUIRY_TOOL: OpenAI.ChatCompletionTool = {
   type: 'function',
@@ -108,6 +111,44 @@ export const POST: APIRoute = async ({ request }) => {
           return textResponse('sorry, something went wrong submitting your enquiry. could you try the contact form at /contact instead?');
         }
 
+        // Validate exactly like the contact form: same regex, hard length caps.
+        const name = String(args.name ?? '').trim().slice(0, 100);
+        const email = String(args.email ?? '').trim().slice(0, 200);
+        const company = args.company ? String(args.company).trim().slice(0, 150) : null;
+        const serviceRequested = String(args.service ?? '').trim().slice(0, 100);
+        const message = String(args.message ?? '').trim().slice(0, 2000);
+
+        const problems: string[] = [];
+        if (!name) problems.push('the name is missing');
+        if (!EMAIL_RE.test(email)) problems.push(`the email address "${email}" does not look valid`);
+        if (!serviceRequested) problems.push('the service is missing');
+        if (!message) problems.push('the message summary is missing');
+
+        if (problems.length > 0) {
+          // Tell the model what failed so it can echo the email back and retry.
+          const retry = await openai.chat.completions.create({
+            model,
+            messages: [
+              { role: 'system', content: SYSTEM_PROMPTS[service] },
+              ...sanitized,
+              choice.message as OpenAI.ChatCompletionMessageParam,
+              {
+                role: 'tool',
+                tool_call_id: toolCall.id,
+                content: `The enquiry was NOT submitted: ${problems.join('; ')}. Repeat the email address back to the user exactly as you have it, ask them to confirm or correct it, then call submit_enquiry again.`,
+              },
+            ],
+            max_tokens: 200,
+            temperature: 0.7,
+            tools: [ENQUIRY_TOOL],
+          });
+
+          const retryText =
+            retry.choices[0]?.message?.content ??
+            'quick check before I send this: could you confirm your email address for me?';
+          return textResponse(retryText);
+        }
+
         // Submit enquiry internally
         const { createClient } = await import('@supabase/supabase-js');
         const url = import.meta.env.PUBLIC_SUPABASE_URL ?? '';
@@ -115,26 +156,39 @@ export const POST: APIRoute = async ({ request }) => {
         const supabase = createClient(url, key, { auth: { autoRefreshToken: false, persistSession: false } });
 
         const { error } = await supabase.from('enquiries').insert({
-          name: args.name,
-          email: args.email,
-          company: args.company || null,
-          service: args.service,
-          message: args.message,
+          name,
+          email,
+          company,
+          service: serviceRequested,
+          message,
           source: 'bot',
           chat_transcript: sanitized,
         });
 
         if (error) {
           console.error('Enquiry insert from bot failed:', error);
-          return textResponse('sorry, there was an issue submitting your enquiry. you can also reach us at /contact — Charlie will get back to you.');
+          return textResponse('sorry, there was an issue submitting your enquiry. you can also reach us at /contact and Charlie will get back to you.');
         }
 
-        // Send emails (non-blocking)
-        import('../../lib/email').then(({ sendAdminNotification, sendSenderConfirmation }) => {
-          const data = { name: args.name, email: args.email, company: args.company, service: args.service, message: args.message, source: 'bot' as const };
-          sendAdminNotification(data).catch((e) => console.error('Admin email failed:', e));
-          sendSenderConfirmation(data).catch((e) => console.error('Confirmation email failed:', e));
-        });
+        // Emails must survive the response: waitUntil keeps the function alive until they settle.
+        const emailData = {
+          name,
+          email,
+          company: company ?? undefined,
+          service: serviceRequested,
+          message,
+          source: 'bot' as const,
+        };
+        waitUntil(
+          Promise.allSettled([
+            sendAdminNotification(emailData),
+            sendSenderConfirmation(emailData),
+          ]).then((results) => {
+            for (const r of results) {
+              if (r.status === 'rejected') console.error('Chat enquiry email failed:', r.reason);
+            }
+          }),
+        );
 
         // Get a follow-up response from the model
         const followUp = await openai.chat.completions.create({
@@ -146,14 +200,14 @@ export const POST: APIRoute = async ({ request }) => {
             {
               role: 'tool',
               tool_call_id: toolCall.id,
-              content: `Enquiry submitted successfully for ${args.name} (${args.email}). Charlie will review it and get back to them.`,
+              content: `Enquiry submitted successfully for ${name} (${email}). Charlie will review it and get back to them.`,
             },
           ],
           max_tokens: 200,
           temperature: 0.7,
         });
 
-        const followUpText = followUp.choices[0]?.message?.content ?? "done — I've sent that through. Charlie will be in touch shortly.";
+        const followUpText = followUp.choices[0]?.message?.content ?? "done, I've sent that through. Charlie will be in touch shortly.";
         return textResponse(followUpText);
       }
     }
