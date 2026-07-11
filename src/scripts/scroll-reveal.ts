@@ -120,6 +120,11 @@ export function initScrollReveal(): void {
  * Animates a number from 0 to its target value when the element enters the
  * viewport.
  *
+ * The element must be server-rendered with its FINAL value as text content
+ * (e.g. `<span data-count-to="40" data-count-suffix="+">40+</span>`), so
+ * crawlers and no-JS visitors always see the real number. The script only
+ * resets to 0 when the count-up animation is definitely going to run.
+ *
  * Required attribute:
  *   data-count-to="40"      — target numeric value
  *
@@ -127,9 +132,7 @@ export function initScrollReveal(): void {
  *   data-count-suffix="+"   — text appended after the number (e.g. "+", "%", "x")
  *
  * Duration: 800 ms, ease-out (quartic).
- *
- * Example:
- *   <span data-count-to="40" data-count-suffix="+"></span>
+ * Reduced motion: no reset, no animation; the server-rendered value stays.
  */
 export function initCounters(): void {
   const DURATION = 800; // ms
@@ -139,6 +142,12 @@ export function initCounters(): void {
   );
 
   if (elements.length === 0) return;
+
+  // Reduced motion (or no IntersectionObserver): keep the server-rendered
+  // final values untouched. This is the static fallback.
+  if (prefersReducedMotion() || typeof IntersectionObserver === "undefined") {
+    return;
+  }
 
   // Ease-out quartic easing.
   function easeOutQuart(t: number): number {
@@ -152,11 +161,6 @@ export function initCounters(): void {
     const decimals = isFloat
       ? (el.dataset["countTo"]?.split(".")[1]?.length ?? 1)
       : 0;
-
-    if (prefersReducedMotion()) {
-      el.textContent = target.toFixed(decimals) + suffix;
-      return;
-    }
 
     const startTime = performance.now();
 
@@ -191,7 +195,8 @@ export function initCounters(): void {
   );
 
   elements.forEach((el) => {
-    // Initialise with "0" so there is no layout shift before the animation.
+    // The element arrives with its final value server-rendered. Zero it
+    // only now that the count-up is guaranteed to run.
     const suffix = el.dataset["countSuffix"] ?? "";
     const target = parseFloat(el.dataset["countTo"] ?? "0");
     const isFloat = !Number.isInteger(target);
