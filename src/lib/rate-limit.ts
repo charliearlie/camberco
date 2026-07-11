@@ -31,10 +31,11 @@ function serviceClient(): RateLimitClient {
  */
 export async function checkRateLimit(
   opts: { key: string; limit: number; windowMinutes: number },
-  client: RateLimitClient = serviceClient(),
+  client?: RateLimitClient,
 ): Promise<boolean> {
   try {
-    const { data, error } = await client.rpc('bump_rate_limit', {
+    const rpcClient = client ?? serviceClient();
+    const { data, error } = await rpcClient.rpc('bump_rate_limit', {
       p_key: opts.key,
       p_limit: opts.limit,
       p_window_minutes: opts.windowMinutes,

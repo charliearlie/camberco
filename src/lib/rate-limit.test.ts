@@ -1,4 +1,4 @@
-import { describe, expect, it } from 'vitest';
+import { afterEach, describe, expect, it, vi } from 'vitest';
 import { checkRateLimit, type RateLimitClient } from './rate-limit';
 
 function fakeClient(
@@ -14,6 +14,10 @@ function fakeClient(
 }
 
 describe('checkRateLimit', () => {
+  afterEach(() => {
+    vi.unstubAllEnvs();
+  });
+
   it('allows when the database says the count is within the limit', async () => {
     const allowed = await checkRateLimit(
       { key: 'enquiries:1.2.3.4', limit: 5, windowMinutes: 60 },
@@ -49,6 +53,12 @@ describe('checkRateLimit', () => {
       throwing,
     );
     expect(allowed).toBe(true);
+  });
+
+  it('fails open when no client is injected and the service client cannot be constructed', async () => {
+    vi.stubEnv('PUBLIC_SUPABASE_URL', '');
+    vi.stubEnv('SUPABASE_SERVICE_ROLE_KEY', '');
+    await expect(checkRateLimit({ key: 't', limit: 1, windowMinutes: 1 })).resolves.toBe(true);
   });
 
   it('passes the key, limit and window through to bump_rate_limit', async () => {
