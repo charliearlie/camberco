@@ -1,0 +1,195 @@
+---
+import Layout from '../layouts/Layout.astro';
+import { COMPANY_NUMBER } from '../lib/site';
+
+const lastUpdated = '2026-07-10';
+---
+
+<Layout
+  title="Privacy Policy | Camber Co"
+  description="How Camber Co collects, uses and protects your data across enquiries, the newsletter and the site chat assistant."
+>
+  <main class="privacy-page">
+    <div class="container">
+      <header data-reveal>
+        <p class="section-tag">$ cat privacy.md</p>
+        <h1>Privacy policy</h1>
+        <p class="updated">Last updated: {lastUpdated}</p>
+      </header>
+
+      <section aria-labelledby="who-we-are">
+        <h2 id="who-we-are">Who we are</h2>
+        <p>
+          Camber Co is an AI automation consultancy based in London, run by Charlie Waite.
+          We build automations, websites, apps and AI systems for small businesses.
+          This policy explains what data this site collects and what we do with it.
+        </p>
+        {COMPANY_NUMBER && (
+          <p>Registered in England and Wales. Company number {COMPANY_NUMBER}.</p>
+        )}
+        <p>
+          Questions about your data: <a href="mailto:hello@camberco.co.uk">hello@camberco.co.uk</a>.
+        </p>
+      </section>
+
+      <section aria-labelledby="what-we-collect">
+        <h2 id="what-we-collect">What we collect</h2>
+        <ul>
+          <li>
+            <strong>Enquiries.</strong> Your name, email address, message and the service you
+            are interested in, whether you use the contact form or the chat assistant submits
+            an enquiry on your behalf.
+          </li>
+          <li>
+            <strong>Newsletter.</strong> Your email address, confirmation status and the dates
+            you signed up and confirmed.
+          </li>
+          <li>
+            <strong>Chat.</strong> The transcript of your conversation with the site assistant.
+            Messages are sent to OpenAI to generate replies. Your name and email are only
+            recorded if you choose to share them.
+          </li>
+          <li>
+            <strong>Technical.</strong> Your IP address, used briefly for rate limiting to
+            prevent abuse. Vercel Analytics collects anonymised usage statistics. We do not
+            use advertising cookies.
+          </li>
+        </ul>
+      </section>
+
+      <section aria-labelledby="how-we-use">
+        <h2 id="how-we-use">How we use it</h2>
+        <p>
+          We use your data to reply to your enquiry, to send the newsletter you asked for,
+          and to improve our services. We do not sell your data. We do not share it for
+          marketing.
+        </p>
+      </section>
+
+      <section aria-labelledby="who-processes">
+        <h2 id="who-processes">Who processes it</h2>
+        <p>Four providers process data on our behalf, each only to deliver their service:</p>
+        <ul>
+          <li><strong>Supabase</strong> hosts our database, including enquiries and newsletter records.</li>
+          <li><strong>Resend</strong> delivers our emails.</li>
+          <li><strong>OpenAI</strong> processes chat messages to generate assistant replies.</li>
+          <li><strong>Vercel</strong> hosts the site and provides anonymised analytics.</li>
+        </ul>
+      </section>
+
+      <section aria-labelledby="retention">
+        <h2 id="retention">How long we keep it</h2>
+        <ul>
+          <li>
+            <strong>Enquiries and chat transcripts.</strong> Kept while we deal with your
+            enquiry and for up to 24 months afterwards, then deleted.
+          </li>
+          <li>
+            <strong>Newsletter.</strong> Kept while you are subscribed. If you unsubscribe we
+            stop sending immediately and keep only a minimal record so we do not email you again.
+          </li>
+          <li>
+            <strong>Rate limiting data.</strong> Deleted automatically within days.
+          </li>
+        </ul>
+      </section>
+
+      <section aria-labelledby="your-rights">
+        <h2 id="your-rights">Your rights</h2>
+        <p>
+          Under UK GDPR you can ask for a copy of your data, ask us to correct it, or ask us
+          to delete it. Email <a href="mailto:hello@camberco.co.uk">hello@camberco.co.uk</a>
+          and we will act on it. You can also complain to the Information Commissioner's
+          Office at <a href="https://ico.org.uk" rel="noopener noreferrer" target="_blank">ico.org.uk</a>.
+        </p>
+      </section>
+    </div>
+  </main>
+</Layout>
+
+<style>
+  .privacy-page {
+    position: relative;
+    z-index: 2;
+    padding: clamp(96px, 13vw, 148px) 0 clamp(72px, 9vw, 112px);
+    background: var(--color-base);
+  }
+
+  .container {
+    max-width: 760px;
+    margin: 0 auto;
+    padding: 0 var(--space-8);
+    display: grid;
+    gap: var(--space-10);
+  }
+
+  .section-tag {
+    margin: 0 0 var(--space-3);
+    font-family: var(--font-mono);
+    font-size: var(--type-caption);
+    color: var(--color-green-500);
+  }
+
+  h1 {
+    margin: 0;
+    font-family: var(--font-mono);
+    font-size: var(--type-h1);
+    line-height: 1.12;
+    letter-spacing: 0;
+    color: var(--color-text-primary);
+  }
+
+  .updated {
+    margin: var(--space-3) 0 0;
+    font-family: var(--font-mono);
+    font-size: var(--type-caption);
+    color: var(--color-text-muted);
+  }
+
+  h2 {
+    margin: 0 0 var(--space-4);
+    font-family: var(--font-mono);
+    font-size: var(--type-h3);
+    letter-spacing: 0;
+    color: var(--color-text-primary);
+  }
+
+  p,
+  li {
+    margin: 0;
+    color: var(--color-text-secondary);
+    line-height: 1.7;
+  }
+
+  p + p {
+    margin-top: var(--space-3);
+  }
+
+  ul {
+    display: grid;
+    gap: var(--space-3);
+    margin: 0;
+    padding-left: var(--space-6);
+  }
+
+  strong {
+    color: var(--color-text-primary);
+  }
+
+  a {
+    color: var(--color-green-500);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+
+  a:hover,
+  a:focus-visible {
+    color: var(--color-green-400);
+  }
+
+  @media (max-width: 768px) {
+    .container {
+      padding: 0 var(--space-4);
+    }
+  }
+</style>
