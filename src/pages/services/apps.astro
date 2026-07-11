@@ -2,6 +2,11 @@
 import Layout from '../../layouts/Layout.astro';
 import StarfieldHero from '../../components/StarfieldHero.astro';
 import ChatDrawer from '../../components/ChatDrawer.astro';
+import { services } from '../../data/services';
+import { AUDIT_CTA_LABEL, BOOKING_URL } from '../../lib/site';
+
+const appsService = services.find((s) => s.slug === 'apps')!;
+const auditHref = BOOKING_URL ?? '/contact';
 
 const projects = [
   {
@@ -114,14 +119,15 @@ const schema = JSON.stringify([
             <span class="status-label">[ APP MODE ]</span>
             <span class="status-path">camber/services/apps</span>
           </div>
-          <h1>Tap the phone.</h1>
+          <h1>From idea to App Store without a dev team.</h1>
           <p>
-            From prototype to App Store, we build mobile products that feel real quickly
-            enough to test with actual users.
+            From prototype to App Store, we build mobile products that feel real
+            quickly enough to test with actual users.
           </p>
+          <p class="hero-price">{appsService.fromPrice} · fixed quote after a free audit call</p>
           <div class="hero-actions">
-            <a href="/contact" class="btn btn-primary">&gt; Start an app</a>
-            <button type="button" class="btn btn-secondary" data-chat-open="builds">&gt; Chat about it</button>
+            <a href={auditHref} class="btn btn-primary">&gt; {AUDIT_CTA_LABEL}</a>
+            <button type="button" class="btn btn-secondary" data-chat-open="apps">&gt; Chat about it</button>
           </div>
         </div>
 
@@ -260,7 +266,7 @@ const schema = JSON.stringify([
           <p>We can turn it into the smallest useful version and find out whether it has legs.</p>
           <div class="cta-actions">
             <a href="/contact" class="btn btn-primary">&gt; Get in touch</a>
-            <button type="button" class="btn btn-secondary" data-chat-open="builds">&gt; Chat about it</button>
+            <button type="button" class="btn btn-secondary" data-chat-open="apps">&gt; Chat about it</button>
           </div>
           <p class="cta-flags">
             <span>--prototype-first</span>
@@ -359,6 +365,14 @@ const schema = JSON.stringify([
     color: var(--color-text-secondary);
     line-height: 1.7;
     max-width: 62ch;
+  }
+
+  .hero-price {
+    margin: 0;
+    font-family: var(--font-mono);
+    font-size: var(--type-body-sm);
+    color: var(--color-green-500);
+    letter-spacing: 0.02em;
   }
 
   .hero-actions,

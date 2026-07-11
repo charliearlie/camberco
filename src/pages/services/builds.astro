@@ -2,6 +2,11 @@
 import Layout from '../../layouts/Layout.astro';
 import StarfieldHero from '../../components/StarfieldHero.astro';
 import ChatDrawer from '../../components/ChatDrawer.astro';
+import { services } from '../../data/services';
+import { AUDIT_CTA_LABEL, BOOKING_URL } from '../../lib/site';
+
+const buildsService = services.find((s) => s.slug === 'builds')!;
+const auditHref = BOOKING_URL ?? '/contact';
 
 const buildTypes = [
   {
@@ -123,11 +128,12 @@ const schema = JSON.stringify([
           </div>
           <h1>Websites that make the offer obvious.</h1>
           <p>
-            No toy generator. The work is sharper positioning, cleaner structure,
-            faster pages, and conversion paths that feel intentional from the first screen.
+            The work is sharper positioning, cleaner structure, faster pages,
+            and conversion paths that feel intentional from the first screen.
           </p>
+          <p class="hero-price">{buildsService.fromPrice} · fixed quote after a free audit call</p>
           <div class="hero-actions">
-            <a href="/contact" class="btn btn-primary">&gt; Start a build</a>
+            <a href={auditHref} class="btn btn-primary">&gt; {AUDIT_CTA_LABEL}</a>
             <button type="button" class="btn btn-secondary" data-chat-open="builds">&gt; Chat about it</button>
           </div>
         </div>
@@ -399,6 +405,14 @@ const schema = JSON.stringify([
     color: var(--color-text-secondary);
     line-height: 1.7;
     max-width: 64ch;
+  }
+
+  .hero-price {
+    margin: 0;
+    font-family: var(--font-mono);
+    font-size: var(--type-body-sm);
+    color: var(--color-green-500);
+    letter-spacing: 0.02em;
   }
 
   .hero-actions,

@@ -2,6 +2,11 @@
 import Layout from '../../layouts/Layout.astro';
 import StarfieldHero from '../../components/StarfieldHero.astro';
 import ChatDrawer from '../../components/ChatDrawer.astro';
+import { services } from '../../data/services';
+import { AUDIT_CTA_LABEL, BOOKING_URL } from '../../lib/site';
+
+const automationService = services.find((s) => s.slug === 'automation')!;
+const auditHref = BOOKING_URL ?? '/contact';
 
 const examples = [
   {
@@ -115,13 +120,15 @@ const schema = JSON.stringify([
             <span class="status-label">[ WORKFLOW MODE ]</span>
             <span class="status-path">camber/services/automation</span>
           </div>
-          <h1>Watch a workflow run.</h1>
+          <h1>Stop doing the same work twice. Workflows that run themselves.</h1>
           <p>
-            We connect the tools already in your business, remove the manual joins,
-            and leave you with a workflow that runs without babysitting.
+            Most small businesses lose 10-30 hours a month to repetitive admin.
+            We connect the tools already in your business, remove the manual
+            joins, and hand those hours back.
           </p>
+          <p class="hero-price">{automationService.fromPrice} · fixed quote after a free audit call</p>
           <div class="hero-actions">
-            <a href="/contact" class="btn btn-primary">&gt; Automate a workflow</a>
+            <a href={auditHref} class="btn btn-primary">&gt; {AUDIT_CTA_LABEL}</a>
             <button type="button" class="btn btn-secondary" data-chat-open="automation">&gt; Chat about it</button>
           </div>
         </div>
@@ -442,6 +449,14 @@ const schema = JSON.stringify([
     color: var(--color-text-secondary);
     line-height: 1.7;
     max-width: 66ch;
+  }
+
+  .hero-price {
+    margin: 0;
+    font-family: var(--font-mono);
+    font-size: var(--type-body-sm);
+    color: var(--color-green-500);
+    letter-spacing: 0.02em;
   }
 
   .hero-actions,

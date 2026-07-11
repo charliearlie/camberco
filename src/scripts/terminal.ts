@@ -115,6 +115,7 @@ const COMMANDS: Record<string, Command> = {
     <span class="t-green">  consultations</span>   AI strategy sessions
     <span class="t-green">  seo</span>             search engine optimisation
     <span class="t-green">  builds</span>          apps & website development
+    <span class="t-green">  apps</span>            mobile app development
     <span class="t-green">  automation</span>      n8n workflow engineering
     <span class="t-green">  training</span>        solo founder coaching
     <span class="t-green">  personal-ai</span>     your own AI assistant
@@ -127,7 +128,7 @@ const COMMANDS: Record<string, Command> = {
     description: 'explore a service',
     run: (args) => {
       const service = args[0] || '';
-      const valid = ['consultations', 'seo', 'builds', 'automation', 'training', 'personal-ai'];
+      const valid = ['consultations', 'seo', 'builds', 'apps', 'automation', 'training', 'personal-ai'];
       if (valid.includes(service)) {
         setTimeout(() => {
           if (window.__openChatDrawer) {
@@ -137,7 +138,7 @@ const COMMANDS: Record<string, Command> = {
         return [`<span class="t-green">opening chat...</span>`];
       }
       return [
-        '<span class="t-muted">usage:</span> explore <span class="t-green">consultations</span> | <span class="t-green">seo</span> | <span class="t-green">builds</span> | <span class="t-green">automation</span> | <span class="t-green">training</span> | <span class="t-green">personal-ai</span>',
+        '<span class="t-muted">usage:</span> explore <span class="t-green">consultations</span> | <span class="t-green">seo</span> | <span class="t-green">builds</span> | <span class="t-green">apps</span> | <span class="t-green">automation</span> | <span class="t-green">training</span> | <span class="t-green">personal-ai</span>',
       ];
     },
   },
