@@ -10,7 +10,7 @@ const auditHref = BOOKING_URL ?? '/contact';
 
 const deliverables = [
   {
-    title: 'Technical audit',
+    title: 'Technical review',
     desc: 'Crawlability, indexing, speed and structured data. The plumbing gets fixed first.',
   },
   {
@@ -42,7 +42,7 @@ const faqs = [
   },
   {
     q: 'What does from £750 cover?',
-    a: 'A one-off technical and content audit with a prioritised fix list starts at £750. Ongoing monthly work is scoped after the audit, so you only pay for what is worth doing.',
+    a: 'A one-off technical and content review with a prioritised fix list starts at £750. It is separate from the free 30-minute audit call, and separate from our AI Readiness Audit, which is a different product. Monthly SEO work is quoted after the review.',
   },
   {
     q: 'Can you fix the website itself too?',
@@ -61,7 +61,7 @@ const schema = JSON.stringify([
     areaServed: { '@type': 'Country', name: 'United Kingdom' },
     url: 'https://camberco.co.uk/services/seo',
     description:
-      'Practical SEO for UK small businesses. Technical audits, keyword strategy, on-page optimisation and honest reporting.',
+      'Practical SEO for UK small businesses. Technical reviews, keyword strategy, on-page optimisation and honest reporting.',
     offers: {
       '@type': 'Offer',
       price: '750',
@@ -83,7 +83,7 @@ const schema = JSON.stringify([
 
 <Layout
   title="SEO for Small Businesses UK | Camber Co"
-  description="Practical SEO services for UK small businesses from £750. Technical audits, keyword strategy and content that ranks. Honest reporting, no vanity dashboards."
+  description="Practical SEO services for UK small businesses from £750. Technical reviews, keyword strategy and content that ranks. Honest reporting, no vanity dashboards."
   schema={schema}
 >
   <StarfieldHero />
