@@ -18,5 +18,6 @@ export async function GET(context: APIContext) {
       content: post.content,
     })),
     customData: `<language>en-gb</language>`,
+    trailingSlash: false,
   });
 }
