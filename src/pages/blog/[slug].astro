@@ -44,7 +44,7 @@ const formattedDate = publishedAt.toLocaleDateString('en-GB', {
   year: 'numeric',
 });
 
-const canonicalUrl = `https://camberco.co.uk/blog/${post.slug}/`;
+const canonicalUrl = new URL(`/blog/${post.slug}`, Astro.site ?? 'https://camberco.co.uk').href;
 
 const categoryLabels: Record<string, string> = {
   'ai-strategy': 'AI Strategy',
@@ -138,7 +138,6 @@ const articleMeta = {
 <Layout
   title={`${title} | Camber Co`}
   description={description}
-  canonicalUrl={canonicalUrl}
   schema={schema}
   ogType="article"
   ogImage={ogImageUrl(coverImage)}

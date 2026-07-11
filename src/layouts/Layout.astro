@@ -6,7 +6,6 @@ import '../styles/tokens.css';
 interface Props {
   title: string;
   description: string;
-  canonicalUrl?: string;
   schema?: string;
   ogType?: string;
   ogImage?: string;
@@ -25,7 +24,6 @@ interface Props {
 const {
   title,
   description,
-  canonicalUrl = 'https://camberco.co.uk/',
   schema,
   ogType = 'website',
   ogImage: ogImageProp,
@@ -34,6 +32,12 @@ const {
   ogImageHeight,
   articleMeta,
 } = Astro.props;
+
+// Canonical is always derived: apex host from Astro.site, path from the
+// request URL with any trailing slash stripped. Pages never pass it in.
+const site = Astro.site ?? new URL('https://camberco.co.uk');
+const canonicalPath = Astro.url.pathname.replace(/\/+$/, '') || '/';
+const canonicalUrl = new URL(canonicalPath, site).href;
 
 const ogImage = ogImageProp ?? 'https://camberco.co.uk/social.png';
 const ogImageAlt = ogImageAltProp ?? 'Camber Co — AI services for founders who move fast.';
