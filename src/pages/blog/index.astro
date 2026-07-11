@@ -3,6 +3,9 @@ import { getPublishedPosts } from '../../lib/blog';
 import Layout from '../../layouts/Layout.astro';
 import BlogCard from '../../components/blog/BlogCard.astro';
 import '../../styles/blog.css';
+import { AUDIT_CTA_LABEL, BOOKING_URL } from '../../lib/site';
+
+const auditHref = BOOKING_URL ?? '/contact';
 
 const posts = await getPublishedPosts();
 
@@ -109,6 +112,12 @@ const blogSchema = JSON.stringify([
       </section>
     )}
 
+    <!-- Audit CTA band -->
+    <aside class="audit-band" aria-label="Book a free audit call">
+      <p class="audit-band-copy">Reading about automation is free. So is the 30-minute audit call.</p>
+      <a href={auditHref} class="audit-band-btn">&gt; {AUDIT_CTA_LABEL}</a>
+    </aside>
+
     <!-- Post grid -->
     {regularPosts.length > 0 && (
       <section aria-label="All posts">
@@ -128,3 +137,53 @@ const blogSchema = JSON.stringify([
     )}
   </main>
 </Layout>
+
+<style>
+  .audit-band {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-6);
+    flex-wrap: wrap;
+    background: var(--color-surface-01);
+    border: 1px solid var(--color-border-muted);
+    border-radius: var(--radius-lg);
+    padding: var(--space-6) var(--space-8);
+    margin: var(--space-10) 0;
+  }
+
+  .audit-band-copy {
+    font-family: var(--font-mono);
+    font-size: var(--type-body);
+    color: var(--color-text-primary);
+    margin: 0;
+  }
+
+  .audit-band-btn {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    background: var(--color-green-500);
+    color: var(--color-on-accent);
+    padding: 10px 18px;
+    border-radius: var(--radius-sm);
+    text-decoration: none;
+    white-space: nowrap;
+    transition:
+      background var(--duration-quick) var(--easing-smooth),
+      transform var(--duration-quick) var(--easing-spring);
+  }
+
+  .audit-band-btn:hover {
+    background: var(--color-green-400);
+    transform: translateY(-1px);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .audit-band-btn {
+      transition: none;
+    }
+  }
+</style>
