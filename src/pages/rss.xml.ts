@@ -12,8 +12,10 @@ export async function GET(context: APIContext) {
       title: post.title,
       pubDate: post.publishedAt,
       description: post.description,
-      link: `/blog/${post.slug}/`,
+      link: `/blog/${post.slug}`,
       categories: [post.category, ...post.tags],
+      author: `hello@camberco.co.uk (${post.author})`,
+      content: post.content,
     })),
     customData: `<language>en-gb</language>`,
   });
