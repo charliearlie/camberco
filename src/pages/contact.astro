@@ -1,6 +1,7 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import ChatDrawer from '../components/ChatDrawer.astro';
+import { services } from '../data/services';
 
 const schema = JSON.stringify([
   {
@@ -26,8 +27,8 @@ const schema = JSON.stringify([
 ---
 
 <Layout
-  title="Get in Touch — Camber Co"
-  description="Ready to move fast with AI? Get in touch with Camber Co for AI strategy, automation, training, or a custom AI bot."
+  title="Get in Touch | Camber Co"
+  description="Book a free 30-minute audit call with Camber Co. AI automation, websites, apps, SEO, training and personal AI for UK small businesses."
   schema={schema}
 >
   <main class="contact-page">
@@ -40,8 +41,25 @@ const schema = JSON.stringify([
 
     <h1 class="page-title">get in touch</h1>
     <p class="page-subtitle">
-      Tell us what you're working on — we'll get back to you within 24 hours.
+      Every enquiry gets a free 30-minute audit call. No pitch. Tell me what is
+      eating your time and I will tell you what I would automate first.
     </p>
+
+    <!-- What happens next -->
+    <ol class="next-steps" aria-label="What happens next">
+      <li class="next-step">
+        <span class="step-num" aria-hidden="true">01</span>
+        <span class="step-text">I reply within 24 hours.</span>
+      </li>
+      <li class="next-step">
+        <span class="step-num" aria-hidden="true">02</span>
+        <span class="step-text">We book the free 30-minute audit call. You talk, I map what could be automated.</span>
+      </li>
+      <li class="next-step">
+        <span class="step-num" aria-hidden="true">03</span>
+        <span class="step-text">You get a short proposal with a fixed price. No chasing, no pressure.</span>
+      </li>
+    </ol>
 
     <!-- Form -->
     <form id="contact-form" class="contact-form" novalidate>
@@ -70,30 +88,12 @@ const schema = JSON.stringify([
       <fieldset class="form-field chips-fieldset">
         <legend class="form-label">service interest <span class="required">*</span></legend>
         <div class="chips" id="service-chips">
-          <label class="chip">
-            <input type="checkbox" name="service" value="AI Strategy" />
-            <span class="chip-text">AI Strategy</span>
-          </label>
-          <label class="chip">
-            <input type="checkbox" name="service" value="Automation" />
-            <span class="chip-text">Automation</span>
-          </label>
-          <label class="chip">
-            <input type="checkbox" name="service" value="Training" />
-            <span class="chip-text">Training</span>
-          </label>
-          <label class="chip">
-            <input type="checkbox" name="service" value="Personal AI" />
-            <span class="chip-text">Personal AI</span>
-          </label>
-          <label class="chip">
-            <input type="checkbox" name="service" value="SEO" />
-            <span class="chip-text">SEO</span>
-          </label>
-          <label class="chip">
-            <input type="checkbox" name="service" value="App & Website Builds" />
-            <span class="chip-text">App & Website Builds</span>
-          </label>
+          {services.map((service) => (
+            <label class="chip">
+              <input type="checkbox" name="service" value={service.title} />
+              <span class="chip-text">{service.title}</span>
+            </label>
+          ))}
           <label class="chip">
             <input type="checkbox" name="service" value="Something else" />
             <span class="chip-text">Something else</span>
@@ -111,6 +111,11 @@ const schema = JSON.stringify([
       <button type="submit" class="submit-btn" id="submit-btn">
         send enquiry →
       </button>
+
+      <p class="consent-note">
+        Your details are used to reply to your enquiry and nothing else.
+        See the <a href="/privacy">privacy policy</a>.
+      </p>
     </form>
 
     <!-- Success state -->
@@ -127,6 +132,23 @@ const schema = JSON.stringify([
     <!-- Chat alternative -->
     <p class="chat-alt" id="chat-alt">
       or <button type="button" class="chat-alt-btn" id="open-chat-btn">chat with the AI assistant</button> instead
+    </p>
+
+    <!-- Proof -->
+    <aside class="proof-block" aria-label="Recent work">
+      <p class="proof-line">
+        <strong>Football IQ</strong>, built and shipped by Camber, grew organic
+        downloads 400% in its first months on the App Store.
+      </p>
+      <p class="proof-line">
+        Charlie also built the Plus AI suite used by WhoScored, Oddschecker,
+        and La Gazzetta dello Sport audiences.
+      </p>
+      <a href="/work" class="proof-link">See the work →</a>
+    </aside>
+
+    <p class="mailto-fallback">
+      Prefer plain email? <a href="mailto:hello@camberco.co.uk">hello@camberco.co.uk</a>
     </p>
   </main>
   <ChatDrawer />
@@ -560,5 +582,99 @@ const schema = JSON.stringify([
 
   .chat-alt-btn:hover {
     color: var(--color-green-300);
+  }
+
+  /* What happens next */
+  .next-steps {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+    padding: 0;
+    margin: 0 0 var(--space-10) 0;
+  }
+
+  .next-step {
+    display: flex;
+    align-items: baseline;
+    gap: var(--space-3);
+  }
+
+  .step-num {
+    font-family: var(--font-mono);
+    font-size: var(--type-caption);
+    font-weight: 700;
+    color: var(--color-green-500);
+    flex-shrink: 0;
+  }
+
+  .step-text {
+    font-family: var(--font-sans);
+    font-size: var(--type-body-sm);
+    color: var(--color-text-secondary);
+    line-height: 1.6;
+  }
+
+  /* Consent */
+  .consent-note {
+    font-family: var(--font-sans);
+    font-size: 12px;
+    color: var(--color-text-muted);
+    line-height: 1.5;
+    margin: 0;
+  }
+
+  .consent-note a {
+    color: var(--color-text-muted);
+    text-decoration: underline;
+  }
+
+  /* Proof */
+  .proof-block {
+    margin-top: var(--space-12);
+    padding: var(--space-6);
+    background: var(--color-surface-01);
+    border: 1px solid var(--color-border-muted);
+    border-radius: var(--radius-md);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+  }
+
+  .proof-line {
+    font-family: var(--font-sans);
+    font-size: var(--type-body-sm);
+    color: var(--color-text-secondary);
+    line-height: 1.6;
+    margin: 0;
+  }
+
+  .proof-line strong {
+    color: var(--color-text-primary);
+  }
+
+  .proof-link {
+    font-family: var(--font-mono);
+    font-size: var(--type-body-sm);
+    color: var(--color-green-400);
+    text-decoration: none;
+    width: fit-content;
+  }
+
+  .proof-link:hover {
+    text-decoration: underline;
+  }
+
+  /* Mailto fallback */
+  .mailto-fallback {
+    margin-top: var(--space-6);
+    text-align: center;
+    font-family: var(--font-mono);
+    font-size: var(--type-body-sm);
+    color: var(--color-text-muted);
+  }
+
+  .mailto-fallback a {
+    color: var(--color-green-400);
   }
 </style>
