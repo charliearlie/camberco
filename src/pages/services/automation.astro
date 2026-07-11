@@ -2,6 +2,7 @@
 import Layout from '../../layouts/Layout.astro';
 import StarfieldHero from '../../components/StarfieldHero.astro';
 import ChatDrawer from '../../components/ChatDrawer.astro';
+import RoiCalculator from '../../components/RoiCalculator.astro';
 import { services } from '../../data/services';
 import { AUDIT_CTA_LABEL, BOOKING_URL } from '../../lib/site';
 
@@ -223,6 +224,19 @@ const schema = JSON.stringify([
 
           <p class="graph-hint">Tap a node for mocked config.</p>
           <div class="automation-tooltip" data-automation-tooltip role="tooltip" aria-hidden="true"></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section-block" id="roi">
+      <div class="container">
+        <div class="section-header" data-reveal>
+          <p class="section-tag">$ camber estimate --savings</p>
+          <h2>What is the manual work costing you?</h2>
+          <p>Drag the sliders. The assumption is on screen, not hidden in a footnote.</p>
+        </div>
+        <div data-reveal>
+          <RoiCalculator />
         </div>
       </div>
     </section>

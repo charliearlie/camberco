@@ -1,0 +1,265 @@
+---
+// RoiCalculator.astro
+// Three sliders -> live hours/pounds recovered. Posts an estimate enquiry
+// to /api/enquiries via "Email me this estimate". Self-initialising.
+---
+
+<div class="roi-calc" data-roi-calculator>
+  <div class="roi-bar">
+    <span class="roi-dot roi-dot--red"></span>
+    <span class="roi-dot roi-dot--yellow"></span>
+    <span class="roi-dot roi-dot--green"></span>
+    <span class="roi-path">$ camber estimate --savings</span>
+  </div>
+
+  <div class="roi-body">
+    <div class="roi-sliders">
+      <label class="roi-field">
+        <span class="roi-field-name">Hours of manual admin each week</span>
+        <input type="range" min="1" max="40" step="1" value="10" data-roi-hours />
+        <output class="roi-field-value" data-roi-label-hours>10 h/week</output>
+      </label>
+
+      <label class="roi-field">
+        <span class="roi-field-name">Average hourly cost of that time</span>
+        <input type="range" min="10" max="100" step="5" value="25" data-roi-cost />
+        <output class="roi-field-value" data-roi-label-cost>£25/hour</output>
+      </label>
+
+      <label class="roi-field">
+        <span class="roi-field-name">People doing this work</span>
+        <input type="range" min="1" max="10" step="1" value="2" data-roi-people />
+        <output class="roi-field-value" data-roi-label-people>2 people</output>
+      </label>
+    </div>
+
+    <div class="roi-results" role="status" aria-live="polite">
+      <div class="roi-result">
+        <span class="roi-number" data-roi-out-hours data-value="0">0</span>
+        <span class="roi-result-label">hours back per month</span>
+      </div>
+      <div class="roi-result">
+        <span class="roi-number" data-roi-out-month data-value="0">£0</span>
+        <span class="roi-result-label">saved per month</span>
+      </div>
+      <div class="roi-result">
+        <span class="roi-number roi-number--year" data-roi-out-year data-value="0">£0</span>
+        <span class="roi-result-label">saved per year</span>
+      </div>
+    </div>
+
+    <p class="roi-assumption">Assumes automation handles about 70% of this work.</p>
+
+    <form class="roi-form" data-roi-form>
+      <input
+        type="text"
+        name="website"
+        class="roi-honeypot"
+        tabindex="-1"
+        autocomplete="off"
+        aria-hidden="true"
+      />
+      <input type="text" name="name" placeholder="your name" required aria-label="Your name" />
+      <input type="email" name="email" placeholder="you@company.co.uk" required aria-label="Your email" />
+      <button type="submit" class="roi-submit">&gt; Email me this estimate</button>
+      <p class="roi-form-status" data-roi-form-status role="status"></p>
+    </form>
+  </div>
+</div>
+
+<style>
+  .roi-calc {
+    border: 1px solid var(--color-border-subtle);
+    border-radius: var(--radius-md);
+    background: var(--color-surface-00);
+    overflow: hidden;
+    box-shadow: 0 0 52px color-mix(in srgb, var(--color-green-500) 8%, transparent);
+  }
+
+  .roi-bar {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    min-height: 38px;
+    padding: 0 var(--space-3);
+    background: var(--color-surface-02);
+    border-bottom: 1px solid var(--color-border-subtle);
+  }
+
+  .roi-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  .roi-dot--red { background: var(--color-error); }
+  .roi-dot--yellow { background: var(--color-warning); }
+  .roi-dot--green { background: var(--color-success); }
+
+  .roi-path {
+    margin-left: var(--space-2);
+    font-family: var(--font-mono);
+    font-size: var(--type-caption);
+    color: var(--color-text-muted);
+  }
+
+  .roi-body {
+    display: grid;
+    gap: var(--space-6);
+    padding: var(--space-6);
+  }
+
+  .roi-sliders {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: var(--space-6);
+  }
+
+  .roi-field {
+    display: grid;
+    gap: var(--space-2);
+  }
+
+  .roi-field-name {
+    font-family: var(--font-sans);
+    font-size: var(--type-body-sm);
+    color: var(--color-text-secondary);
+  }
+
+  .roi-field input[type='range'] {
+    width: 100%;
+    accent-color: var(--color-green-500);
+    cursor: pointer;
+  }
+
+  .roi-field-value {
+    font-family: var(--font-mono);
+    font-size: var(--type-label);
+    color: var(--color-green-500);
+  }
+
+  .roi-results {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: var(--space-4);
+    padding: var(--space-4) 0;
+    border-top: 1px solid var(--color-border-subtle);
+    border-bottom: 1px solid var(--color-border-subtle);
+  }
+
+  .roi-result {
+    display: grid;
+    gap: var(--space-1);
+  }
+
+  .roi-number {
+    font-family: var(--font-mono);
+    font-size: clamp(28px, 4vw, 44px);
+    font-weight: 800;
+    color: var(--color-text-primary);
+    line-height: 1;
+    letter-spacing: -0.03em;
+  }
+
+  .roi-number--year {
+    color: var(--color-green-500);
+  }
+
+  .roi-result-label {
+    font-family: var(--font-mono);
+    font-size: var(--type-caption);
+    color: var(--color-text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+  }
+
+  .roi-assumption {
+    margin: 0;
+    font-family: var(--font-mono);
+    font-size: var(--type-caption);
+    color: var(--color-text-muted);
+  }
+
+  .roi-form {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-3);
+  }
+
+  .roi-honeypot {
+    position: absolute;
+    left: -9999px;
+    width: 1px;
+    height: 1px;
+    opacity: 0;
+  }
+
+  .roi-form input[type='text']:not(.roi-honeypot),
+  .roi-form input[type='email'] {
+    flex: 1 1 180px;
+    min-height: 44px;
+    padding: var(--space-2) var(--space-3);
+    background: var(--color-surface-01);
+    border: 1px solid var(--color-border-muted);
+    border-radius: var(--radius-sm);
+    color: var(--color-text-primary);
+    font-family: var(--font-mono);
+    font-size: var(--type-body-sm);
+  }
+
+  .roi-form input:focus-visible {
+    outline: 2px solid var(--color-green-500);
+    outline-offset: 1px;
+  }
+
+  .roi-submit {
+    min-height: 44px;
+    padding: var(--space-3) var(--space-6);
+    background: var(--color-green-500);
+    color: var(--color-on-accent);
+    border-radius: var(--radius-sm);
+    font-family: var(--font-mono);
+    font-size: var(--type-label);
+    font-weight: 700;
+    transition: background var(--duration-quick) var(--easing-smooth);
+  }
+
+  .roi-submit:hover {
+    background: var(--color-green-400);
+  }
+
+  .roi-submit:disabled {
+    opacity: 0.6;
+    cursor: wait;
+  }
+
+  .roi-form-status {
+    flex-basis: 100%;
+    margin: 0;
+    min-height: 1.4em;
+    font-family: var(--font-mono);
+    font-size: var(--type-caption);
+    color: var(--color-text-muted);
+  }
+
+  @media (max-width: 768px) {
+    .roi-sliders,
+    .roi-results {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .roi-submit {
+      transition: none;
+    }
+  }
+</style>
+
+<script>
+  import { initRoiCalculator } from '../scripts/roi-calculator.ts';
+
+  document.querySelectorAll<HTMLElement>('[data-roi-calculator]').forEach(initRoiCalculator);
+</script>
