@@ -3,6 +3,7 @@ export const prerender = false;
 import type { APIRoute } from 'astro';
 import { createClient } from '@supabase/supabase-js';
 import { sendAdminNotification, sendSenderConfirmation } from '../../lib/email';
+import { checkRateLimit } from '../../lib/rate-limit';
 
 function serverSupabase() {
   const url = import.meta.env.PUBLIC_SUPABASE_URL ?? '';
@@ -28,23 +29,6 @@ function jsonRes(body: unknown, status = 200) {
   });
 }
 
-// In-memory rate limit for form submissions
-const rateLimit = new Map<string, { count: number; resetAt: number }>();
-const RATE_LIMIT = 5;
-const RATE_WINDOW = 60 * 60 * 1000; // 1 hour
-
-function checkRateLimit(ip: string): boolean {
-  const now = Date.now();
-  const entry = rateLimit.get(ip);
-  if (!entry || now > entry.resetAt) {
-    rateLimit.set(ip, { count: 1, resetAt: now + RATE_WINDOW });
-    return true;
-  }
-  if (entry.count >= RATE_LIMIT) return false;
-  entry.count++;
-  return true;
-}
-
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 const VALID_SERVICES = [
@@ -63,7 +47,8 @@ const VALID_SERVICES = [
 
 export const POST: APIRoute = async ({ request }) => {
   const ip = request.headers.get('x-forwarded-for')?.split(',')[0]?.trim() || 'unknown';
-  if (!checkRateLimit(ip)) {
+  const allowed = await checkRateLimit({ key: `enquiries:${ip}`, limit: 5, windowMinutes: 60 });
+  if (!allowed) {
     return jsonRes({ error: 'Too many submissions. Please try again later.' }, 429);
   }
 

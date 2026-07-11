@@ -1,29 +1,13 @@
 import type { APIRoute } from 'astro';
 import OpenAI from 'openai';
 import { SYSTEM_PROMPTS, type ServiceKey } from '../../scripts/chat-prompts';
+import { checkRateLimit } from '../../lib/rate-limit';
 
 export const prerender = false;
 
 const VALID_SERVICES: ServiceKey[] = ['consultations', 'seo', 'builds', 'automation', 'training', 'personal-ai', 'general'];
 const MAX_MESSAGES = 20;
 const MAX_MSG_LENGTH = 500;
-
-// In-memory rate limit (cost protection — resets on cold start)
-const rateLimit = new Map<string, { count: number; resetAt: number }>();
-const RATE_LIMIT = 30;
-const RATE_WINDOW = 60 * 60 * 1000; // 1 hour
-
-function checkRateLimit(ip: string): boolean {
-  const now = Date.now();
-  const entry = rateLimit.get(ip);
-  if (!entry || now > entry.resetAt) {
-    rateLimit.set(ip, { count: 1, resetAt: now + RATE_WINDOW });
-    return true;
-  }
-  if (entry.count >= RATE_LIMIT) return false;
-  entry.count++;
-  return true;
-}
 
 const ENQUIRY_TOOL: OpenAI.ChatCompletionTool = {
   type: 'function',
@@ -54,7 +38,8 @@ export const POST: APIRoute = async ({ request }) => {
   }
 
   const ip = request.headers.get('x-forwarded-for')?.split(',')[0]?.trim() || 'unknown';
-  if (!checkRateLimit(ip)) {
+  const allowed = await checkRateLimit({ key: `chat:${ip}`, limit: 30, windowMinutes: 60 });
+  if (!allowed) {
     return new Response(JSON.stringify({ error: 'Too many requests. Try again later.' }), {
       status: 429,
       headers: { 'Content-Type': 'application/json' },
