@@ -16,7 +16,10 @@ async function fetchBlogLastmod() {
   try {
     const res = await fetch(
       `${url}/rest/v1/blog_drafts?status=eq.published&select=slug,updated_at,published_at`,
-      { headers: { apikey: key, Authorization: `Bearer ${key}` } },
+      {
+        headers: { apikey: key, Authorization: `Bearer ${key}` },
+        signal: AbortSignal.timeout(5000),
+      },
     );
     if (!res.ok) return new Map();
     const rows = await res.json();
