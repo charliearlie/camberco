@@ -174,7 +174,7 @@ const COMMANDS: Record<string, Command> = {
   contact: {
     description: 'go to contact page',
     run: () => {
-      window.location.href = '/contact/';
+      window.location.href = '/contact';
       return L`
       <span class="t-green">opening /contact ...</span>
       `;

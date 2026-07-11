@@ -46,7 +46,7 @@ describe('buildDigestBatch', () => {
 
   it('links to the post and the unsubscribe URL in the body', () => {
     const [first] = buildDigestBatch(subs, post);
-    expect(first.html).toContain('https://camberco.co.uk/blog/automate-the-boring-bits/');
+    expect(first.html).toContain('https://camberco.co.uk/blog/automate-the-boring-bits"');
     expect(first.html).toContain('https://camberco.co.uk/api/unsubscribe?token=tok-a');
   });
 });

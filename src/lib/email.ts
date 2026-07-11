@@ -203,14 +203,14 @@ export async function sendWelcomeEmail(
         ${posts
           .map(
             (p) =>
-              `<li style="margin: 0 0 8px 0;"><a href="${SITE_URL}/blog/${p.slug}/" style="color: #4ade80; text-decoration: none;">${escapeHtml(p.title)}</a></li>`,
+              `<li style="margin: 0 0 8px 0;"><a href="${SITE_URL}/blog/${p.slug}" style="color: #4ade80; text-decoration: none;">${escapeHtml(p.title)}</a></li>`,
           )
           .join('')}
       </ul>
     `
     : `
       <p style="color: #d0d0d0; line-height: 1.6; margin: 0 0 24px 0;">
-        <a href="${SITE_URL}/blog/" style="color: #4ade80; text-decoration: none;">Browse the blog</a> for practical writing on AI and automation.
+        <a href="${SITE_URL}/blog" style="color: #4ade80; text-decoration: none;">Browse the blog</a> for practical writing on AI and automation.
       </p>
     `;
 
@@ -285,7 +285,7 @@ export function chunk<T>(items: T[], size: number): T[][] {
 }
 
 export function buildDigestBatch(subscribers: Subscriber[], post: BlogDigestData): DigestEmail[] {
-  const postUrl = `${SITE_URL}/blog/${post.slug}/`;
+  const postUrl = `${SITE_URL}/blog/${post.slug}`;
 
   return subscribers.map((sub) => {
     const unsubUrl = `${SITE_URL}/api/unsubscribe?token=${sub.unsubscribe_token}`;
