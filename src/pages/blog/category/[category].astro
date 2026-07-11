@@ -5,18 +5,9 @@ import BlogCard from '../../../components/blog/BlogCard.astro';
 import '../../../styles/blog.css';
 
 export async function getStaticPaths() {
-  const categories = [
-    'ai-strategy',
-    'automation',
-    'case-study',
-    'tools-and-workflows',
-    'founder-journey',
-    'industry-trends',
-  ] as const;
-
-  return categories.map((cat) => ({
-    params: { category: cat },
-  }));
+  const posts = await getPublishedPosts();
+  const categories = [...new Set(posts.map((p) => p.category))];
+  return categories.map((cat) => ({ params: { category: cat } }));
 }
 
 const { category } = Astro.params;
@@ -35,14 +26,10 @@ const posts = allPosts.filter((p) => p.category === category);
 
 const categoryLabel = categoryLabels[category] ?? category;
 
+const presentCategories = [...new Set(allPosts.map((p) => p.category))];
 const allCategories = [
   { value: 'all', label: 'All Posts' },
-  { value: 'ai-strategy', label: 'AI Strategy' },
-  { value: 'automation', label: 'Automation' },
-  { value: 'case-study', label: 'Case Study' },
-  { value: 'tools-and-workflows', label: 'Tools & Workflows' },
-  { value: 'founder-journey', label: 'Founder Journey' },
-  { value: 'industry-trends', label: 'Industry Trends' },
+  ...presentCategories.map((value) => ({ value, label: categoryLabels[value] ?? value })),
 ];
 ---
 

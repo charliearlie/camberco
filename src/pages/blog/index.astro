@@ -9,14 +9,19 @@ const posts = await getPublishedPosts();
 const featuredPosts = posts.filter((p) => p.featured);
 const regularPosts = posts.filter((p) => !p.featured);
 
+const categoryLabels: Record<string, string> = {
+  'ai-strategy': 'AI Strategy',
+  'automation': 'Automation',
+  'case-study': 'Case Study',
+  'tools-and-workflows': 'Tools & Workflows',
+  'founder-journey': 'Founder Journey',
+  'industry-trends': 'Industry Trends',
+};
+
+const presentCategories = [...new Set(posts.map((p) => p.category))];
 const categories = [
   { value: 'all', label: 'All Posts' },
-  { value: 'ai-strategy', label: 'AI Strategy' },
-  { value: 'automation', label: 'Automation' },
-  { value: 'case-study', label: 'Case Study' },
-  { value: 'tools-and-workflows', label: 'Tools & Workflows' },
-  { value: 'founder-journey', label: 'Founder Journey' },
-  { value: 'industry-trends', label: 'Industry Trends' },
+  ...presentCategories.map((value) => ({ value, label: categoryLabels[value] ?? value })),
 ];
 
 const blogSchema = JSON.stringify([
