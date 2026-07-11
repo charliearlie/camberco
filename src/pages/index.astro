@@ -4,6 +4,8 @@ import StarfieldHero from '../components/StarfieldHero.astro';
 import ChatDrawer from '../components/ChatDrawer.astro';
 import { getPublishedPosts } from '../lib/blog';
 import BlogCard from '../components/blog/BlogCard.astro';
+import RoiCalculator from '../components/RoiCalculator.astro';
+import RaceDemo from '../components/RaceDemo.astro';
 import { AUDIT_CTA_LABEL, BOOKING_URL, SITE_URL } from '../lib/site';
 import { services } from '../data/services';
 
@@ -262,6 +264,34 @@ const schema = JSON.stringify([
     </div>
   </section>
 
+  <!-- ===== ROI CALCULATOR ===== -->
+  <section class="roi-section" id="roi">
+    <div class="container">
+      <div class="section-header" data-reveal>
+        <span class="section-tag">the maths</span>
+        <h2>What is the manual work costing you?</h2>
+        <p>Drag the sliders. The assumption is on screen, not hidden in a footnote.</p>
+      </div>
+      <div data-reveal>
+        <RoiCalculator />
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== BEFORE / AFTER RACE ===== -->
+  <section class="race-section" id="race">
+    <div class="container">
+      <div class="section-header" data-reveal>
+        <span class="section-tag">the race</span>
+        <h2>Manual vs automated. Same job.</h2>
+        <p>Seven steps a human does every time a lead comes in, against one workflow.</p>
+      </div>
+      <div data-reveal>
+        <RaceDemo />
+      </div>
+    </div>
+  </section>
+
   <!-- ===== WHO WE WORK WITH ===== -->
   <section class="audience">
     <div class="container">
@@ -420,6 +450,8 @@ const schema = JSON.stringify([
   /* Lift all content below the hero above the fixed starfield overlays (z-index: 1) */
   .section-divider,
   .services,
+  .roi-section,
+  .race-section,
   .audience,
   .about-section,
   .faq,
@@ -649,6 +681,11 @@ const schema = JSON.stringify([
      ============================================================ */
   .services {
     padding: clamp(80px, 12vw, 128px) 0;
+  }
+
+  .roi-section,
+  .race-section {
+    padding: clamp(40px, 6vw, 64px) 0;
   }
 
   .service-grid {
