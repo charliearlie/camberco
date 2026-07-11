@@ -94,7 +94,7 @@ export async function sendSenderConfirmation(data: EnquiryData): Promise<void> {
 
       <p style="color: #d0d0d0; line-height: 1.6; margin: 0 0 24px 0;">
         Hey ${escapeHtml(data.name)}, thanks for getting in touch with Camber Co.
-        Charlie will review your enquiry and get back to you within one working day.
+        Charlie will review your enquiry and reply within 24 hours.
       </p>
 
       <div style="background: #111111; border: 1px solid #1f1f1f; border-radius: 4px; padding: 16px; margin-bottom: 24px;">
