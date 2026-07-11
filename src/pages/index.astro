@@ -4,7 +4,7 @@ import StarfieldHero from '../components/StarfieldHero.astro';
 import ChatDrawer from '../components/ChatDrawer.astro';
 import { getPublishedPosts } from '../lib/blog';
 import BlogCard from '../components/blog/BlogCard.astro';
-import { AUDIT_CTA_LABEL, BOOKING_URL } from '../lib/site';
+import { AUDIT_CTA_LABEL, BOOKING_URL, SITE_URL } from '../lib/site';
 import { services } from '../data/services';
 
 const auditHref = BOOKING_URL ?? '/contact';
@@ -14,15 +14,15 @@ const recentPosts = (await getPublishedPosts()).slice(0, 3);
 const faqs = [
   {
     q: `What does an AI consultancy actually do?`,
-    a: `An AI consultancy helps businesses identify where artificial intelligence can save time, reduce costs, and improve operations. At Camber Co, we go beyond advising — we build and deploy working tools including n8n workflow automation, websites, web apps, SEO, and personal AI assistants. We work with a small number of clients at a time to ensure every engagement delivers something real.`,
+    a: `An AI consultancy helps businesses identify where artificial intelligence can save time, reduce costs, and improve operations. Camber Co goes further than advising. We build and deploy working tools: n8n workflow automation, websites, mobile apps, SEO, and personal AI assistants. I take on a small number of clients each quarter, so every engagement ships something real.`,
   },
   {
     q: `How much does AI consultancy cost in the UK?`,
-    a: `Pricing depends on what you need — every business is different. At Camber Co, every engagement starts with a free 30-minute audit call where we understand your situation and recommend the right approach. Click "explore" on any service to chat with our AI and get a personalised recommendation, or book a call directly. No commitment required.`,
+    a: `Every service has a published starting price: workflow automation from £1,200, website builds from £2,500, mobile apps from £4,500, AI consultations at £297 per session, SEO from £750, training and coaching from £197, and personal AI from £497. The exact quote depends on scope. Every engagement starts with a free 30-minute audit call. No pitch, no obligation.`,
   },
   {
     q: `What is an AI readiness audit?`,
-    a: `An AI readiness audit is a focused assessment of your business operations and processes to identify where AI can deliver the highest return on investment. Our free 30-minute audit call and paid AI consultation sessions are designed to give you clarity on exactly which tasks to automate first and what tools to use — with no jargon and no commitment. You'll walk away with a clear, prioritised action list.`,
+    a: `Two things, and they are different. The free 30-minute audit call is a conversation: you describe how your business runs, I tell you what I would automate first. The paid AI Readiness Audit (£750) is a half-day assessment with a written, prioritised report. Most people start with the free call.`,
   },
   {
     q: `Can AI help small businesses in the UK?`,
@@ -58,7 +58,7 @@ const faqs = [
   },
   {
     q: `What is a personal AI assistant?`,
-    a: `A personal AI assistant is an AI trained on your business context — your documents, processes, and knowledge — that runs on platforms you already use like WhatsApp, Telegram, or Slack. Unlike generic AI tools like ChatGPT, it knows your business specifically and can handle tasks, answer questions, and automate workflows tailored to your operations. Camber Co deploys these using OpenClaw, an open-source platform that keeps your data private and local.`,
+    a: `A personal AI assistant is an AI trained on your business context, your documents, processes, and knowledge, that runs on platforms you already use like WhatsApp, Telegram, or Slack. Unlike generic AI tools like ChatGPT, it knows your business specifically and can handle tasks, answer questions, and automate workflows tailored to your operations. Camber Co deploys these using OpenClaw, an open-source platform. Standard setups use cloud AI models with sensible guardrails. On-premises builds are available if you handle sensitive data.`,
   },
   {
     q: `What AI training do you offer for non-technical founders?`,
@@ -100,7 +100,7 @@ const schema = JSON.stringify([
       { "@type": "City", "name": "London" },
       { "@type": "Country", "name": "United Kingdom" }
     ],
-    "slogan": "Build faster. Think clearer. Ship smarter."
+    "slogan": "The AI consultant who builds."
   },
   {
     "@context": "https://schema.org",
@@ -165,65 +165,18 @@ const schema = JSON.stringify([
     "description": "AI systems, SEO, web development, n8n workflow automation, solo founder coaching, and personal AI assistants for UK founders and small businesses.",
     "hasOfferCatalog": {
       "@type": "OfferCatalog",
-      "name": "AI Services",
-      "itemListElement": [
-        {
-          "@type": "Offer",
-          "itemOffered": {
-            "@type": "Service",
-            "name": "AI Consultations",
-            "description": "60-minute sessions to audit where AI will actually move the needle in your business. Clear decisions, clear next steps."
-          },
-          "price": "297",
-          "priceCurrency": "GBP"
+      "name": "Camber Co Services",
+      "itemListElement": services.map((s) => ({
+        "@type": "Offer",
+        "itemOffered": {
+          "@type": "Service",
+          "name": s.title,
+          "url": `${SITE_URL}${s.href}`,
+          "description": s.blurb,
         },
-        {
-          "@type": "Offer",
-          "itemOffered": {
-            "@type": "Service",
-            "name": "SEO Services",
-            "description": "Technical audits, on-page optimisation, and keyword strategy for small businesses. Practical SEO that moves rankings."
-          }
-        },
-        {
-          "@type": "Offer",
-          "itemOffered": {
-            "@type": "Service",
-            "name": "App & Website Builds",
-            "description": "Clean, fast websites and web apps built to convert. From landing pages to full builds for small businesses."
-          }
-        },
-        {
-          "@type": "Offer",
-          "itemOffered": {
-            "@type": "Service",
-            "name": "Solo Founder Training",
-            "description": "1:1 coaching sessions for non-technical founders who want to actually use AI in their business."
-          },
-          "price": "197",
-          "priceCurrency": "GBP"
-        },
-        {
-          "@type": "Offer",
-          "itemOffered": {
-            "@type": "Service",
-            "name": "N8n Workflow Automation",
-            "description": "Custom n8n pipelines that connect your tools, eliminate manual steps, and run without babysitting."
-          },
-          "price": "1200",
-          "priceCurrency": "GBP"
-        },
-        {
-          "@type": "Offer",
-          "itemOffered": {
-            "@type": "Service",
-            "name": "OpenClaw Personal AI",
-            "description": "Pre-configured AI bots for WhatsApp, Telegram, Slack, and Discord. Built on openclaw.ai — local, private, yours."
-          },
-          "price": "497",
-          "priceCurrency": "GBP"
-        }
-      ]
+        "price": s.fromPrice.replace(/[^0-9]/g, ''),
+        "priceCurrency": "GBP",
+      })),
     }
   },
   {
@@ -344,12 +297,12 @@ const schema = JSON.stringify([
               <span class="stat-label">automations shipped</span>
             </div>
             <div class="stat-block">
-              <span class="stat-number" data-count-to="12">12</span>
-              <span class="stat-label">years building software</span>
+              <span class="stat-number" data-count-to="120" data-count-suffix="+">120+</span>
+              <span class="stat-label">hours automated every month</span>
             </div>
             <div class="stat-block">
-              <span class="stat-number">£m+</span>
-              <span class="stat-label">revenue helped generate</span>
+              <span class="stat-number" data-count-to="12">12</span>
+              <span class="stat-label">years building software</span>
             </div>
           </div>
         </div>
@@ -443,7 +396,7 @@ const schema = JSON.stringify([
       <span class="section-tag">ready to start</span>
       <h2 class="cta-heading">Let's build something that works.</h2>
       <p class="cta-sub">30 minutes. No pitch. Just clarity on where AI can make the biggest difference in your business.</p>
-      <a href="/contact" class="btn-primary btn-large">&gt; Get in Touch</a>
+      <a href={auditHref} class="btn-primary btn-large">&gt; {AUDIT_CTA_LABEL}</a>
       <p class="cta-flags">--no-commitment --no-jargon --just-signal</p>
     </div>
   </section>
