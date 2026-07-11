@@ -20,7 +20,7 @@ export async function getStaticPaths() {
 }
 
 const { post } = Astro.props as { post: BlogPost };
-const { html: articleHtml, headings } = processHtml(post.content);
+const { html: articleHtml, headings } = await processHtml(post.content);
 
 const allPosts = await getPublishedPosts();
 
