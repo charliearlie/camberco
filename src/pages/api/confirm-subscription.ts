@@ -108,11 +108,13 @@ export const POST: APIRoute = async ({ request }) => {
 
   const supabase = serverSupabase();
 
+  // Matches first-time confirmations (confirmed=false) and lapsed subscribers
+  // reactivating from their old confirmation link (confirmed=true, status!='active').
   const { data: updated, error } = await supabase
     .from('subscribers')
     .update({ confirmed: true, status: 'active', unsubscribed_at: null })
     .eq('unsubscribe_token', token)
-    .eq('confirmed', false)
+    .or('confirmed.eq.false,status.neq.active')
     .select('email')
     .maybeSingle();
 
@@ -127,10 +129,10 @@ export const POST: APIRoute = async ({ request }) => {
   }
 
   if (!updated) {
-    // Either an invalid token, or a re-click on an already confirmed subscription.
+    // Either an invalid token, or a re-click on an already active subscription.
     const { data: existing } = await supabase
       .from('subscribers')
-      .select('email')
+      .select('email, confirmed, status')
       .eq('unsubscribe_token', token)
       .maybeSingle();
 
@@ -143,10 +145,21 @@ export const POST: APIRoute = async ({ request }) => {
       );
     }
 
+    if (existing.confirmed && existing.status === 'active') {
+      return page(
+        'Subscribed',
+        '$ already confirmed',
+        `<p>You are already subscribed. New posts will land in your inbox.</p><a href="/blog/">Back to blog</a>`,
+      );
+    }
+
+    // Row exists but is not active and the update did not match it: a concurrent
+    // state change. Ask the user to retry; the next POST will hit the update path.
     return page(
-      'Subscribed',
-      '$ already confirmed',
-      `<p>You are already subscribed. New posts will land in your inbox.</p><a href="/blog/">Back to blog</a>`,
+      'Something went wrong',
+      '$ something went wrong',
+      `<p>We could not confirm your subscription. Please try the link again in a minute.</p>`,
+      500,
     );
   }
 
