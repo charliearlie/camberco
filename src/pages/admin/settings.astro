@@ -198,6 +198,9 @@ import AdminLayout from '../../components/admin/AdminLayout.astro';
 
   logoutBtn.addEventListener('click', async () => {
     await supabase.auth.signOut();
+    // Clear the mirror cookie the middleware validates (attributes must
+    // match how the login/callback pages set it, or the browser keeps it).
+    document.cookie = 'camber-admin-token=; Max-Age=0; Path=/; SameSite=Lax; Secure';
     window.location.href = '/admin/login';
   });
 </script>
