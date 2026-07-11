@@ -1,0 +1,64 @@
+# Camber Co
+
+> Camber Co is a London-based AI automation consultancy for UK small businesses, run by Charlie Waite. The AI consultant who builds: not just advice, but working systems. Camber Co designs, builds and ships workflow automations, websites, mobile apps, SEO improvements and personal AI assistants. Every engagement starts with a free 30-minute audit call.
+
+Charlie Waite has 12 years of software engineering experience, including Trainline, Just Eat and Fairplay Sports Media. Camber Co is the consultancy side of that work. Camber Builds is its product division, which has shipped Football IQ to the App Store. Clients get the person who builds, not an account manager.
+
+## Workflow automation (from £1,200)
+
+https://camberco.co.uk/services/automation
+
+Custom n8n and AI workflows for small businesses. Camber Co connects the tools already in the business (email, CRM, Slack, Notion, Stripe, Sheets) and removes the manual joins. Typical automations: lead capture to CRM enrichment, support email triage, weekly KPI digests, invoice chasing. Builds include logging, retries, alerting and a runbook at handover. Typical saving: 10 to 30 hours per month on repetitive processes.
+
+## Website builds (from £2,500)
+
+https://camberco.co.uk/services/builds
+
+Clean, fast websites, landing pages, web apps and MVPs. Built with Astro, Next.js, React and Supabase. Every build is performance-focused and designed around one clear conversion path. Handover means the owner can edit content without a developer.
+
+## Mobile apps (from £4,500)
+
+https://camberco.co.uk/services/apps
+
+Mobile apps from tappable prototype to App Store submission. React Native, Expo and SwiftUI. Camber Builds has shipped Football IQ to the App Store and handles screenshots, metadata, privacy notes, subscriptions, TestFlight and review fixes as part of the project.
+
+## AI consultations (£297 per session)
+
+https://camberco.co.uk/services/consultations
+
+A focused 60-minute session that audits where AI will actually move the needle in a business. Output: clear decisions, a prioritised action list and concrete next steps. No jargon.
+
+## SEO services (from £750)
+
+https://camberco.co.uk/services/seo
+
+Practical SEO for UK small businesses: technical audits, on-page optimisation, keyword research and content strategy. The focus is traffic that converts, not vanity metrics.
+
+## Training & coaching (from £197 solo, team workshops from £1,500)
+
+https://camberco.co.uk/services/training
+
+Hands-on AI coaching for non-technical founders and small teams. Covers evaluating AI tools, building simple automations, prompting well and shipping AI-powered features. Solo sessions are 1:1 and tailored. Team workshops run from £1,500.
+
+## Personal AI (from £497)
+
+https://camberco.co.uk/services/personal-ai
+
+A private AI assistant trained on your business context, running on platforms you already use: WhatsApp, Telegram, Slack or Discord. Deployed with OpenClaw, an open-source platform that keeps data private and local.
+
+## AI Readiness Audit (£750)
+
+A paid half-day assessment of your operations with a written report: which tasks to automate first, which tools to use and what the return looks like. This is separate from the free 30-minute audit call. The free call is always free, with no pitch.
+
+## Proof
+
+- Work showcase: https://camberco.co.uk/work
+- Football IQ (live on the App Store): https://apps.apple.com/app/id6757344691
+- About Charlie: https://camberco.co.uk/about-me
+- Blog: https://camberco.co.uk/blog
+
+## Contact
+
+- Email: hello@camberco.co.uk
+- Contact page: https://camberco.co.uk/contact
+- Based in London, working with businesses across the UK. Delivery is remote-friendly.

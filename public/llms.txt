@@ -1,0 +1,37 @@
+# Camber Co
+
+> Camber Co is a London-based AI automation consultancy for UK small businesses, run by Charlie Waite. The AI consultant who builds: not just advice, but working systems. Camber Co designs, builds and ships workflow automations, websites, mobile apps, SEO improvements and personal AI assistants. Every engagement starts with a free 30-minute audit call.
+
+## Services
+
+- [Workflow automation](https://camberco.co.uk/services/automation): n8n and AI workflows that remove repetitive admin. From £1,200.
+- [Website builds](https://camberco.co.uk/services/builds): fast, conversion-focused websites and web apps. From £2,500.
+- [Mobile apps](https://camberco.co.uk/services/apps): iOS and cross-platform apps, from idea to App Store. From £4,500.
+- [AI consultations](https://camberco.co.uk/services/consultations): a 60-minute session with clear decisions and next steps. £297 per session.
+- [SEO services](https://camberco.co.uk/services/seo): technical audits, on-page fixes and keyword strategy for small businesses. From £750.
+- [Training & coaching](https://camberco.co.uk/services/training): hands-on AI coaching for founders and teams. From £197 solo, team workshops from £1,500.
+- [Personal AI](https://camberco.co.uk/services/personal-ai): private AI assistants on WhatsApp, Telegram, Slack or Discord. From £497.
+
+## Company
+
+- [Home](https://camberco.co.uk/)
+- [Work](https://camberco.co.uk/work): the Camber Builds product showcase, including Football IQ on the App Store.
+- [About](https://camberco.co.uk/about-me): Charlie Waite, Tech Lead and AI engineer, 12 years shipping software.
+- [Blog](https://camberco.co.uk/blog): practical writing on AI strategy and automation for UK founders.
+- [Contact](https://camberco.co.uk/contact)
+
+## Pricing summary
+
+- Workflow automation: from £1,200
+- Website builds: from £2,500
+- Mobile apps: from £4,500
+- AI consultations: £297 per session
+- SEO services: from £750
+- Training & coaching: from £197 solo, £1,500 team workshops
+- Personal AI: from £497
+- AI Readiness Audit: £750. A paid half-day assessment with a written report. This is separate from the free 30-minute audit call, which is always free with no pitch.
+
+## Contact
+
+- Email: hello@camberco.co.uk
+- Every enquiry gets a reply within 24 hours.
