@@ -141,6 +141,14 @@ const schema = JSON.stringify([
             <button type="button" class="btn btn-secondary btn-small" data-automation-run>&gt; Run again</button>
           </div>
 
+          <div class="industry-row" role="group" aria-label="Show this workflow for an industry">
+            <span class="industry-label">show it for:</span>
+            <button type="button" class="industry-btn" data-automation-industry="trades" aria-pressed="false">Trades</button>
+            <button type="button" class="industry-btn" data-automation-industry="agency" aria-pressed="false">Agency</button>
+            <button type="button" class="industry-btn" data-automation-industry="ecommerce" aria-pressed="false">E-commerce</button>
+            <button type="button" class="industry-btn" data-automation-industry="clinic" aria-pressed="false">Clinic</button>
+          </div>
+
           <div class="graph-scroll" aria-label="Automation workflow graph">
             <svg class="automation-svg" viewBox="0 0 760 320" role="img" aria-labelledby="automation-title">
               <title id="automation-title">Email arrives, Claude classifies it, then Notion logs it and Slack receives an alert.</title>
@@ -569,6 +577,51 @@ const schema = JSON.stringify([
     font-family: var(--font-mono);
     font-size: var(--type-caption);
     color: var(--color-text-muted);
+  }
+
+  .industry-row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-2);
+    padding: var(--space-3) var(--space-4);
+    border-bottom: 1px solid var(--color-border-subtle);
+  }
+
+  .industry-label {
+    font-family: var(--font-mono);
+    font-size: var(--type-caption);
+    color: var(--color-text-muted);
+  }
+
+  .industry-btn {
+    padding: var(--space-1) var(--space-3);
+    border: 1px solid var(--color-border-muted);
+    border-radius: var(--radius-sm);
+    background: var(--color-surface-01);
+    color: var(--color-text-secondary);
+    font-family: var(--font-mono);
+    font-size: var(--type-caption);
+    transition:
+      color var(--duration-quick) var(--easing-smooth),
+      border-color var(--duration-quick) var(--easing-smooth);
+  }
+
+  .industry-btn:hover {
+    color: var(--color-text-primary);
+    border-color: var(--color-border-visible);
+  }
+
+  .industry-btn.is-active,
+  .industry-btn[aria-pressed='true'] {
+    color: var(--color-green-500);
+    border-color: var(--color-green-500);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .industry-btn {
+      transition: none;
+    }
   }
 
   .graph-scroll {
