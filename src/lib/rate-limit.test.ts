@@ -1,14 +1,36 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { checkRateLimit, type RateLimitClient } from './rate-limit';
 
+interface DeleteCall {
+  table: string;
+  column: string;
+  value: string;
+}
+
 function fakeClient(
   result: { data: unknown; error: { message: string } | null },
   calls: unknown[][] = [],
+  deletes: DeleteCall[] = [],
+  deleteResult: PromiseLike<{ error: { message: string } | null }> = Promise.resolve({
+    error: null,
+  }),
 ): RateLimitClient {
   return {
     rpc(fn: string, args: Record<string, unknown>) {
       calls.push([fn, args]);
       return Promise.resolve(result);
+    },
+    from(table: string) {
+      return {
+        delete() {
+          return {
+            lt(column: string, value: string) {
+              deletes.push({ table, column, value });
+              return deleteResult;
+            },
+          };
+        },
+      };
     },
   };
 }
@@ -16,6 +38,7 @@ function fakeClient(
 describe('checkRateLimit', () => {
   afterEach(() => {
     vi.unstubAllEnvs();
+    vi.restoreAllMocks();
   });
 
   it('allows when the database says the count is within the limit', async () => {
@@ -47,6 +70,9 @@ describe('checkRateLimit', () => {
       rpc() {
         return Promise.reject(new Error('network down'));
       },
+      from() {
+        throw new Error('should not be reached');
+      },
     };
     const allowed = await checkRateLimit(
       { key: 'subscribe:1.2.3.4', limit: 5, windowMinutes: 60 },
@@ -70,5 +96,61 @@ describe('checkRateLimit', () => {
     expect(calls).toEqual([
       ['bump_rate_limit', { p_key: 'subscribe:9.9.9.9', p_limit: 5, p_window_minutes: 60 }],
     ]);
+  });
+
+  describe('opportunistic cleanup', () => {
+    it('deletes rows older than 24 hours when the random gate fires', async () => {
+      vi.spyOn(Math, 'random').mockReturnValue(0.001);
+      const deletes: DeleteCall[] = [];
+      const before = Date.now();
+
+      const allowed = await checkRateLimit(
+        { key: 'chat:1.2.3.4', limit: 30, windowMinutes: 60 },
+        fakeClient({ data: true, error: null }, [], deletes),
+      );
+
+      expect(allowed).toBe(true);
+      expect(deletes).toHaveLength(1);
+      expect(deletes[0].table).toBe('rate_limits');
+      expect(deletes[0].column).toBe('window_started_at');
+
+      // Cutoff is roughly 24 hours before now.
+      const cutoffMs = new Date(deletes[0].value).getTime();
+      const dayMs = 24 * 60 * 60 * 1000;
+      expect(before - cutoffMs).toBeGreaterThanOrEqual(dayMs - 5000);
+      expect(Date.now() - cutoffMs).toBeLessThanOrEqual(dayMs + 5000);
+    });
+
+    it('issues no delete when the random gate does not fire', async () => {
+      vi.spyOn(Math, 'random').mockReturnValue(0.99);
+      const deletes: DeleteCall[] = [];
+
+      const allowed = await checkRateLimit(
+        { key: 'chat:1.2.3.4', limit: 30, windowMinutes: 60 },
+        fakeClient({ data: true, error: null }, [], deletes),
+      );
+
+      expect(allowed).toBe(true);
+      expect(deletes).toHaveLength(0);
+    });
+
+    it('swallows cleanup failures without affecting the rate limit verdict', async () => {
+      vi.spyOn(Math, 'random').mockReturnValue(0.001);
+      const deletes: DeleteCall[] = [];
+      const failing = Promise.reject(new Error('delete failed'));
+      // Pre-handle so the test runner never sees an unhandled rejection from
+      // the fixture itself; checkRateLimit attaches its own swallow handler.
+      failing.catch(() => {});
+
+      const allowed = await checkRateLimit(
+        { key: 'enquiries:1.2.3.4', limit: 5, windowMinutes: 60 },
+        fakeClient({ data: false, error: null }, [], deletes, failing),
+      );
+
+      // The delete was attempted, its failure was swallowed, and the
+      // fail-open/verdict behaviour is untouched (rpc said blocked).
+      expect(deletes).toHaveLength(1);
+      expect(allowed).toBe(false);
+    });
   });
 });
