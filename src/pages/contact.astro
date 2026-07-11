@@ -1,11 +1,34 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import ChatDrawer from '../components/ChatDrawer.astro';
+
+const schema = JSON.stringify([
+  {
+    '@context': 'https://schema.org',
+    '@type': 'ContactPage',
+    '@id': 'https://camberco.co.uk/contact#webpage',
+    url: 'https://camberco.co.uk/contact',
+    name: 'Contact Camber Co',
+    description: 'Contact Camber Co about AI automation, websites, apps, SEO, training, or personal AI. Every enquiry gets a reply within 24 hours.',
+    isPartOf: { '@id': 'https://camberco.co.uk/#website' },
+    about: { '@id': 'https://camberco.co.uk/#organization' },
+    inLanguage: 'en-GB',
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'Home', item: 'https://camberco.co.uk/' },
+      { '@type': 'ListItem', position: 2, name: 'Contact', item: 'https://camberco.co.uk/contact' },
+    ],
+  },
+]);
 ---
 
 <Layout
   title="Get in Touch — Camber Co"
   description="Ready to move fast with AI? Get in touch with Camber Co for AI strategy, automation, training, or a custom AI bot."
+  schema={schema}
 >
   <main class="contact-page">
     <!-- Breadcrumb -->
