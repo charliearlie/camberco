@@ -96,8 +96,13 @@
     started = true;
     const canvas = document.getElementById('starfield-canvas') as HTMLCanvasElement | null;
     if (!canvas) return;
-    const { startStarfield } = await import('../scripts/starfield.ts');
-    startStarfield(canvas);
+    try {
+      const { startStarfield } = await import('../scripts/starfield.ts');
+      startStarfield(canvas);
+    } catch {
+      // Module failed to load; the CSS fallback stays. Reset so a theme toggle can retry.
+      started = false;
+    }
   }
 
   maybeStart();
