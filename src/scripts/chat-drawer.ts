@@ -33,6 +33,7 @@ function linkify(text: string): string {
 let currentService: ServiceKey = 'general';
 let messages: Message[] = [];
 let isStreaming = false;
+let lastFocused: HTMLElement | null = null;
 
 function getElements() {
   return {
@@ -43,7 +44,13 @@ function getElements() {
     closeBtn: document.getElementById('chatClose'),
     sendBtn: document.getElementById('chatSend'),
     title: document.getElementById('chatTitle'),
+    chips: document.getElementById('chatChips'),
+    fab: document.querySelector<HTMLElement>('.chat-fab'),
   };
+}
+
+function isOpen(): boolean {
+  return document.getElementById('chatDrawer')?.getAttribute('aria-hidden') === 'false';
 }
 
 function appendMessage(container: HTMLElement, role: 'user' | 'assistant', content: string): HTMLElement {
@@ -106,7 +113,7 @@ async function streamResponse(messagesEl: HTMLElement): Promise<void> {
   } catch {
     msgEl.classList.remove('chat-msg--streaming');
     msgEl.innerHTML =
-      'connection lost. <a href="/contact">get in touch directly</a>';
+      'connection lost. <a href="/contact/">get in touch directly</a>';
   }
 
   isStreaming = false;
@@ -115,6 +122,8 @@ async function streamResponse(messagesEl: HTMLElement): Promise<void> {
 function openDrawer(service: ServiceKey = 'general') {
   const els = getElements();
   if (!els.drawer || !els.backdrop || !els.messagesEl || !els.input || !els.title) return;
+
+  lastFocused = document.activeElement instanceof HTMLElement ? document.activeElement : null;
 
   currentService = service;
   messages = [];
@@ -132,9 +141,13 @@ function openDrawer(service: ServiceKey = 'general') {
   };
   els.title.textContent = titles[service] || 'camber/ai';
 
+  (els.drawer as HTMLElement).inert = false;
   els.drawer.setAttribute('aria-hidden', 'false');
   els.backdrop.setAttribute('aria-hidden', 'false');
   document.body.style.overflow = 'hidden';
+
+  els.chips?.removeAttribute('hidden');
+  if (els.fab) els.fab.hidden = true;
 
   setTimeout(() => els.input?.focus(), 350);
 
@@ -147,41 +160,83 @@ function closeDrawer() {
   if (!els.drawer || !els.backdrop) return;
 
   els.drawer.setAttribute('aria-hidden', 'true');
+  (els.drawer as HTMLElement).inert = true;
   els.backdrop.setAttribute('aria-hidden', 'true');
   document.body.style.overflow = '';
+  if (els.fab) els.fab.hidden = false;
+
+  lastFocused?.focus();
+  lastFocused = null;
 }
 
-function sendMessage() {
+function sendMessage(text?: string) {
   const els = getElements();
   if (!els.input || !els.messagesEl || isStreaming) return;
 
-  const text = els.input.value.trim();
-  if (!text) return;
+  const value = (text ?? els.input.value).trim();
+  if (!value) return;
 
   els.input.value = '';
-  messages.push({ role: 'user', content: text });
-  appendMessage(els.messagesEl, 'user', text);
+  els.chips?.setAttribute('hidden', '');
+  messages.push({ role: 'user', content: value });
+  appendMessage(els.messagesEl, 'user', value);
   streamResponse(els.messagesEl);
+}
+
+function trapFocus(e: KeyboardEvent): void {
+  if (e.key !== 'Tab' || !isOpen()) return;
+  const drawer = document.getElementById('chatDrawer');
+  if (!drawer) return;
+
+  const focusables = Array.from(
+    drawer.querySelectorAll<HTMLElement>('button, input, a[href]'),
+  ).filter((el) => !el.hasAttribute('hidden') && el.offsetParent !== null);
+  if (focusables.length === 0) return;
+
+  const first = focusables[0];
+  const last = focusables[focusables.length - 1];
+  const active = document.activeElement;
+
+  if (e.shiftKey && active === first) {
+    e.preventDefault();
+    last.focus();
+  } else if (!e.shiftKey && active === last) {
+    e.preventDefault();
+    first.focus();
+  } else if (!(active instanceof HTMLElement) || !drawer.contains(active)) {
+    e.preventDefault();
+    first.focus();
+  }
 }
 
 export function initChatDrawer(): void {
   const els = getElements();
   if (!els.drawer) return;
 
+  // Hidden drawers are inert: unfocusable and invisible to assistive tech.
+  (els.drawer as HTMLElement).inert = true;
+
   els.closeBtn?.addEventListener('click', closeDrawer);
   els.backdrop?.addEventListener('click', closeDrawer);
 
   document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape') closeDrawer();
+    if (e.key === 'Escape' && isOpen()) closeDrawer();
+    trapFocus(e);
   });
 
-  els.sendBtn?.addEventListener('click', sendMessage);
+  els.sendBtn?.addEventListener('click', () => sendMessage());
 
   els.input?.addEventListener('keydown', (e) => {
     if (e.key === 'Enter' && !isStreaming) {
       e.preventDefault();
       sendMessage();
     }
+  });
+
+  document.querySelectorAll<HTMLElement>('[data-chat-chip]').forEach((chip) => {
+    chip.addEventListener('click', () => {
+      sendMessage(chip.textContent ?? '');
+    });
   });
 
   window.__openChatDrawer = openDrawer;

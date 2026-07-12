@@ -1,5 +1,10 @@
 ---
 // ChatDrawer.astro — Slide-up chat drawer for AI enquiry conversations
+interface Props {
+  /** When set, renders a floating chat button that opens the drawer for this service. */
+  fab?: 'consultations' | 'seo' | 'builds' | 'apps' | 'automation' | 'training' | 'personal-ai' | 'general';
+}
+const { fab } = Astro.props;
 ---
 
 <div class="chat-drawer-backdrop" id="chatBackdrop" aria-hidden="true"></div>
@@ -17,6 +22,12 @@
 
   <div class="chat-messages" id="chatMessages" role="log" aria-live="polite"></div>
 
+  <div class="chat-chips" id="chatChips">
+    <button type="button" class="chat-chip" data-chat-chip>I run a trades business. What could you automate?</button>
+    <button type="button" class="chat-chip" data-chat-chip>What could you automate for an agency?</button>
+    <button type="button" class="chat-chip" data-chat-chip>How much does a chatbot cost?</button>
+  </div>
+
   <div class="chat-input-row">
     <span class="chat-prompt" aria-hidden="true">&gt;</span>
     <input
@@ -33,6 +44,12 @@
     <button class="chat-send" id="chatSend" aria-label="Send message">↵</button>
   </div>
 </div>
+
+{fab && (
+  <button type="button" class="chat-fab" data-chat-open={fab} aria-label="Chat with Camber AI">
+    <span aria-hidden="true">&gt;_</span> chat
+  </button>
+)}
 
 <style>
   .chat-drawer-backdrop {
@@ -240,9 +257,70 @@
     }
   }
 
+  .chat-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    padding: 0 16px 12px;
+    flex-shrink: 0;
+  }
+
+  .chat-chips[hidden] {
+    display: none;
+  }
+
+  .chat-chip {
+    font-family: var(--font-mono, 'JetBrains Mono', monospace);
+    font-size: 0.72rem;
+    color: var(--color-text-secondary, #d0d0d0);
+    background: var(--color-surface-01, #111);
+    border: 1px solid var(--color-border-subtle, #1a1a2e);
+    border-radius: 999px;
+    padding: 6px 12px;
+    cursor: pointer;
+    transition: border-color 0.15s ease, color 0.15s ease;
+  }
+
+  .chat-chip:hover {
+    color: var(--color-green-500, #22c55e);
+    border-color: var(--color-green-500, #22c55e);
+  }
+
+  .chat-fab {
+    position: fixed;
+    right: 20px;
+    bottom: 20px;
+    z-index: 950;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 18px;
+    font-family: var(--font-mono, 'JetBrains Mono', monospace);
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: var(--color-green-500, #22c55e);
+    background: var(--color-surface-00, #0a0a0a);
+    border: 1px solid var(--color-green-500, #22c55e);
+    border-radius: 999px;
+    cursor: pointer;
+    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.4);
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+  }
+
+  .chat-fab:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 0 20px var(--color-green-glow, rgba(34, 197, 94, 0.15)), 0 4px 24px rgba(0, 0, 0, 0.4);
+  }
+
+  .chat-fab[hidden] {
+    display: none;
+  }
+
   @media (prefers-reduced-motion: reduce) {
     .chat-drawer { transition: none; }
     .chat-drawer-backdrop { transition: none; }
     :global(.chat-msg) { animation: none; }
+    .chat-chip { transition: none; }
+    .chat-fab { transition: none; }
   }
 </style>
