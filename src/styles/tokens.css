@@ -222,3 +222,37 @@ button {
     scroll-behavior: auto !important;
   }
 }
+
+/* ============================================================
+   Scroll Reveal
+   Static styles for [data-reveal] / [data-reveal-stagger]
+   (driven by src/scripts/scroll-reveal.ts). Scoped to
+   scripting-enabled browsers so content is never hidden
+   when JavaScript is unavailable.
+   ============================================================ */
+
+@media (scripting: enabled) {
+  [data-reveal],
+  [data-reveal-stagger] > * {
+    opacity: 0;
+    transform: translateY(16px);
+    transition:
+      opacity 400ms cubic-bezier(0.16, 1, 0.3, 1),
+      transform 400ms cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .reveal-visible,
+  [data-reveal-stagger].revealed > * {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  [data-reveal],
+  [data-reveal-stagger] > * {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+}

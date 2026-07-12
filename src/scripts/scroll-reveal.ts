@@ -1,23 +1,3 @@
-export const SCROLL_REVEAL_CSS = `\
-[data-reveal], [data-reveal-stagger] > * {
-  opacity: 0;
-  transform: translateY(16px);
-  transition: opacity 400ms cubic-bezier(0.16, 1, 0.3, 1),
-              transform 400ms cubic-bezier(0.16, 1, 0.3, 1);
-}
-.reveal-visible, [data-reveal-stagger].revealed > * {
-  opacity: 1;
-  transform: translateY(0);
-}
-@media (prefers-reduced-motion: reduce) {
-  [data-reveal], [data-reveal-stagger] > * {
-    opacity: 1;
-    transform: none;
-    transition: none;
-  }
-}
-`;
-
 // ---------------------------------------------------------------------------
 // Internal helpers
 // ---------------------------------------------------------------------------

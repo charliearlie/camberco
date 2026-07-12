@@ -572,15 +572,8 @@ const schema = JSON.stringify([
 </style>
 
 <script>
-  import { initScrollReveal, SCROLL_REVEAL_CSS } from '../../scripts/scroll-reveal.ts';
+  import { initScrollReveal } from '../../scripts/scroll-reveal.ts';
   import { initChatDrawer } from '../../scripts/chat-drawer.ts';
-
-  if (!document.getElementById('scroll-reveal-css')) {
-    const style = document.createElement('style');
-    style.id = 'scroll-reveal-css';
-    style.textContent = SCROLL_REVEAL_CSS;
-    document.head.appendChild(style);
-  }
 
   initScrollReveal();
   initChatDrawer();

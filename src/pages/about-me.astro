@@ -1820,12 +1820,8 @@ const schema = JSON.stringify([
 </style>
 
 <script>
-  import { initScrollReveal, initCounters, SCROLL_REVEAL_CSS } from '../scripts/scroll-reveal.ts';
+  import { initScrollReveal, initCounters } from '../scripts/scroll-reveal.ts';
   import { initAboutTerminal } from '../scripts/about-terminal.ts';
-
-  const style = document.createElement('style');
-  style.textContent = SCROLL_REVEAL_CSS;
-  document.head.appendChild(style);
 
   initScrollReveal();
   initCounters();
