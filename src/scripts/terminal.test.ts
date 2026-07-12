@@ -45,6 +45,28 @@ describe('homepage terminal commands (refactor invariance)', () => {
     ]);
   });
 
+  it('renders services exactly as before the refactor, including the apps entry', () => {
+    expect(dispatchCommand(COMMANDS, 'services')).toEqual([
+      '<span class="t-green">ACTIVE SERVICES</span>',
+      '',
+      '<span class="t-green">  consultations</span>   AI strategy sessions',
+      '<span class="t-green">  seo</span>             search engine optimisation',
+      '<span class="t-green">  builds</span>          apps & website development',
+      '<span class="t-green">  apps</span>            mobile app development',
+      '<span class="t-green">  automation</span>      n8n workflow engineering',
+      '<span class="t-green">  training</span>        solo founder coaching',
+      '<span class="t-green">  personal-ai</span>     your own AI assistant',
+      '',
+      '<span class="t-muted">run "explore &lt;service&gt;" to chat with AI about it</span>',
+    ]);
+  });
+
+  it('renders the explore usage/whitelist exactly as before the refactor, including apps', () => {
+    expect(dispatchCommand(COMMANDS, 'explore')).toEqual([
+      '<span class="t-muted">usage:</span> explore <span class="t-green">consultations</span> | <span class="t-green">seo</span> | <span class="t-green">builds</span> | <span class="t-green">apps</span> | <span class="t-green">automation</span> | <span class="t-green">training</span> | <span class="t-green">personal-ai</span>',
+    ]);
+  });
+
   it('reports unknown commands with the same message', () => {
     expect(dispatchCommand(COMMANDS, 'frobnicate')).toEqual([
       '<span class="t-muted">command not found: frobnicate. type "help" for available commands.</span>',
