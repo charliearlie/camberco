@@ -222,7 +222,7 @@ export const COMMANDS: Record<string, CommandFn> = {
 const BOOT_LINES = [
   '<span class="t-muted">camber-os v2.0.0</span>',
   '<span class="t-muted">connecting to London node...</span> <span class="t-green">connected</span>',
-  '<span class="t-muted">loading services...</span> <span class="t-green">6 active</span>',
+  '<span class="t-muted">loading services...</span> <span class="t-green">7 active</span>',
   '',
   '<span class="t-green">system ready.</span> type <span class="t-pink">help</span> to begin.',
   '',

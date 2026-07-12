@@ -159,7 +159,7 @@ export function initRoiCalculator(root: HTMLElement): void {
       const res = await fetch('/api/enquiries', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name, email, website, service: 'Automation', message }),
+        body: JSON.stringify({ name, email, website, service: 'Workflow automation', message }),
       });
       if (!res.ok) throw new Error('request failed');
       if (status) status.textContent = 'Sent. Charlie will reply within one working day.';

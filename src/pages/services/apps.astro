@@ -3,30 +3,26 @@ import Layout from '../../layouts/Layout.astro';
 import StarfieldHero from '../../components/StarfieldHero.astro';
 import ChatDrawer from '../../components/ChatDrawer.astro';
 import { services } from '../../data/services';
+import { projects as allProjects } from '../../data/projects';
 import { AUDIT_CTA_LABEL, BOOKING_URL } from '../../lib/site';
 
 const appsService = services.find((s) => s.slug === 'apps')!;
 const auditHref = BOOKING_URL ?? '/contact';
 
-const projects = [
-  {
-    slug: 'football-iq',
-    title: 'Football IQ',
-    status: 'live',
-    blurb: 'Daily football trivia with 8+ game modes. AI-generated content nightly.',
-    longBlurb: 'A Wordle-style daily football trivia app with 8+ game modes - Career Path, Transfer Guess, Goalscorer Recall, Starting XI and more. Built with React Native + Expo, running on PostgreSQL. AI agent pipeline auto-generates fresh puzzles nightly from real match data. Free for the last 7 days, with a one-time premium unlock for the growing archive.',
-    tags: ['React Native', 'Expo', 'PostgreSQL', 'AI agents', 'PostHog', 'RevenueCat'],
-    link: { label: 'apps.apple.com', href: 'https://apps.apple.com/us/app/football-iq-daily-quiz-game/id6757344691' },
-  },
-  {
-    slug: 'jodz',
-    title: 'Jodz',
-    status: 'in submission',
-    blurb: 'Privacy-first cashflow forecasting for iPhone & Mac.',
-    longBlurb: 'Jodz answers "where will my money be?" instead of "where did it go?". A single continuous timeline projects every bill, payday, subscription and scheduled event months ahead. Built end-to-end in Swift 6 + SwiftUI with SwiftData and CloudKit private database - no third-party SDKs, no analytics, no tracking. Universal Purchase across iPhone and Mac with a Home Screen widget.',
-    tags: ['Swift 6', 'SwiftUI', 'SwiftData', 'CloudKit', 'Swift Charts', 'Universal Purchase'],
-  },
-];
+// Shipped-projects showcase sources its facts from data/projects.ts, the
+// single source of truth, so this page never drifts from what's actually true.
+const SHOWN_PROJECT_SLUGS = ['football-iq', 'jodz'];
+const projects = SHOWN_PROJECT_SLUGS.map((slug) => allProjects.find((p) => p.slug === slug))
+  .filter((p): p is NonNullable<typeof p> => Boolean(p))
+  .map((p) => ({
+    slug: p.slug,
+    title: p.name,
+    status: p.status.replace(/-/g, ' '),
+    blurb: p.tagline,
+    longBlurb: p.story,
+    tags: p.tech,
+    link: p.links.appStore ? { label: 'apps.apple.com', href: p.links.appStore } : undefined,
+  }));
 
 const processSteps = [
   {
@@ -45,7 +41,7 @@ const processSteps = [
     hash: 'd77c381',
     label: 'Build',
     message: 'feat(app): ship the native-feeling product',
-    body: 'React Native, Expo, SwiftUI, PostgreSQL, CloudKit, analytics, subscriptions, and release tooling when needed.',
+    body: 'React Native, Expo, SwiftUI, Supabase, CloudKit, analytics, subscriptions, and release tooling when needed.',
   },
   {
     hash: 'e14f550',
@@ -55,7 +51,7 @@ const processSteps = [
   },
 ];
 
-const stack = ['React Native', 'Expo', 'Swift 6', 'SwiftUI', 'PostgreSQL', 'CloudKit'];
+const stack = ['React Native', 'Expo', 'Swift 6', 'SwiftUI', 'Supabase', 'CloudKit'];
 
 const faqs = [
   {
@@ -68,7 +64,7 @@ const faqs = [
   },
   {
     q: 'Can the app connect to AI or automation?',
-    a: 'Yes. Football IQ already uses an AI content pipeline, and apps can connect to PostgreSQL, serverless jobs, n8n workflows, or custom APIs.',
+    a: 'Yes. Football IQ already uses an AI content pipeline, and apps can connect to Supabase, serverless jobs, n8n workflows, or custom APIs.',
   },
   {
     q: 'What should I bring to the first call?',
@@ -105,7 +101,7 @@ const schema = JSON.stringify([
 
 <Layout
   title="Mobile App Builds | Camber Co"
-  description="Mobile app builds for founders, from tappable prototype to App Store submission. React Native, Expo, SwiftUI, PostgreSQL, and CloudKit."
+  description="Mobile app builds for founders, from tappable prototype to App Store submission. React Native, Expo, SwiftUI, Supabase, and CloudKit."
   schema={schema}
 >
   <StarfieldHero />

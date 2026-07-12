@@ -6,7 +6,7 @@
   <div class="newsletter-inner">
     <p class="newsletter-label">$ subscribe</p>
     <p class="newsletter-copy">Get new posts in your inbox. No spam, unsubscribe any time.</p>
-    <form class="newsletter-form" data-newsletter-form>
+    <form class="newsletter-form" data-blog-newsletter-form>
       <!-- Honeypot -->
       <input type="text" name="website" style="display:none" tabindex="-1" autocomplete="off" />
       <div class="newsletter-row">
@@ -33,7 +33,7 @@
 </div>
 
 <script>
-  document.querySelectorAll('[data-newsletter-form]').forEach((form) => {
+  document.querySelectorAll('[data-blog-newsletter-form]').forEach((form) => {
     form.addEventListener('submit', async (e) => {
       e.preventDefault();
       const f = e.target as HTMLFormElement;

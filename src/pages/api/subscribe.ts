@@ -58,10 +58,13 @@ export const POST: APIRoute = async ({ request }) => {
     return jsonRes({ success: true, message: 'Already subscribed.' });
   }
 
-  // Upsert subscriber; re-subscribing after an unsubscribe reactivates the row
+  // Upsert subscriber; re-subscribing after an unsubscribe reactivates the row.
+  // confirmed is always reset to false here so a lapsed or anonymously-submitted
+  // address must go through the confirmation email again before it counts as
+  // confirmed. The guard above already short-circuits genuinely active subscribers.
   const { data: subscriber, error } = await supabase
     .from('subscribers')
-    .upsert({ email, status: 'active', unsubscribed_at: null }, { onConflict: 'email' })
+    .upsert({ email, status: 'active', confirmed: false, unsubscribed_at: null }, { onConflict: 'email' })
     .select('unsubscribe_token')
     .single();
 

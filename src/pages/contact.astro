@@ -139,6 +139,7 @@ const schema = JSON.stringify([
       <p class="proof-line">
         <strong>Football IQ</strong>, built and shipped by Camber, grew organic
         downloads 400% in its first months on the App Store.
+        <a href="/blog/how-we-grew-football-iq-organic-traffic-400-percent" class="proof-inline-link">Read the case study →</a>
       </p>
       <p class="proof-line">
         Charlie also built the Plus AI suite used by WhoScored, Oddschecker,
@@ -155,6 +156,10 @@ const schema = JSON.stringify([
 </Layout>
 
 <script>
+  import { initChatDrawer } from '../scripts/chat-drawer.ts';
+
+  initChatDrawer();
+
   const form = document.getElementById('contact-form') as HTMLFormElement;
   const errorEl = document.getElementById('form-error') as HTMLDivElement;
   const successEl = document.getElementById('form-success') as HTMLDivElement;
@@ -662,6 +667,20 @@ const schema = JSON.stringify([
   }
 
   .proof-link:hover {
+    text-decoration: underline;
+  }
+
+  .proof-inline-link {
+    display: inline-block;
+    margin-left: var(--space-2);
+    font-family: var(--font-mono);
+    font-size: var(--type-body-sm);
+    color: var(--color-green-400);
+    text-decoration: none;
+    white-space: nowrap;
+  }
+
+  .proof-inline-link:hover {
     text-decoration: underline;
   }
 

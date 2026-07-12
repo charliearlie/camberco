@@ -74,7 +74,7 @@ const navLinks = [
     <div class="footer-newsletter">
       <p class="col-label">Newsletter</p>
       <p class="newsletter-desc">New posts delivered to your inbox.</p>
-      <form class="footer-nl-form" data-newsletter-form>
+      <form class="footer-nl-form" data-footer-newsletter-form>
         <input type="text" name="website" style="display:none" tabindex="-1" autocomplete="off" />
         <div class="footer-nl-row">
           <input
@@ -363,7 +363,7 @@ const navLinks = [
 </style>
 
 <script>
-  document.querySelectorAll('[data-newsletter-form]').forEach((form) => {
+  document.querySelectorAll('[data-footer-newsletter-form]').forEach((form) => {
     form.addEventListener('submit', async (e) => {
       e.preventDefault();
       const f = e.target as HTMLFormElement;
