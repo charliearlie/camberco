@@ -1,21 +1,61 @@
 // src/scripts/app-demo.ts
 // Lazy phone quiz + parallax demo for /services/apps.
 
-interface QuizQuestion {
+export interface QuizQuestion {
   question: string;
   answers: string[];
   correctIndex: number;
 }
 
-const QUESTIONS: QuizQuestion[] = [
+export const QUESTIONS: QuizQuestion[] = [
   {
-    question: 'Which Premier League team won the 2023/24 title?',
-    answers: ['Arsenal', 'Liverpool', 'Manchester City', 'Aston Villa'],
+    question: 'What kills most app ideas before launch?',
+    answers: [
+      'Slow, expensive agency quotes',
+      'Not enough features',
+      'The wrong logo',
+      'Too much user feedback',
+    ],
+    correctIndex: 0,
+  },
+  {
+    question: 'What should version one of your app do?',
+    answers: [
+      'Everything you can think of',
+      'One job your users would pay for',
+      'Match every competitor feature',
+      'Win a design award',
+    ],
+    correctIndex: 1,
+  },
+  {
+    question: 'How does Camber ship without a big dev team?',
+    answers: [
+      'Offshore outsourcing',
+      'No-code templates',
+      'One senior builder, React Native and AI tooling',
+      'It does not',
+    ],
     correctIndex: 2,
   },
   {
-    question: 'What powers Football IQ on mobile?',
-    answers: ['React Native + Expo', 'A spreadsheet', 'A static PDF', 'A slide deck'],
+    question: 'How soon should you have a build you can tap?',
+    answers: [
+      'In about 12 months',
+      'After the funding round',
+      'Once the spec is perfect',
+      'Weeks, not months',
+    ],
+    correctIndex: 3,
+  },
+  {
+    question: 'What proves this is not just talk?',
+    answers: [
+      'Football IQ, live on the App Store',
+      'A pitch deck',
+      'A mood board',
+      'A roadmap PDF',
+    ],
     correctIndex: 0,
   },
 ];
@@ -58,7 +98,7 @@ function initQuiz(root: HTMLElement): void {
 
     const title = document.createElement('p');
     title.className = 'quiz-done-title';
-    title.textContent = "🏆 Done - you're ready";
+    title.textContent = "Done - you're ready";
 
     const body = document.createElement('p');
     body.className = 'quiz-done-body';
