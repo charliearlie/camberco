@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { dispatchCommand } from './terminal-engine';
-import { COMMANDS } from './terminal';
+import { COMMANDS, INBOX_DEMO } from './terminal';
 
 describe('homepage terminal commands (refactor invariance)', () => {
   it('renders status exactly as before the refactor', () => {
@@ -84,5 +84,31 @@ describe('homepage terminal commands (refactor invariance)', () => {
     expect(dispatchCommand(COMMANDS, '<img>')).toEqual([
       '<span class="t-muted">command not found: &lt;img&gt;. type "help" for available commands.</span>',
     ]);
+  });
+});
+
+describe('demo inbox', () => {
+  it('lists demo inbox in help', () => {
+    expect(dispatchCommand(COMMANDS, 'help').join('\n')).toContain('demo inbox');
+  });
+
+  it('shows usage for bare demo', () => {
+    expect(dispatchCommand(COMMANDS, 'demo')).toEqual([
+      '<span class="t-muted">usage:</span> demo <span class="t-green">inbox</span>',
+    ]);
+  });
+
+  it('acknowledges demo inbox and schedules the replay', () => {
+    expect(dispatchCommand(COMMANDS, 'demo inbox')).toEqual([
+      '<span class="t-green">launching inbox agent...</span>',
+    ]);
+  });
+
+  it('tells the triage story without em dashes', () => {
+    const all = INBOX_DEMO.map((l) => l.text).join('\n');
+    expect(all).toContain('3 new emails');
+    expect(all).toContain('invoice logged to Xero');
+    expect(all).toContain('reply drafted');
+    expect(all).not.toMatch(/—/);
   });
 });

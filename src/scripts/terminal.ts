@@ -3,7 +3,7 @@
 
 import type { ServiceKey } from './chat-prompts';
 import { createTerminal, L, escapeHtml } from './terminal-engine';
-import type { CommandFn } from './terminal-engine';
+import type { AutoplayLine, CommandFn, TerminalHandle } from './terminal-engine';
 
 declare global {
   interface Window {
@@ -15,14 +15,34 @@ declare global {
 const PUBLIC_COMMANDS = [
   'help', 'status', 'about', 'services',
   'explore consultations', 'explore automation', 'explore training', 'explore personal-ai',
-  'stack', 'contact', 'book', 'clear',
+  'stack', 'contact', 'book', 'demo inbox', 'clear',
 ];
 
 export const ALL_COMPLETIONS = [
   ...PUBLIC_COMMANDS,
-  'explore',
+  'explore', 'demo',
   'ping', 'sudo', 'whoami', 'cowsay', 'matrix', 'exit',
   'ls', 'cat', 'rm', 'cd', 'npm', 'hello', 'hi', '42',
+];
+
+let handle: TerminalHandle | null = null;
+
+// Scripted replay: an agent triaging email. Typed-out theatre via autoplay.
+export const INBOX_DEMO: AutoplayLine[] = [
+  { type: 'command', text: 'agent run inbox-triage' },
+  { type: 'output', text: '<span class="t-muted">connecting to inbox...</span> <span class="t-green">connected</span>', delayMs: 500 },
+  { type: 'output', text: '<span class="t-green">3 new emails</span>', delayMs: 450 },
+  { type: 'output', text: '', delayMs: 150 },
+  { type: 'output', text: '<span class="t-muted">[1/3]</span> supplier invoice <span class="t-green">→ classified: finance</span>', delayMs: 420 },
+  { type: 'output', text: '<span class="t-muted">[2/3]</span> quote request <span class="t-green">→ classified: new lead</span>', delayMs: 420 },
+  { type: 'output', text: '<span class="t-muted">[3/3]</span> newsletter <span class="t-muted">→ archived</span>', delayMs: 420 },
+  { type: 'output', text: '', delayMs: 150 },
+  { type: 'output', text: '<span class="t-green">✓</span> invoice logged to Xero', delayMs: 480 },
+  { type: 'output', text: '<span class="t-green">✓</span> reply drafted for the quote request', delayMs: 480 },
+  { type: 'output', text: '<span class="t-green">✓</span> follow-up scheduled for Friday', delayMs: 480 },
+  { type: 'output', text: '', delayMs: 150 },
+  { type: 'output', text: '<span class="t-muted">3 emails handled. none needed a human.</span>', delayMs: 350 },
+  { type: 'output', text: '<span class="t-pink">→ this can run on your inbox. type "book".</span>' },
 ];
 
 // ─── Command Registry ────────────────────────────────────────────────────────
@@ -38,6 +58,7 @@ export const COMMANDS: Record<string, CommandFn> = {
       <span class="t-green">stack</span>             tech stack
       <span class="t-green">contact</span>           get in touch
       <span class="t-green">book</span>              book a free audit call
+      <span class="t-green">demo inbox</span>        watch an agent clear an inbox
       <span class="t-green">clear</span>             clear terminal
 
     <span class="t-muted">tab to autocomplete · ↑↓ history · try hidden commands</span>
@@ -134,6 +155,18 @@ export const COMMANDS: Record<string, CommandFn> = {
       `;
   },
 
+  demo: (args) => {
+    if ((args[0] || '').toLowerCase() === 'inbox') {
+      if (typeof window !== 'undefined') {
+        window.setTimeout(() => {
+          handle?.autoplay(INBOX_DEMO);
+        }, 350);
+      }
+      return ['<span class="t-green">launching inbox agent...</span>'];
+    }
+    return ['<span class="t-muted">usage:</span> demo <span class="t-green">inbox</span>'];
+  },
+
   clear: () => [],
 
   // ── Easter eggs ────────────────────────────────────────────────────────
@@ -200,7 +233,7 @@ export function initTerminal(): void {
   const root = document.getElementById('interactiveTerminal');
   if (!root) return;
 
-  createTerminal({
+  handle = createTerminal({
     root,
     commands: COMMANDS,
     completions: ALL_COMPLETIONS,
