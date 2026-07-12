@@ -145,31 +145,73 @@ const schema = JSON.stringify([
               <span class="window-dot window-dot--yellow"></span>
               <span class="window-dot window-dot--green"></span>
               <span class="browser-url">https://client-site.com/offer</span>
+              <span class="mock-label">Illustration</span>
+              <div class="mock-toggle" role="group" aria-label="Toggle before and after states">
+                <button type="button" class="mock-toggle-btn" data-mock-state="before" aria-pressed="false">Before</button>
+                <button type="button" class="mock-toggle-btn is-active" data-mock-state="after" aria-pressed="true">After</button>
+              </div>
             </div>
             <div class="proof-browser-body">
-              <div class="proof-site">
-                <nav class="proof-site-nav" aria-label="Preview site navigation">
-                  <span>Northstar Studio</span>
-                  <span>availability open</span>
-                </nav>
-
-                <section class="proof-site-hero">
-                  <span class="proof-kicker">Service page rebuild</span>
-                  <h2>Turn visitor confusion into booked calls.</h2>
-                  <p>
-                    A focused page system for a premium consultancy: clearer offer,
-                    sharper proof, faster load, and one obvious next step.
-                  </p>
-                  <div class="proof-site-actions" aria-label="Preview site actions">
-                    <span>Book strategy call</span>
-                    <span>View proof</span>
+              <div data-mock-panel="before" hidden>
+                <div class="proof-site proof-site--before">
+                  <nav class="before-nav" aria-hidden="true">
+                    <span class="before-brand">Northstar Studio</span>
+                    <span>Home</span>
+                    <span>About</span>
+                    <span>Services</span>
+                    <span>Portfolio</span>
+                    <span>News</span>
+                    <span>Contact</span>
+                  </nav>
+                  <section class="before-hero">
+                    <h2>Welcome to our website</h2>
+                    <p>
+                      We are a full service creative digital agency studio offering end to end
+                      solutions across brand, web, print, social, video and more, for clients of
+                      every size in every sector. Please explore our site to learn more about
+                      everything we can do for you and your business today.
+                    </p>
+                    <div class="before-actions" aria-hidden="true">
+                      <span>Learn more</span>
+                      <span>Our services</span>
+                      <span>Download brochure</span>
+                      <span>Contact us</span>
+                    </div>
+                  </section>
+                  <div class="before-popup" aria-hidden="true">
+                    <strong>Join our newsletter!</strong>
+                    <span>Subscribe for weekly updates</span>
                   </div>
-                </section>
+                  <div class="before-cookie" aria-hidden="true">
+                    This website uses cookies. Accept | Manage | Decline
+                  </div>
+                </div>
+              </div>
+              <div data-mock-panel="after">
+                <div class="proof-site">
+                  <nav class="proof-site-nav" aria-label="Preview site navigation">
+                    <span>Northstar Studio</span>
+                    <span>availability open</span>
+                  </nav>
 
-                <div class="proof-metrics" aria-label="Preview quality signals">
-                  <span><strong>95+</strong> performance target</span>
-                  <span><strong>1</strong> primary conversion path</span>
-                  <span><strong>0</strong> bloated plugins</span>
+                  <section class="proof-site-hero">
+                    <span class="proof-kicker">Service page rebuild</span>
+                    <h2>Turn visitor confusion into booked calls.</h2>
+                    <p>
+                      A focused page system for a premium consultancy: clearer offer,
+                      sharper proof, faster load, and one obvious next step.
+                    </p>
+                    <div class="proof-site-actions" aria-label="Preview site actions">
+                      <span>Book strategy call</span>
+                      <span>View proof</span>
+                    </div>
+                  </section>
+
+                  <div class="proof-metrics" aria-label="Preview quality signals">
+                    <span><strong>95+</strong> performance target</span>
+                    <span><strong>1</strong> primary conversion path</span>
+                    <span><strong>0</strong> bloated plugins</span>
+                  </div>
                 </div>
               </div>
             </div>
@@ -675,6 +717,116 @@ const schema = JSON.stringify([
     line-height: 1;
   }
 
+  .mock-label {
+    margin-left: var(--space-2);
+    padding: 2px var(--space-2);
+    border: 1px solid var(--color-border-muted);
+    border-radius: var(--radius-sm);
+    font-family: var(--font-mono);
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--color-text-muted);
+    flex-shrink: 0;
+  }
+
+  .mock-toggle {
+    display: inline-flex;
+    gap: 2px;
+    margin-left: var(--space-2);
+    flex-shrink: 0;
+  }
+
+  .mock-toggle-btn {
+    padding: 2px var(--space-2);
+    border: 1px solid var(--color-border-muted);
+    border-radius: var(--radius-sm);
+    background: var(--color-surface-01);
+    color: var(--color-text-muted);
+    font-family: var(--font-mono);
+    font-size: 10px;
+  }
+
+  .mock-toggle-btn.is-active,
+  .mock-toggle-btn[aria-pressed='true'] {
+    color: var(--color-green-500);
+    border-color: var(--color-green-500);
+  }
+
+  .proof-site--before {
+    align-content: start;
+    gap: var(--space-4);
+    background: linear-gradient(140deg, #3a3a44, #2c2c34);
+    position: relative;
+  }
+
+  .before-nav {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-3);
+    font-size: var(--type-caption);
+    color: color-mix(in srgb, var(--color-text-inverse) 60%, transparent);
+  }
+
+  .before-brand {
+    font-weight: 800;
+    color: var(--color-text-inverse);
+  }
+
+  .before-hero h2 {
+    max-width: none;
+    font-family: var(--font-sans);
+    font-size: var(--type-h2);
+    line-height: 1.2;
+    letter-spacing: 0;
+  }
+
+  .before-hero p {
+    max-width: none;
+    font-size: var(--type-body-sm);
+    line-height: 1.5;
+  }
+
+  .before-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+    margin-top: var(--space-3);
+  }
+
+  .before-actions span {
+    padding: var(--space-2) var(--space-3);
+    border: 1px solid color-mix(in srgb, var(--color-text-inverse) 30%, transparent);
+    border-radius: var(--radius-sm);
+    font-size: var(--type-caption);
+    font-weight: 700;
+  }
+
+  .before-popup {
+    position: absolute;
+    right: var(--space-4);
+    bottom: 72px;
+    display: grid;
+    gap: var(--space-1);
+    padding: var(--space-3);
+    border: 1px solid color-mix(in srgb, var(--color-text-inverse) 30%, transparent);
+    border-radius: var(--radius-sm);
+    background: color-mix(in srgb, var(--color-text-primary) 80%, transparent);
+    font-size: var(--type-caption);
+  }
+
+  .before-cookie {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    padding: var(--space-2) var(--space-4);
+    background: color-mix(in srgb, var(--color-text-primary) 85%, transparent);
+    border-top: 1px solid color-mix(in srgb, var(--color-text-inverse) 20%, transparent);
+    font-size: var(--type-caption);
+    text-align: center;
+  }
+
   .launch-board {
     display: grid;
     align-content: start;
@@ -1044,6 +1196,24 @@ const schema = JSON.stringify([
       if (service && window.__openChatDrawer) {
         window.__openChatDrawer(service as any);
       }
+    });
+  });
+
+  // Before/after mock toggle
+  const mockButtons = Array.from(document.querySelectorAll<HTMLButtonElement>('[data-mock-state]'));
+  const mockPanels = Array.from(document.querySelectorAll<HTMLElement>('[data-mock-panel]'));
+
+  mockButtons.forEach((button) => {
+    button.addEventListener('click', () => {
+      const state = button.dataset.mockState;
+      mockButtons.forEach((b) => {
+        const active = b === button;
+        b.classList.toggle('is-active', active);
+        b.setAttribute('aria-pressed', String(active));
+      });
+      mockPanels.forEach((panel) => {
+        panel.hidden = panel.dataset.mockPanel !== state;
+      });
     });
   });
 </script>
