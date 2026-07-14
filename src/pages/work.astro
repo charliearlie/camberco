@@ -4,12 +4,14 @@ import Layout from '../layouts/Layout.astro';
 import StarfieldHero from '../components/StarfieldHero.astro';
 import ChatDrawer from '../components/ChatDrawer.astro';
 import { projects, type Project } from '../data/projects';
+import { experience } from '../data/experience';
 import { AUDIT_CTA_LABEL, BOOKING_URL } from '../lib/site';
 
 const auditHref = BOOKING_URL ?? '/contact';
 
 const builds = projects.filter((p) => p.division === 'camber-builds');
 const credentials = projects.filter((p) => p.division === 'professional-credential');
+const careerHighlights = experience.filter((role) => role.featured);
 
 const statusLabels: Record<Project['status'], string> = {
   live: 'live',
@@ -43,7 +45,7 @@ const schema = JSON.stringify([
     name: 'Camber Builds',
     url: 'https://camberco.co.uk/work',
     description:
-      'Apps and websites designed, built and shipped by Camber Co: Football IQ, Jodz, bio-core and ClipPin, plus professional work for major sports media brands.',
+      'Apps and websites designed, built and shipped by Camber Co: Football IQ, Jodz, bio-core and ClipPin, plus professional work for major sports media brands and enterprise experience at the BBC, Just Eat and Trainline.',
     about: { '@id': 'https://camberco.co.uk/#organization' },
   },
   {
@@ -72,7 +74,7 @@ const schema = JSON.stringify([
 
 <Layout
   title="Camber Builds | Apps and Websites Shipped by Camber Co"
-  description="Camber Builds is the product division of Camber Co. Football IQ, Jodz, bio-core and ClipPin, designed, built and shipped. Plus professional work for major sports media brands."
+  description="Camber Builds is the product division of Camber Co. Football IQ, Jodz, bio-core and ClipPin, designed, built and shipped. Backed by 12 years of enterprise experience at the BBC, Just Eat and Trainline."
   schema={schema}
 >
   <StarfieldHero />
@@ -187,6 +189,41 @@ const schema = JSON.stringify([
               </article>
             );
           })}
+        </div>
+      </div>
+    </section>
+
+    <section class="section-block" aria-labelledby="experience-heading">
+      <div class="container">
+        <div class="section-header" data-reveal>
+          <p class="section-tag">$ git log --author=charlie</p>
+          <h2 id="experience-heading">Shipped at scale.</h2>
+          <p>
+            Before Camber Co, 12 years building software inside some of the most
+            recognisable names in the UK and Europe. The same hands are on your project.
+          </p>
+        </div>
+
+        <div class="work-grid" data-reveal-stagger>
+          {careerHighlights.map((role) => (
+            <article class="work-card">
+              <div class="card-bar">
+                <span class="window-dot window-dot--red"></span>
+                <span class="window-dot window-dot--yellow"></span>
+                <span class="window-dot window-dot--green"></span>
+                <span class="card-path">~/{role.companySlug}</span>
+                <span class="status-pill status-pill--period">{role.date}</span>
+              </div>
+              <div class="card-body">
+                <h3>{role.company}</h3>
+                <p class="card-tagline">{role.title}</p>
+                <p class="card-story">{role.highlight}</p>
+                <div class="card-tags">
+                  {role.tags.map((t) => <span>{t}</span>)}
+                </div>
+              </div>
+            </article>
+          ))}
         </div>
       </div>
     </section>
@@ -498,6 +535,12 @@ const schema = JSON.stringify([
   .status-pill--professional-work {
     color: var(--color-pink-500);
     border-color: color-mix(in srgb, var(--color-pink-500) 40%, transparent);
+  }
+
+  .status-pill--period {
+    max-width: 60%;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 
   .card-body {
