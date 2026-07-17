@@ -1,0 +1,643 @@
+---
+export const prerender = false;
+import AdminLayout from '../../components/admin/AdminLayout.astro';
+---
+
+<AdminLayout title="Clients">
+  <main style="max-width: 1100px; margin: 0 auto; padding: var(--space-8) var(--space-6);">
+    <!-- Heading -->
+    <div class="crm-head">
+      <h1 class="crm-h1">$ camber admin --clients</h1>
+      <button type="button" id="new-client-btn" class="crm-primary-btn">+ new client</button>
+    </div>
+
+    <!-- Toolbar: search + status filter -->
+    <div class="crm-toolbar">
+      <input
+        type="search"
+        id="client-search"
+        class="crm-search"
+        placeholder="search name, company, email…"
+        aria-label="Search clients"
+      />
+    </div>
+    <div id="filter-tabs" class="filter-tabs" role="tablist" aria-label="Filter by status">
+      <button class="filter-tab active" data-status="all" role="tab" aria-selected="true">all <span class="tab-count" id="count-all">0</span></button>
+      <button class="filter-tab" data-status="lead" role="tab" aria-selected="false">lead <span class="tab-count" id="count-lead">0</span></button>
+      <button class="filter-tab" data-status="active" role="tab" aria-selected="false">active <span class="tab-count" id="count-active">0</span></button>
+      <button class="filter-tab" data-status="past" role="tab" aria-selected="false">past <span class="tab-count" id="count-past">0</span></button>
+      <button class="filter-tab" data-status="archived" role="tab" aria-selected="false">archived <span class="tab-count" id="count-archived">0</span></button>
+    </div>
+
+    <!-- Error -->
+    <div id="crm-error" class="crm-error"></div>
+
+    <!-- Clients table -->
+    <div class="crm-table">
+      <div class="crm-header crm-clients-grid">
+        <span class="crm-col-label">contact</span>
+        <span class="crm-col-label">company</span>
+        <span class="crm-col-label">status</span>
+        <span class="crm-col-label">added</span>
+      </div>
+      <div id="client-list">
+        <div class="crm-loading">loading clients…</div>
+      </div>
+    </div>
+
+    <!-- Record editor (create + edit) -->
+    <section id="client-editor" class="crm-editor" hidden aria-label="Client record">
+      <div class="crm-editor-head">
+        <h2 id="editor-title" class="crm-editor-title"></h2>
+        <button type="button" id="editor-close" class="crm-icon-btn" aria-label="Close editor">✕</button>
+      </div>
+
+      <div id="editor-error" class="crm-error crm-error--inline"></div>
+
+      <form id="client-form" class="crm-form">
+        <div class="crm-form-grid">
+          <div class="crm-field">
+            <label for="f-name">name *</label>
+            <input id="f-name" name="name" type="text" required maxlength="200" autocomplete="off" />
+          </div>
+          <div class="crm-field">
+            <label for="f-company">company</label>
+            <input id="f-company" name="company" type="text" maxlength="200" autocomplete="off" />
+          </div>
+          <div class="crm-field">
+            <label for="f-email">email</label>
+            <input id="f-email" name="email" type="email" maxlength="320" autocomplete="off" />
+          </div>
+          <div class="crm-field">
+            <label for="f-phone">phone</label>
+            <input id="f-phone" name="phone" type="text" maxlength="50" autocomplete="off" />
+          </div>
+          <div class="crm-field">
+            <label for="f-website">website</label>
+            <input id="f-website" name="website" type="text" maxlength="500" autocomplete="off" />
+          </div>
+          <div class="crm-field">
+            <label for="f-status">status</label>
+            <select id="f-status" name="status">
+              <option value="lead">lead</option>
+              <option value="active">active</option>
+              <option value="past">past</option>
+              <option value="archived">archived</option>
+            </select>
+          </div>
+          <div class="crm-field">
+            <label for="f-source">source</label>
+            <select id="f-source" name="source">
+              <option value="direct">direct</option>
+              <option value="referral">referral</option>
+              <option value="enquiry">enquiry</option>
+            </select>
+          </div>
+          <div class="crm-field crm-field--full">
+            <label for="f-summary">summary</label>
+            <input id="f-summary" name="summary" type="text" maxlength="500" autocomplete="off" placeholder="one-line summary" />
+          </div>
+        </div>
+
+        <div class="crm-form-actions">
+          <button type="submit" id="save-btn" class="crm-primary-btn">$ save</button>
+          <button type="button" id="delete-btn" class="crm-danger-btn" hidden>$ delete</button>
+        </div>
+      </form>
+
+      <!-- Related records (edit mode only) -->
+      <div id="related" hidden>
+        <div class="crm-related-grid">
+          <div class="crm-related">
+            <h3 class="crm-related-title">enquiries</h3>
+            <div id="related-enquiries" class="crm-related-list"></div>
+          </div>
+          <div class="crm-related">
+            <h3 class="crm-related-title">projects</h3>
+            <div id="related-projects" class="crm-related-list"></div>
+          </div>
+        </div>
+
+        <div class="crm-timeline">
+          <h3 class="crm-related-title">activity timeline</h3>
+          <form id="note-form" class="crm-note-form">
+            <label for="note-body" class="crm-visually-hidden">Add a note</label>
+            <textarea id="note-body" rows="2" maxlength="20000" placeholder="add a note…"></textarea>
+            <button type="submit" id="note-btn" class="crm-primary-btn">$ add</button>
+          </form>
+          <div id="timeline-list" class="crm-timeline-list"></div>
+        </div>
+      </div>
+    </section>
+  </main>
+</AdminLayout>
+
+<script>
+  import { supabase } from '../../lib/supabase';
+  import { penceToGBP } from '../../lib/crm';
+
+  interface Client {
+    id: string;
+    name: string;
+    company: string | null;
+    email: string | null;
+    phone: string | null;
+    website: string | null;
+    status: string;
+    source: string;
+    summary: string | null;
+    created_at: string;
+  }
+  interface RelEnquiry { id: string; name: string; email: string; service: string; status: string; created_at: string; }
+  interface RelProject { id: string; name: string; status: string; value_pence: number | null; currency: string; due_date: string | null; }
+  interface Note { id: string; body: string; project_id: string | null; created_at: string; }
+
+  let clients: Client[] = [];
+  let currentFilter = 'all';
+  let searchTerm = '';
+  let editingId: string | null = null;
+
+  const listEl = document.getElementById('client-list') as HTMLDivElement;
+  const errorEl = document.getElementById('crm-error') as HTMLDivElement;
+  const editorEl = document.getElementById('client-editor') as HTMLElement;
+  const editorTitle = document.getElementById('editor-title') as HTMLElement;
+  const editorError = document.getElementById('editor-error') as HTMLDivElement;
+  const form = document.getElementById('client-form') as HTMLFormElement;
+  const saveBtn = document.getElementById('save-btn') as HTMLButtonElement;
+  const deleteBtn = document.getElementById('delete-btn') as HTMLButtonElement;
+  const relatedEl = document.getElementById('related') as HTMLDivElement;
+  const searchEl = document.getElementById('client-search') as HTMLInputElement;
+
+  async function getToken(): Promise<string | null> {
+    const { data: { session } } = await supabase.auth.getSession();
+    return session?.access_token ?? null;
+  }
+
+  function escapeHtml(s: string): string {
+    return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+  }
+  function formatDate(iso: string): string {
+    return new Date(iso).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
+  }
+
+  const statusColors: Record<string, string> = {
+    new: 'var(--color-green-500)', contacted: 'var(--color-warning)', booked: 'var(--color-pink-500)', closed: 'var(--color-text-muted)',
+    lead: 'var(--color-warning)', active: 'var(--color-green-500)', past: 'var(--color-text-muted)', archived: 'var(--color-text-muted)',
+    proposal: 'var(--color-pink-500)', on_hold: 'var(--color-warning)', completed: 'var(--color-green-400)', cancelled: 'var(--color-error)',
+  };
+  function statusBadge(status: string): string {
+    const color = statusColors[status] || 'var(--color-text-muted)';
+    const label = escapeHtml(status.replace(/_/g, ' '));
+    return `<span style="display:inline-block;padding:2px 10px;background:color-mix(in srgb, ${color} 13%, transparent);color:${color};font-family:var(--font-mono);font-size:11px;font-weight:600;border-radius:9999px;border:1px solid color-mix(in srgb, ${color} 30%, transparent);letter-spacing:0.02em;">${label}</span>`;
+  }
+
+  function showError(el: HTMLElement, msg: string) {
+    el.textContent = msg;
+    el.style.display = 'block';
+  }
+  function clearError(el: HTMLElement) {
+    el.textContent = '';
+    el.style.display = 'none';
+  }
+
+  // ---- List rendering ----
+  function updateCounts() {
+    const counts: Record<string, number> = { all: clients.length, lead: 0, active: 0, past: 0, archived: 0 };
+    for (const c of clients) counts[c.status] = (counts[c.status] || 0) + 1;
+    for (const key of Object.keys(counts)) {
+      const el = document.getElementById(`count-${key}`);
+      if (el) el.textContent = String(counts[key]);
+    }
+  }
+
+  function visibleClients(): Client[] {
+    const term = searchTerm.trim().toLowerCase();
+    return clients.filter((c) => {
+      if (currentFilter !== 'all' && c.status !== currentFilter) return false;
+      if (!term) return true;
+      return (
+        c.name.toLowerCase().includes(term) ||
+        (c.company ?? '').toLowerCase().includes(term) ||
+        (c.email ?? '').toLowerCase().includes(term)
+      );
+    });
+  }
+
+  function renderRow(c: Client): string {
+    return `
+      <div class="crm-row crm-clients-grid" data-id="${escapeHtml(c.id)}" role="button" tabindex="0">
+        <span class="crm-cell crm-contact">
+          <span class="crm-name">${escapeHtml(c.name)}</span>
+          <span class="crm-sub">${escapeHtml(c.email ?? '—')}</span>
+        </span>
+        <span class="crm-cell crm-muted">${escapeHtml(c.company ?? '—')}</span>
+        <span class="crm-cell">${statusBadge(c.status)}</span>
+        <span class="crm-cell crm-mono-muted">${formatDate(c.created_at)}</span>
+      </div>`;
+  }
+
+  function renderList() {
+    const items = visibleClients();
+    if (items.length === 0) {
+      listEl.innerHTML = `<div class="crm-empty">no clients${currentFilter !== 'all' ? ` with status "${escapeHtml(currentFilter)}"` : ''}${searchTerm ? ' matching your search' : ''} yet</div>`;
+      return;
+    }
+    listEl.innerHTML = items.map(renderRow).join('');
+  }
+
+  // ---- Editor ----
+  function openCreate() {
+    editingId = null;
+    editorTitle.textContent = 'new client';
+    form.reset();
+    (document.getElementById('f-status') as HTMLSelectElement).value = 'lead';
+    (document.getElementById('f-source') as HTMLSelectElement).value = 'direct';
+    deleteBtn.hidden = true;
+    relatedEl.hidden = true;
+    clearError(editorError);
+    editorEl.hidden = false;
+    editorEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    (document.getElementById('f-name') as HTMLInputElement).focus();
+  }
+
+  function fillForm(c: Client) {
+    (document.getElementById('f-name') as HTMLInputElement).value = c.name ?? '';
+    (document.getElementById('f-company') as HTMLInputElement).value = c.company ?? '';
+    (document.getElementById('f-email') as HTMLInputElement).value = c.email ?? '';
+    (document.getElementById('f-phone') as HTMLInputElement).value = c.phone ?? '';
+    (document.getElementById('f-website') as HTMLInputElement).value = c.website ?? '';
+    (document.getElementById('f-status') as HTMLSelectElement).value = c.status;
+    (document.getElementById('f-source') as HTMLSelectElement).value = c.source;
+    (document.getElementById('f-summary') as HTMLInputElement).value = c.summary ?? '';
+  }
+
+  async function openEdit(id: string) {
+    clearError(editorError);
+    editorEl.hidden = false;
+    editorTitle.textContent = 'loading…';
+    editorEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    const token = await getToken();
+    if (!token) { window.location.href = '/admin/login'; return; }
+    try {
+      const res = await fetch(`/api/admin/clients?id=${encodeURIComponent(id)}`, { headers: { Authorization: `Bearer ${token}` } });
+      if (res.status === 401) { window.location.href = '/admin/login'; return; }
+      const json = await res.json();
+      if (!res.ok || json.error) throw new Error(json.error ?? 'Failed to load client.');
+      const c: Client = json.client;
+      editingId = c.id;
+      editorTitle.textContent = c.name;
+      fillForm(c);
+      deleteBtn.hidden = false;
+      relatedEl.hidden = false;
+      renderRelated(json.enquiries ?? [], json.projects ?? [], json.notes ?? []);
+    } catch (err) {
+      showError(editorError, (err as Error).message);
+    }
+  }
+
+  function renderRelated(enquiries: RelEnquiry[], projects: RelProject[], notes: Note[]) {
+    const enqEl = document.getElementById('related-enquiries') as HTMLDivElement;
+    enqEl.innerHTML = enquiries.length
+      ? enquiries.map((e) => `
+          <a class="crm-related-row" href="/admin/enquiries">
+            <span class="crm-related-main">${escapeHtml(e.name)}<span class="crm-sub">${escapeHtml(e.service || '—')}</span></span>
+            ${statusBadge(e.status)}
+          </a>`).join('')
+      : `<div class="crm-related-empty">no enquiries linked</div>`;
+
+    const projEl = document.getElementById('related-projects') as HTMLDivElement;
+    projEl.innerHTML = projects.length
+      ? projects.map((p) => `
+          <a class="crm-related-row" href="/admin/projects?id=${encodeURIComponent(p.id)}">
+            <span class="crm-related-main">${escapeHtml(p.name)}<span class="crm-sub">${escapeHtml(penceToGBP(p.value_pence, p.currency))}</span></span>
+            ${statusBadge(p.status)}
+          </a>`).join('')
+      : `<div class="crm-related-empty">no projects yet</div>`;
+
+    renderTimeline(notes);
+  }
+
+  function renderTimeline(notes: Note[]) {
+    const el = document.getElementById('timeline-list') as HTMLDivElement;
+    if (!notes.length) {
+      el.innerHTML = `<div class="crm-related-empty">no activity yet</div>`;
+      return;
+    }
+    el.innerHTML = notes.map((n) => `
+      <div class="crm-note" data-note-id="${escapeHtml(n.id)}">
+        <div class="crm-note-body">${escapeHtml(n.body)}</div>
+        <div class="crm-note-meta">
+          <span>${formatDate(n.created_at)}${n.project_id ? ' · project note' : ''}</span>
+          <button type="button" class="crm-note-del" data-note-id="${escapeHtml(n.id)}" aria-label="Delete note">del</button>
+        </div>
+      </div>`).join('');
+  }
+
+  function closeEditor() {
+    editorEl.hidden = true;
+    editingId = null;
+  }
+
+  // ---- Save / delete ----
+  function collectForm(): Record<string, unknown> {
+    const val = (id: string) => (document.getElementById(id) as HTMLInputElement | HTMLSelectElement).value.trim();
+    return {
+      name: val('f-name'),
+      company: val('f-company'),
+      email: val('f-email'),
+      phone: val('f-phone'),
+      website: val('f-website'),
+      status: val('f-status'),
+      source: val('f-source'),
+      summary: val('f-summary'),
+    };
+  }
+
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    clearError(editorError);
+    const body = collectForm();
+    if (!body.name) { showError(editorError, 'Name is required.'); return; }
+
+    const token = await getToken();
+    if (!token) { window.location.href = '/admin/login'; return; }
+
+    saveBtn.disabled = true;
+    saveBtn.textContent = '$ saving…';
+    try {
+      const editing = editingId;
+      const res = await fetch('/api/admin/clients', {
+        method: editing ? 'PUT' : 'POST',
+        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+        body: JSON.stringify(editing ? { id: editing, ...body } : body),
+      });
+      const json = await res.json();
+      if (!res.ok || json.error) throw new Error(json.error ?? 'Failed to save client.');
+      await reload();
+      await openEdit(json.client.id);
+    } catch (err) {
+      showError(editorError, (err as Error).message);
+    } finally {
+      saveBtn.disabled = false;
+      saveBtn.textContent = '$ save';
+    }
+  });
+
+  deleteBtn.addEventListener('click', async () => {
+    if (!editingId) return;
+    if (!confirm('Delete this client? This also deletes its projects and timeline notes, and unlinks its enquiries. This cannot be undone.')) return;
+    const token = await getToken();
+    if (!token) { window.location.href = '/admin/login'; return; }
+    deleteBtn.disabled = true;
+    try {
+      const res = await fetch(`/api/admin/clients?id=${encodeURIComponent(editingId)}`, {
+        method: 'DELETE',
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      const json = await res.json();
+      if (!res.ok || json.error) throw new Error(json.error ?? 'Failed to delete client.');
+      closeEditor();
+      await reload();
+    } catch (err) {
+      showError(editorError, (err as Error).message);
+    } finally {
+      deleteBtn.disabled = false;
+    }
+  });
+
+  // ---- Notes ----
+  const noteForm = document.getElementById('note-form') as HTMLFormElement;
+  const noteBody = document.getElementById('note-body') as HTMLTextAreaElement;
+  const noteBtn = document.getElementById('note-btn') as HTMLButtonElement;
+
+  noteForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    if (!editingId) return;
+    const text = noteBody.value.trim();
+    if (!text) return;
+    const token = await getToken();
+    if (!token) { window.location.href = '/admin/login'; return; }
+    noteBtn.disabled = true;
+    try {
+      const res = await fetch('/api/admin/notes', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+        body: JSON.stringify({ client_id: editingId, body: text }),
+      });
+      const json = await res.json();
+      if (!res.ok || json.error) throw new Error(json.error ?? 'Failed to add note.');
+      noteBody.value = '';
+      await openEdit(editingId);
+    } catch (err) {
+      showError(editorError, (err as Error).message);
+    } finally {
+      noteBtn.disabled = false;
+    }
+  });
+
+  document.getElementById('timeline-list')?.addEventListener('click', async (e) => {
+    const btn = (e.target as HTMLElement).closest('.crm-note-del') as HTMLElement | null;
+    if (!btn) return;
+    const noteId = btn.dataset.noteId;
+    if (!noteId || !editingId) return;
+    if (!confirm('Delete this note?')) return;
+    const token = await getToken();
+    if (!token) { window.location.href = '/admin/login'; return; }
+    const res = await fetch(`/api/admin/notes?id=${encodeURIComponent(noteId)}`, {
+      method: 'DELETE',
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    if (res.ok) await openEdit(editingId);
+  });
+
+  // ---- Events ----
+  document.getElementById('new-client-btn')?.addEventListener('click', openCreate);
+  document.getElementById('editor-close')?.addEventListener('click', closeEditor);
+
+  listEl.addEventListener('click', (e) => {
+    const row = (e.target as HTMLElement).closest('.crm-row') as HTMLElement | null;
+    if (row?.dataset.id) openEdit(row.dataset.id);
+  });
+  listEl.addEventListener('keydown', (e) => {
+    const ke = e as KeyboardEvent;
+    if (ke.key !== 'Enter' && ke.key !== ' ') return;
+    const row = (ke.target as HTMLElement).closest('.crm-row') as HTMLElement | null;
+    if (row?.dataset.id) { e.preventDefault(); openEdit(row.dataset.id); }
+  });
+
+  searchEl.addEventListener('input', () => { searchTerm = searchEl.value; renderList(); });
+
+  document.getElementById('filter-tabs')?.addEventListener('click', (e) => {
+    const btn = (e.target as HTMLElement).closest('.filter-tab') as HTMLElement | null;
+    if (!btn) return;
+    currentFilter = btn.dataset.status ?? 'all';
+    document.querySelectorAll('.filter-tab').forEach((t) => {
+      t.classList.remove('active');
+      t.setAttribute('aria-selected', 'false');
+    });
+    btn.classList.add('active');
+    btn.setAttribute('aria-selected', 'true');
+    renderList();
+  });
+
+  document.addEventListener('keydown', (e) => {
+    if ((e as KeyboardEvent).key === 'Escape' && !editorEl.hidden) closeEditor();
+  });
+
+  // ---- Load ----
+  async function reload() {
+    const token = await getToken();
+    if (!token) { window.location.href = '/admin/login'; return; }
+    const res = await fetch('/api/admin/clients', { headers: { Authorization: `Bearer ${token}` } });
+    if (res.status === 401) { window.location.href = '/admin/login'; return; }
+    const json = await res.json();
+    if (!res.ok || json.error) throw new Error(json.error ?? 'Failed to load clients.');
+    clients = json.clients ?? [];
+    updateCounts();
+    renderList();
+  }
+
+  async function init() {
+    try {
+      clearError(errorEl);
+      await reload();
+      // Deep link: /admin/clients?id=<uuid> opens that client.
+      const id = new URLSearchParams(window.location.search).get('id');
+      if (id) openEdit(id);
+    } catch (err) {
+      listEl.innerHTML = '';
+      showError(errorEl, (err as Error).message);
+    }
+  }
+
+  init();
+</script>
+
+<style>
+  .crm-head { display: flex; align-items: center; justify-content: space-between; gap: var(--space-4); margin-bottom: var(--space-6); }
+  .crm-h1 { font-family: var(--font-mono); font-size: 20px; font-weight: 700; color: var(--color-green-500); margin: 0; }
+
+  .crm-primary-btn {
+    display: inline-flex; align-items: center; height: 36px; padding: 0 var(--space-4);
+    background: var(--color-green-500); color: var(--color-text-inverse);
+    font-family: var(--font-mono); font-size: 13px; font-weight: 600; font-variant: small-caps; letter-spacing: 0.05em;
+    border: none; border-radius: var(--radius-sm); cursor: pointer; transition: background var(--duration-quick);
+  }
+  .crm-primary-btn:hover { background: var(--color-green-400); }
+  .crm-primary-btn:disabled { opacity: 0.6; cursor: default; }
+  .crm-primary-btn:focus-visible { outline: 2px solid var(--color-green-500); outline-offset: 2px; }
+
+  .crm-danger-btn {
+    display: inline-flex; align-items: center; height: 36px; padding: 0 var(--space-4);
+    background: transparent; color: var(--color-error);
+    font-family: var(--font-mono); font-size: 13px; font-weight: 600; font-variant: small-caps; letter-spacing: 0.05em;
+    border: 1px solid var(--color-error); border-radius: var(--radius-sm); cursor: pointer; transition: background var(--duration-quick), color var(--duration-quick);
+  }
+  .crm-danger-btn:hover { background: rgba(239,68,68,0.12); }
+  .crm-danger-btn:focus-visible { outline: 2px solid var(--color-error); outline-offset: 2px; }
+
+  .crm-toolbar { margin-bottom: var(--space-4); }
+  .crm-search {
+    width: 100%; height: 40px; padding: 0 var(--space-4);
+    background: var(--color-surface-01); border: 1px solid var(--color-border-muted); border-radius: var(--radius-sm);
+    color: var(--color-text-primary); font-family: var(--font-mono); font-size: 13px;
+  }
+  .crm-search:focus-visible { outline: 2px solid var(--color-green-500); outline-offset: 1px; border-color: var(--color-green-500); }
+
+  /* Filter tabs (mirrors the enquiries page) */
+  .filter-tabs { display: flex; gap: var(--space-2); margin-bottom: var(--space-6); flex-wrap: wrap; }
+  .filter-tab {
+    display: inline-flex; align-items: center; gap: var(--space-1); padding: var(--space-2) var(--space-4);
+    font-family: var(--font-mono); font-size: 12px; font-weight: 500; color: var(--color-text-muted);
+    background: var(--color-surface-01); border: 1px solid var(--color-border-muted); border-radius: var(--radius-sm);
+    cursor: pointer; transition: background var(--duration-quick), color var(--duration-quick), border-color var(--duration-quick);
+  }
+  .filter-tab:hover { color: var(--color-text-secondary); border-color: var(--color-border-visible); }
+  .filter-tab.active { background: var(--color-green-glow); border-color: var(--color-green-500); color: var(--color-green-400); }
+  .filter-tab:focus-visible { outline: 2px solid var(--color-green-500); outline-offset: 2px; }
+  .tab-count { font-size: 10px; opacity: 0.6; }
+
+  .crm-error {
+    display: none; padding: var(--space-2) var(--space-3);
+    background: rgba(239,68,68,0.1); border: 1px solid rgba(239,68,68,0.3); border-radius: var(--radius-sm);
+    font-family: var(--font-mono); font-size: 12px; color: var(--color-error); margin-bottom: var(--space-4);
+  }
+  .crm-error--inline { margin-top: var(--space-2); }
+
+  /* Table */
+  .crm-table { background: var(--color-surface-01); border: 1px solid var(--color-border-muted); border-radius: var(--radius-md); overflow: hidden; }
+  .crm-header { padding: var(--space-3) var(--space-5); border-bottom: 1px solid var(--color-border-subtle); background: var(--color-surface-02); }
+  .crm-col-label { font-family: var(--font-mono); font-size: 11px; font-variant: small-caps; color: var(--color-text-muted); letter-spacing: 0.06em; }
+  .crm-clients-grid { display: grid; grid-template-columns: 2fr 1.5fr 110px 110px; align-items: center; gap: var(--space-3); }
+  .crm-row { padding: var(--space-4) var(--space-5); border-bottom: 1px solid var(--color-border-subtle); cursor: pointer; transition: background var(--duration-quick); }
+  .crm-row:hover { background: var(--color-surface-02); }
+  .crm-row:focus-visible { outline: 2px solid var(--color-green-500); outline-offset: -2px; }
+  .crm-cell { font-family: var(--font-sans); font-size: 13px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .crm-contact { display: flex; flex-direction: column; gap: 2px; overflow: hidden; }
+  .crm-name { font-size: 14px; color: var(--color-text-primary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .crm-sub { font-family: var(--font-mono); font-size: 11px; color: var(--color-text-muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .crm-muted { color: var(--color-text-secondary); }
+  .crm-mono-muted { font-family: var(--font-mono); font-size: 12px; color: var(--color-text-muted); }
+  .crm-loading, .crm-empty { padding: var(--space-8) var(--space-4); font-family: var(--font-mono); font-size: 13px; color: var(--color-text-muted); text-align: center; }
+
+  /* Editor */
+  .crm-editor[hidden] { display: none; }
+  .crm-editor { margin-top: var(--space-6); padding: var(--space-6); background: var(--color-surface-01); border: 1px solid var(--color-border-muted); border-radius: var(--radius-md); }
+  .crm-editor-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: var(--space-4); }
+  .crm-editor-title { font-family: var(--font-mono); font-size: 18px; font-weight: 700; color: var(--color-text-primary); margin: 0; overflow: hidden; text-overflow: ellipsis; }
+  .crm-icon-btn { background: none; border: none; color: var(--color-text-muted); font-size: 16px; cursor: pointer; padding: var(--space-2); transition: color var(--duration-quick); }
+  .crm-icon-btn:hover { color: var(--color-text-primary); }
+  .crm-icon-btn:focus-visible { outline: 2px solid var(--color-green-500); outline-offset: 2px; }
+
+  .crm-form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-4); }
+  .crm-field { display: flex; flex-direction: column; gap: var(--space-1); }
+  .crm-field--full { grid-column: 1 / -1; }
+  .crm-field label { font-family: var(--font-mono); font-size: 11px; font-variant: small-caps; letter-spacing: 0.06em; color: var(--color-text-muted); }
+  .crm-field input, .crm-field select {
+    height: 38px; padding: 0 var(--space-3);
+    background: var(--color-surface-02); border: 1px solid var(--color-border-muted); border-radius: var(--radius-sm);
+    color: var(--color-text-primary); font-family: var(--font-sans); font-size: 14px;
+  }
+  .crm-field input:focus-visible, .crm-field select:focus-visible, .crm-note-form textarea:focus-visible {
+    outline: 2px solid var(--color-green-500); outline-offset: 1px; border-color: var(--color-green-500);
+  }
+
+  .crm-form-actions { display: flex; gap: var(--space-3); margin-top: var(--space-5); }
+
+  /* Related */
+  #related[hidden] { display: none; }
+  .crm-related-grid { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-4); margin-top: var(--space-6); }
+  .crm-related-title { font-family: var(--font-mono); font-size: 12px; font-variant: small-caps; letter-spacing: 0.06em; color: var(--color-text-secondary); margin: 0 0 var(--space-2); }
+  .crm-related-list { border: 1px solid var(--color-border-subtle); border-radius: var(--radius-sm); overflow: hidden; }
+  .crm-related-row { display: flex; align-items: center; justify-content: space-between; gap: var(--space-2); padding: var(--space-2) var(--space-3); border-bottom: 1px solid var(--color-border-subtle); text-decoration: none; transition: background var(--duration-quick); }
+  .crm-related-row:last-child { border-bottom: none; }
+  .crm-related-row:hover { background: var(--color-surface-02); }
+  .crm-related-row:focus-visible { outline: 2px solid var(--color-green-500); outline-offset: -2px; }
+  .crm-related-main { display: flex; flex-direction: column; gap: 2px; font-family: var(--font-sans); font-size: 13px; color: var(--color-text-primary); min-width: 0; overflow: hidden; }
+  .crm-related-empty { padding: var(--space-3); font-family: var(--font-mono); font-size: 12px; color: var(--color-text-muted); }
+
+  /* Timeline */
+  .crm-timeline { margin-top: var(--space-6); }
+  .crm-note-form { display: flex; gap: var(--space-2); margin-bottom: var(--space-4); align-items: flex-start; }
+  .crm-note-form textarea {
+    flex: 1; padding: var(--space-2) var(--space-3);
+    background: var(--color-surface-02); border: 1px solid var(--color-border-muted); border-radius: var(--radius-sm);
+    color: var(--color-text-primary); font-family: var(--font-sans); font-size: 14px; resize: vertical;
+  }
+  .crm-timeline-list { display: flex; flex-direction: column; gap: var(--space-2); }
+  .crm-note { padding: var(--space-3); background: var(--color-surface-02); border: 1px solid var(--color-border-subtle); border-radius: var(--radius-sm); }
+  .crm-note-body { font-family: var(--font-sans); font-size: 14px; color: var(--color-text-secondary); line-height: 1.5; white-space: pre-wrap; }
+  .crm-note-meta { display: flex; align-items: center; justify-content: space-between; margin-top: var(--space-2); font-family: var(--font-mono); font-size: 11px; color: var(--color-text-muted); }
+  .crm-note-del { background: none; border: none; color: var(--color-text-muted); font-family: var(--font-mono); font-size: 11px; cursor: pointer; padding: 0; }
+  .crm-note-del:hover { color: var(--color-error); }
+  .crm-note-del:focus-visible { outline: 2px solid var(--color-error); outline-offset: 2px; }
+
+  .crm-visually-hidden { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
+
+  @media (max-width: 640px) {
+    .crm-form-grid, .crm-related-grid { grid-template-columns: 1fr; }
+    .crm-clients-grid { grid-template-columns: 1.4fr 90px; }
+    .crm-header .crm-col-label:nth-child(2), .crm-header .crm-col-label:nth-child(4),
+    .crm-row .crm-cell:nth-child(2), .crm-row .crm-cell:nth-child(4) { display: none; }
+  }
+</style>
