@@ -39,7 +39,7 @@ export const COMMANDS: Record<string, CommandFn> = {
     `,
 
   whoami: () => L`
-    <span class="t-green">Charlie Waite</span> · Tech Lead & AI Engineer
+    <span class="t-green">Charlie</span> · Tech Lead & AI Engineer
 
     12 years shipping software. Currently leading
     the subscriptions team at Fairplay Sports Media
@@ -221,7 +221,7 @@ export const COMMANDS: Record<string, CommandFn> = {
     }
     if (file === 'README.md') {
       return L`
-        <span class="t-green"># Charlie Waite</span>
+        <span class="t-green"># Charlie</span>
 
         Tech lead. AI engineer. Founder of Camber Co.
         Ships things. Doesn't talk in slide decks.
@@ -254,7 +254,7 @@ const BOOT_LINES = [
   '<span class="t-muted">connecting to London node...</span> <span class="t-green">connected</span>',
   '',
   '<span class="t-pink">$</span> <span class="t-muted">whoami</span>',
-  '<span class="t-green">Charlie Waite</span> · Tech Lead & AI Engineer.',
+  '<span class="t-green">Charlie</span> · Tech Lead & AI Engineer.',
   '12 years building software. London, UK.',
   '',
   'type <span class="t-pink">help</span> to explore. tab autocompletes.',

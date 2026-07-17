@@ -18,7 +18,7 @@ describe('about terminal commands (refactor invariance)', () => {
 
   it('keeps whoami identity intact', () => {
     const out = dispatchCommand(COMMANDS, 'whoami').join('\n');
-    expect(out).toContain('Charlie Waite');
+    expect(out).toContain('Charlie');
     expect(out).toContain('Camber Co');
   });
 
