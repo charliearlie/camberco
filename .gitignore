@@ -4,3 +4,18 @@ node_modules
 .vercel
 .superpowers/
 .admin-credentials.local
+
+# Per-developer MCP config. Contains a Supabase personal access token, so it
+# must never be committed: this repo is public.
+.mcp.json
+
+# Build cache and tooling scratch
+.astro/
+.playwright-mcp/
+supabase/.temp/
+
+# Root-level screenshots from design/review sessions. Site assets live in
+# public/, which this does not match.
+/*.png
+
+.DS_Store
