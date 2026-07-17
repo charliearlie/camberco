@@ -1,0 +1,634 @@
+---
+export const prerender = false;
+import AdminLayout from '../../components/admin/AdminLayout.astro';
+---
+
+<AdminLayout title="Projects">
+  <main style="max-width: 1100px; margin: 0 auto; padding: var(--space-8) var(--space-6);">
+    <div class="crm-head">
+      <h1 class="crm-h1">$ camber admin --projects</h1>
+      <button type="button" id="new-project-btn" class="crm-primary-btn">+ new project</button>
+    </div>
+
+    <!-- Toolbar: client filter -->
+    <div class="crm-toolbar">
+      <label for="client-filter" class="crm-visually-hidden">Filter by client</label>
+      <select id="client-filter" class="crm-search">
+        <option value="all">all clients</option>
+      </select>
+    </div>
+
+    <!-- Status filter -->
+    <div id="filter-tabs" class="filter-tabs" role="tablist" aria-label="Filter by status">
+      <button class="filter-tab active" data-status="all" role="tab" aria-selected="true">all <span class="tab-count" id="count-all">0</span></button>
+      <button class="filter-tab" data-status="lead" role="tab" aria-selected="false">lead <span class="tab-count" id="count-lead">0</span></button>
+      <button class="filter-tab" data-status="proposal" role="tab" aria-selected="false">proposal <span class="tab-count" id="count-proposal">0</span></button>
+      <button class="filter-tab" data-status="active" role="tab" aria-selected="false">active <span class="tab-count" id="count-active">0</span></button>
+      <button class="filter-tab" data-status="on_hold" role="tab" aria-selected="false">on hold <span class="tab-count" id="count-on_hold">0</span></button>
+      <button class="filter-tab" data-status="completed" role="tab" aria-selected="false">completed <span class="tab-count" id="count-completed">0</span></button>
+      <button class="filter-tab" data-status="cancelled" role="tab" aria-selected="false">cancelled <span class="tab-count" id="count-cancelled">0</span></button>
+    </div>
+
+    <div id="crm-error" class="crm-error"></div>
+
+    <!-- Projects table -->
+    <div class="crm-table">
+      <div class="crm-header crm-projects-grid">
+        <span class="crm-col-label">project</span>
+        <span class="crm-col-label">client</span>
+        <span class="crm-col-label">status</span>
+        <span class="crm-col-label">value</span>
+        <span class="crm-col-label">due</span>
+      </div>
+      <div id="project-list">
+        <div class="crm-loading">loading projects…</div>
+      </div>
+    </div>
+
+    <!-- Record editor -->
+    <section id="project-editor" class="crm-editor" hidden aria-label="Project record">
+      <div class="crm-editor-head">
+        <h2 id="editor-title" class="crm-editor-title"></h2>
+        <button type="button" id="editor-close" class="crm-icon-btn" aria-label="Close editor">✕</button>
+      </div>
+
+      <div id="editor-error" class="crm-error crm-error--inline"></div>
+
+      <form id="project-form" class="crm-form">
+        <div class="crm-form-grid">
+          <div class="crm-field crm-field--full" id="client-select-wrap">
+            <label for="f-client">client *</label>
+            <select id="f-client" name="client_id" required>
+              <option value="">select a client…</option>
+            </select>
+          </div>
+          <div class="crm-field crm-field--full" id="client-link-wrap" hidden>
+            <span class="crm-field-label">client</span>
+            <a id="client-link" class="crm-inline-link" href=""></a>
+          </div>
+
+          <div class="crm-field crm-field--full">
+            <label for="f-name">name *</label>
+            <input id="f-name" name="name" type="text" required maxlength="200" autocomplete="off" />
+          </div>
+          <div class="crm-field crm-field--full">
+            <label for="f-description">description</label>
+            <input id="f-description" name="description" type="text" maxlength="5000" autocomplete="off" />
+          </div>
+          <div class="crm-field">
+            <label for="f-status">status</label>
+            <select id="f-status" name="status">
+              <option value="lead">lead</option>
+              <option value="proposal">proposal</option>
+              <option value="active">active</option>
+              <option value="on_hold">on hold</option>
+              <option value="completed">completed</option>
+              <option value="cancelled">cancelled</option>
+            </select>
+          </div>
+          <div class="crm-field">
+            <label for="f-value">value (in pounds)</label>
+            <input id="f-value" name="value" type="number" min="0" step="0.01" inputmode="decimal" autocomplete="off" placeholder="0.00" />
+          </div>
+          <div class="crm-field">
+            <label for="f-currency">currency</label>
+            <input id="f-currency" name="currency" type="text" maxlength="3" autocomplete="off" value="GBP" style="text-transform:uppercase;" />
+          </div>
+          <div class="crm-field">
+            <label for="f-start">start date</label>
+            <input id="f-start" name="start_date" type="date" autocomplete="off" />
+          </div>
+          <div class="crm-field">
+            <label for="f-due">due date</label>
+            <input id="f-due" name="due_date" type="date" autocomplete="off" />
+          </div>
+          <div class="crm-field crm-field--full">
+            <label for="f-notes">notes</label>
+            <textarea id="f-notes" name="notes" rows="3" maxlength="20000" autocomplete="off"></textarea>
+          </div>
+        </div>
+
+        <p id="completed-note" class="crm-hint" hidden></p>
+
+        <div class="crm-form-actions">
+          <button type="submit" id="save-btn" class="crm-primary-btn">$ save</button>
+          <button type="button" id="delete-btn" class="crm-danger-btn" hidden>$ delete</button>
+        </div>
+      </form>
+
+      <!-- Project-scoped timeline (edit mode only) -->
+      <div id="related" hidden>
+        <div class="crm-timeline">
+          <h3 class="crm-related-title">project timeline</h3>
+          <form id="note-form" class="crm-note-form">
+            <label for="note-body" class="crm-visually-hidden">Add a note</label>
+            <textarea id="note-body" rows="2" maxlength="20000" placeholder="add a note…"></textarea>
+            <button type="submit" id="note-btn" class="crm-primary-btn">$ add</button>
+          </form>
+          <div id="timeline-list" class="crm-timeline-list"></div>
+        </div>
+      </div>
+    </section>
+  </main>
+</AdminLayout>
+
+<script>
+  import { supabase } from '../../lib/supabase';
+  import { penceToGBP, penceToPounds, poundsToPence } from '../../lib/crm';
+
+  interface ClientLite { id: string; name: string; company: string | null; }
+  interface Project {
+    id: string;
+    client_id: string;
+    name: string;
+    description: string | null;
+    status: string;
+    value_pence: number | null;
+    currency: string;
+    start_date: string | null;
+    due_date: string | null;
+    completed_at: string | null;
+    notes: string | null;
+    created_at: string;
+    client: { id: string; name: string; company: string | null } | null;
+  }
+  interface Note { id: string; body: string; created_at: string; }
+
+  let projects: Project[] = [];
+  let clients: ClientLite[] = [];
+  let currentFilter = 'all';
+  let clientFilter = 'all';
+  let editingId: string | null = null;
+
+  const listEl = document.getElementById('project-list') as HTMLDivElement;
+  const errorEl = document.getElementById('crm-error') as HTMLDivElement;
+  const editorEl = document.getElementById('project-editor') as HTMLElement;
+  const editorTitle = document.getElementById('editor-title') as HTMLElement;
+  const editorError = document.getElementById('editor-error') as HTMLDivElement;
+  const form = document.getElementById('project-form') as HTMLFormElement;
+  const saveBtn = document.getElementById('save-btn') as HTMLButtonElement;
+  const deleteBtn = document.getElementById('delete-btn') as HTMLButtonElement;
+  const relatedEl = document.getElementById('related') as HTMLDivElement;
+  const clientSelect = document.getElementById('f-client') as HTMLSelectElement;
+  const clientSelectWrap = document.getElementById('client-select-wrap') as HTMLDivElement;
+  const clientLinkWrap = document.getElementById('client-link-wrap') as HTMLDivElement;
+  const clientLink = document.getElementById('client-link') as HTMLAnchorElement;
+  const clientFilterEl = document.getElementById('client-filter') as HTMLSelectElement;
+  const completedNote = document.getElementById('completed-note') as HTMLParagraphElement;
+
+  async function getToken(): Promise<string | null> {
+    const { data: { session } } = await supabase.auth.getSession();
+    return session?.access_token ?? null;
+  }
+  function escapeHtml(s: string): string {
+    return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+  }
+  function formatDate(iso: string): string {
+    return new Date(iso).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
+  }
+  const statusColors: Record<string, string> = {
+    lead: 'var(--color-warning)', proposal: 'var(--color-pink-500)', active: 'var(--color-green-500)',
+    on_hold: 'var(--color-warning)', completed: 'var(--color-green-400)', cancelled: 'var(--color-error)',
+  };
+  function statusBadge(status: string): string {
+    const color = statusColors[status] || 'var(--color-text-muted)';
+    const label = escapeHtml(status.replace(/_/g, ' '));
+    return `<span style="display:inline-block;padding:2px 10px;background:color-mix(in srgb, ${color} 13%, transparent);color:${color};font-family:var(--font-mono);font-size:11px;font-weight:600;border-radius:9999px;border:1px solid color-mix(in srgb, ${color} 30%, transparent);letter-spacing:0.02em;">${label}</span>`;
+  }
+  function showError(el: HTMLElement, msg: string) { el.textContent = msg; el.style.display = 'block'; }
+  function clearError(el: HTMLElement) { el.textContent = ''; el.style.display = 'none'; }
+
+  // ---- List ----
+  function updateCounts() {
+    const scoped = clientFilter === 'all' ? projects : projects.filter((p) => p.client_id === clientFilter);
+    const counts: Record<string, number> = { all: scoped.length, lead: 0, proposal: 0, active: 0, on_hold: 0, completed: 0, cancelled: 0 };
+    for (const p of scoped) counts[p.status] = (counts[p.status] || 0) + 1;
+    for (const key of Object.keys(counts)) {
+      const el = document.getElementById(`count-${key}`);
+      if (el) el.textContent = String(counts[key]);
+    }
+  }
+
+  function visibleProjects(): Project[] {
+    return projects.filter((p) => {
+      if (currentFilter !== 'all' && p.status !== currentFilter) return false;
+      if (clientFilter !== 'all' && p.client_id !== clientFilter) return false;
+      return true;
+    });
+  }
+
+  function renderRow(p: Project): string {
+    return `
+      <div class="crm-row crm-projects-grid" data-id="${escapeHtml(p.id)}" role="button" tabindex="0">
+        <span class="crm-cell crm-name">${escapeHtml(p.name)}</span>
+        <span class="crm-cell crm-muted">${escapeHtml(p.client?.name ?? 'Unknown client')}</span>
+        <span class="crm-cell">${statusBadge(p.status)}</span>
+        <span class="crm-cell crm-mono-muted">${escapeHtml(penceToGBP(p.value_pence, p.currency))}</span>
+        <span class="crm-cell crm-mono-muted">${p.due_date ? formatDate(p.due_date) : '—'}</span>
+      </div>`;
+  }
+
+  function renderList() {
+    const items = visibleProjects();
+    if (items.length === 0) {
+      listEl.innerHTML = `<div class="crm-empty">no projects${currentFilter !== 'all' ? ` with status "${escapeHtml(currentFilter.replace(/_/g, ' '))}"` : ''} yet</div>`;
+      return;
+    }
+    listEl.innerHTML = items.map(renderRow).join('');
+  }
+
+  function populateClientControls() {
+    const opts = clients.map((c) => {
+      const label = escapeHtml(c.company ? `${c.name} · ${c.company}` : c.name);
+      return `<option value="${escapeHtml(c.id)}">${label}</option>`;
+    });
+    clientSelect.innerHTML = `<option value="">select a client…</option>${opts.join('')}`;
+    clientFilterEl.innerHTML = `<option value="all">all clients</option>${opts.join('')}`;
+    clientFilterEl.value = clientFilter;
+  }
+
+  // ---- Editor ----
+  function openCreate(preselectClientId?: string) {
+    editingId = null;
+    editorTitle.textContent = 'new project';
+    form.reset();
+    (document.getElementById('f-status') as HTMLSelectElement).value = 'lead';
+    (document.getElementById('f-currency') as HTMLInputElement).value = 'GBP';
+    clientSelectWrap.hidden = false;
+    clientLinkWrap.hidden = true;
+    clientSelect.disabled = false;
+    if (preselectClientId) clientSelect.value = preselectClientId;
+    deleteBtn.hidden = true;
+    relatedEl.hidden = true;
+    completedNote.hidden = true;
+    clearError(editorError);
+    editorEl.hidden = false;
+    editorEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    (document.getElementById('f-name') as HTMLInputElement).focus();
+  }
+
+  function fillForm(p: Project) {
+    (document.getElementById('f-name') as HTMLInputElement).value = p.name ?? '';
+    (document.getElementById('f-description') as HTMLInputElement).value = p.description ?? '';
+    (document.getElementById('f-status') as HTMLSelectElement).value = p.status;
+    const pounds = penceToPounds(p.value_pence);
+    (document.getElementById('f-value') as HTMLInputElement).value = pounds === null ? '' : String(pounds);
+    (document.getElementById('f-currency') as HTMLInputElement).value = p.currency ?? 'GBP';
+    (document.getElementById('f-start') as HTMLInputElement).value = p.start_date ?? '';
+    (document.getElementById('f-due') as HTMLInputElement).value = p.due_date ?? '';
+    (document.getElementById('f-notes') as HTMLTextAreaElement).value = p.notes ?? '';
+
+    // In edit mode the parent client is shown as a link (cannot be reparented).
+    clientSelectWrap.hidden = true;
+    clientLinkWrap.hidden = false;
+    clientLink.textContent = p.client?.name ?? 'Unknown client';
+    clientLink.href = p.client ? `/admin/clients?id=${encodeURIComponent(p.client.id)}` : '#';
+
+    completedNote.hidden = !p.completed_at;
+    if (p.completed_at) completedNote.textContent = `completed on ${formatDate(p.completed_at)}`;
+  }
+
+  async function openEdit(id: string) {
+    clearError(editorError);
+    editorEl.hidden = false;
+    editorTitle.textContent = 'loading…';
+    editorEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    const token = await getToken();
+    if (!token) { window.location.href = '/admin/login'; return; }
+    try {
+      const res = await fetch(`/api/admin/projects?id=${encodeURIComponent(id)}`, { headers: { Authorization: `Bearer ${token}` } });
+      if (res.status === 401) { window.location.href = '/admin/login'; return; }
+      const json = await res.json();
+      if (!res.ok || json.error) throw new Error(json.error ?? 'Failed to load project.');
+      const p: Project = json.project;
+      editingId = p.id;
+      editorTitle.textContent = p.name;
+      fillForm(p);
+      deleteBtn.hidden = false;
+      relatedEl.hidden = false;
+      renderTimeline(json.notes ?? []);
+    } catch (err) {
+      showError(editorError, (err as Error).message);
+    }
+  }
+
+  function renderTimeline(notes: Note[]) {
+    const el = document.getElementById('timeline-list') as HTMLDivElement;
+    if (!notes.length) { el.innerHTML = `<div class="crm-related-empty">no activity yet</div>`; return; }
+    el.innerHTML = notes.map((n) => `
+      <div class="crm-note" data-note-id="${escapeHtml(n.id)}">
+        <div class="crm-note-body">${escapeHtml(n.body)}</div>
+        <div class="crm-note-meta">
+          <span>${formatDate(n.created_at)}</span>
+          <button type="button" class="crm-note-del" data-note-id="${escapeHtml(n.id)}" aria-label="Delete note">del</button>
+        </div>
+      </div>`).join('');
+  }
+
+  function closeEditor() { editorEl.hidden = true; editingId = null; }
+
+  function collectForm(): Record<string, unknown> {
+    const val = (id: string) => (document.getElementById(id) as HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement).value;
+    const body: Record<string, unknown> = {
+      name: val('f-name').trim(),
+      description: val('f-description').trim(),
+      status: val('f-status'),
+      value_pence: poundsToPence(val('f-value')),
+      currency: val('f-currency').trim().toUpperCase() || 'GBP',
+      start_date: val('f-start'),
+      due_date: val('f-due'),
+      notes: val('f-notes').trim(),
+    };
+    if (!editingId) body.client_id = clientSelect.value;
+    return body;
+  }
+
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    clearError(editorError);
+    const body = collectForm();
+    if (!body.name) { showError(editorError, 'Project name is required.'); return; }
+    if (!editingId && !body.client_id) { showError(editorError, 'Please choose a client.'); return; }
+
+    const token = await getToken();
+    if (!token) { window.location.href = '/admin/login'; return; }
+    saveBtn.disabled = true;
+    saveBtn.textContent = '$ saving…';
+    try {
+      const editing = editingId;
+      const res = await fetch('/api/admin/projects', {
+        method: editing ? 'PUT' : 'POST',
+        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+        body: JSON.stringify(editing ? { id: editing, ...body } : body),
+      });
+      const json = await res.json();
+      if (!res.ok || json.error) throw new Error(json.error ?? 'Failed to save project.');
+      await reload();
+      await openEdit(json.project.id);
+    } catch (err) {
+      showError(editorError, (err as Error).message);
+    } finally {
+      saveBtn.disabled = false;
+      saveBtn.textContent = '$ save';
+    }
+  });
+
+  deleteBtn.addEventListener('click', async () => {
+    if (!editingId) return;
+    if (!confirm('Delete this project? Its timeline notes stay on the client. This cannot be undone.')) return;
+    const token = await getToken();
+    if (!token) { window.location.href = '/admin/login'; return; }
+    deleteBtn.disabled = true;
+    try {
+      const res = await fetch(`/api/admin/projects?id=${encodeURIComponent(editingId)}`, {
+        method: 'DELETE',
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      const json = await res.json();
+      if (!res.ok || json.error) throw new Error(json.error ?? 'Failed to delete project.');
+      closeEditor();
+      await reload();
+    } catch (err) {
+      showError(editorError, (err as Error).message);
+    } finally {
+      deleteBtn.disabled = false;
+    }
+  });
+
+  // ---- Notes ----
+  const noteForm = document.getElementById('note-form') as HTMLFormElement;
+  const noteBody = document.getElementById('note-body') as HTMLTextAreaElement;
+  const noteBtn = document.getElementById('note-btn') as HTMLButtonElement;
+
+  noteForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    if (!editingId) return;
+    const text = noteBody.value.trim();
+    if (!text) return;
+    const token = await getToken();
+    if (!token) { window.location.href = '/admin/login'; return; }
+    noteBtn.disabled = true;
+    try {
+      const res = await fetch('/api/admin/notes', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+        body: JSON.stringify({ project_id: editingId, body: text }),
+      });
+      const json = await res.json();
+      if (!res.ok || json.error) throw new Error(json.error ?? 'Failed to add note.');
+      noteBody.value = '';
+      await openEdit(editingId);
+    } catch (err) {
+      showError(editorError, (err as Error).message);
+    } finally {
+      noteBtn.disabled = false;
+    }
+  });
+
+  document.getElementById('timeline-list')?.addEventListener('click', async (e) => {
+    const btn = (e.target as HTMLElement).closest('.crm-note-del') as HTMLElement | null;
+    if (!btn) return;
+    const noteId = btn.dataset.noteId;
+    if (!noteId || !editingId) return;
+    if (!confirm('Delete this note?')) return;
+    const token = await getToken();
+    if (!token) { window.location.href = '/admin/login'; return; }
+    const res = await fetch(`/api/admin/notes?id=${encodeURIComponent(noteId)}`, {
+      method: 'DELETE',
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    if (res.ok) await openEdit(editingId);
+  });
+
+  // ---- Events ----
+  document.getElementById('new-project-btn')?.addEventListener('click', () => openCreate(clientFilter !== 'all' ? clientFilter : undefined));
+  document.getElementById('editor-close')?.addEventListener('click', closeEditor);
+
+  listEl.addEventListener('click', (e) => {
+    const row = (e.target as HTMLElement).closest('.crm-row') as HTMLElement | null;
+    if (row?.dataset.id) openEdit(row.dataset.id);
+  });
+  listEl.addEventListener('keydown', (e) => {
+    const ke = e as KeyboardEvent;
+    if (ke.key !== 'Enter' && ke.key !== ' ') return;
+    const row = (ke.target as HTMLElement).closest('.crm-row') as HTMLElement | null;
+    if (row?.dataset.id) { e.preventDefault(); openEdit(row.dataset.id); }
+  });
+
+  clientFilterEl.addEventListener('change', () => { clientFilter = clientFilterEl.value; updateCounts(); renderList(); });
+
+  document.getElementById('filter-tabs')?.addEventListener('click', (e) => {
+    const btn = (e.target as HTMLElement).closest('.filter-tab') as HTMLElement | null;
+    if (!btn) return;
+    currentFilter = btn.dataset.status ?? 'all';
+    document.querySelectorAll('.filter-tab').forEach((t) => { t.classList.remove('active'); t.setAttribute('aria-selected', 'false'); });
+    btn.classList.add('active');
+    btn.setAttribute('aria-selected', 'true');
+    renderList();
+  });
+
+  document.addEventListener('keydown', (e) => {
+    if ((e as KeyboardEvent).key === 'Escape' && !editorEl.hidden) closeEditor();
+  });
+
+  // ---- Load ----
+  async function reload() {
+    const token = await getToken();
+    if (!token) { window.location.href = '/admin/login'; return; }
+    const [projRes, clientRes] = await Promise.all([
+      fetch('/api/admin/projects', { headers: { Authorization: `Bearer ${token}` } }),
+      fetch('/api/admin/clients', { headers: { Authorization: `Bearer ${token}` } }),
+    ]);
+    if (projRes.status === 401 || clientRes.status === 401) { window.location.href = '/admin/login'; return; }
+    const projJson = await projRes.json();
+    const clientJson = await clientRes.json();
+    if (!projRes.ok || projJson.error) throw new Error(projJson.error ?? 'Failed to load projects.');
+    if (!clientRes.ok || clientJson.error) throw new Error(clientJson.error ?? 'Failed to load clients.');
+    projects = projJson.projects ?? [];
+    clients = (clientJson.clients ?? []).map((c: ClientLite) => ({ id: c.id, name: c.name, company: c.company }));
+    populateClientControls();
+    updateCounts();
+    renderList();
+  }
+
+  async function init() {
+    try {
+      clearError(errorEl);
+      const params = new URLSearchParams(window.location.search);
+      const preClient = params.get('client_id');
+      if (preClient) clientFilter = preClient;
+      await reload();
+      const id = params.get('id');
+      if (id) {
+        openEdit(id);
+      } else if (params.get('new') === '1') {
+        openCreate(preClient ?? undefined);
+      }
+    } catch (err) {
+      listEl.innerHTML = '';
+      showError(errorEl, (err as Error).message);
+    }
+  }
+
+  init();
+</script>
+
+<style>
+  .crm-head { display: flex; align-items: center; justify-content: space-between; gap: var(--space-4); margin-bottom: var(--space-6); }
+  .crm-h1 { font-family: var(--font-mono); font-size: 20px; font-weight: 700; color: var(--color-green-500); margin: 0; }
+
+  .crm-primary-btn {
+    display: inline-flex; align-items: center; height: 36px; padding: 0 var(--space-4);
+    background: var(--color-green-500); color: var(--color-text-inverse);
+    font-family: var(--font-mono); font-size: 13px; font-weight: 600; font-variant: small-caps; letter-spacing: 0.05em;
+    border: none; border-radius: var(--radius-sm); cursor: pointer; transition: background var(--duration-quick);
+  }
+  .crm-primary-btn:hover { background: var(--color-green-400); }
+  .crm-primary-btn:disabled { opacity: 0.6; cursor: default; }
+  .crm-primary-btn:focus-visible { outline: 2px solid var(--color-green-500); outline-offset: 2px; }
+
+  .crm-danger-btn {
+    display: inline-flex; align-items: center; height: 36px; padding: 0 var(--space-4);
+    background: transparent; color: var(--color-error);
+    font-family: var(--font-mono); font-size: 13px; font-weight: 600; font-variant: small-caps; letter-spacing: 0.05em;
+    border: 1px solid var(--color-error); border-radius: var(--radius-sm); cursor: pointer; transition: background var(--duration-quick), color var(--duration-quick);
+  }
+  .crm-danger-btn:hover { background: rgba(239,68,68,0.12); }
+  .crm-danger-btn:focus-visible { outline: 2px solid var(--color-error); outline-offset: 2px; }
+
+  .crm-toolbar { margin-bottom: var(--space-4); }
+  .crm-search {
+    width: 100%; height: 40px; padding: 0 var(--space-4);
+    background: var(--color-surface-01); border: 1px solid var(--color-border-muted); border-radius: var(--radius-sm);
+    color: var(--color-text-primary); font-family: var(--font-mono); font-size: 13px;
+  }
+  .crm-search:focus-visible { outline: 2px solid var(--color-green-500); outline-offset: 1px; border-color: var(--color-green-500); }
+
+  .filter-tabs { display: flex; gap: var(--space-2); margin-bottom: var(--space-6); flex-wrap: wrap; }
+  .filter-tab {
+    display: inline-flex; align-items: center; gap: var(--space-1); padding: var(--space-2) var(--space-4);
+    font-family: var(--font-mono); font-size: 12px; font-weight: 500; color: var(--color-text-muted);
+    background: var(--color-surface-01); border: 1px solid var(--color-border-muted); border-radius: var(--radius-sm);
+    cursor: pointer; transition: background var(--duration-quick), color var(--duration-quick), border-color var(--duration-quick);
+  }
+  .filter-tab:hover { color: var(--color-text-secondary); border-color: var(--color-border-visible); }
+  .filter-tab.active { background: var(--color-green-glow); border-color: var(--color-green-500); color: var(--color-green-400); }
+  .filter-tab:focus-visible { outline: 2px solid var(--color-green-500); outline-offset: 2px; }
+  .tab-count { font-size: 10px; opacity: 0.6; }
+
+  .crm-error {
+    display: none; padding: var(--space-2) var(--space-3);
+    background: rgba(239,68,68,0.1); border: 1px solid rgba(239,68,68,0.3); border-radius: var(--radius-sm);
+    font-family: var(--font-mono); font-size: 12px; color: var(--color-error); margin-bottom: var(--space-4);
+  }
+  .crm-error--inline { margin-top: var(--space-2); }
+
+  .crm-table { background: var(--color-surface-01); border: 1px solid var(--color-border-muted); border-radius: var(--radius-md); overflow: hidden; }
+  .crm-header { padding: var(--space-3) var(--space-5); border-bottom: 1px solid var(--color-border-subtle); background: var(--color-surface-02); }
+  .crm-col-label { font-family: var(--font-mono); font-size: 11px; font-variant: small-caps; color: var(--color-text-muted); letter-spacing: 0.06em; }
+  .crm-projects-grid { display: grid; grid-template-columns: 2fr 1.4fr 110px 110px 90px; align-items: center; gap: var(--space-3); }
+  .crm-row { padding: var(--space-4) var(--space-5); border-bottom: 1px solid var(--color-border-subtle); cursor: pointer; transition: background var(--duration-quick); }
+  .crm-row:hover { background: var(--color-surface-02); }
+  .crm-row:focus-visible { outline: 2px solid var(--color-green-500); outline-offset: -2px; }
+  .crm-cell { font-family: var(--font-sans); font-size: 13px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .crm-name { font-size: 14px; color: var(--color-text-primary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .crm-muted { color: var(--color-text-secondary); }
+  .crm-mono-muted { font-family: var(--font-mono); font-size: 12px; color: var(--color-text-muted); }
+  .crm-loading, .crm-empty { padding: var(--space-8) var(--space-4); font-family: var(--font-mono); font-size: 13px; color: var(--color-text-muted); text-align: center; }
+
+  .crm-editor[hidden] { display: none; }
+  .crm-editor { margin-top: var(--space-6); padding: var(--space-6); background: var(--color-surface-01); border: 1px solid var(--color-border-muted); border-radius: var(--radius-md); }
+  .crm-editor-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: var(--space-4); }
+  .crm-editor-title { font-family: var(--font-mono); font-size: 18px; font-weight: 700; color: var(--color-text-primary); margin: 0; overflow: hidden; text-overflow: ellipsis; }
+  .crm-icon-btn { background: none; border: none; color: var(--color-text-muted); font-size: 16px; cursor: pointer; padding: var(--space-2); transition: color var(--duration-quick); }
+  .crm-icon-btn:hover { color: var(--color-text-primary); }
+  .crm-icon-btn:focus-visible { outline: 2px solid var(--color-green-500); outline-offset: 2px; }
+
+  .crm-form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-4); }
+  .crm-field { display: flex; flex-direction: column; gap: var(--space-1); }
+  .crm-field--full { grid-column: 1 / -1; }
+  .crm-field label, .crm-field-label { font-family: var(--font-mono); font-size: 11px; font-variant: small-caps; letter-spacing: 0.06em; color: var(--color-text-muted); }
+  .crm-field input, .crm-field select, .crm-field textarea {
+    padding: 0 var(--space-3);
+    background: var(--color-surface-02); border: 1px solid var(--color-border-muted); border-radius: var(--radius-sm);
+    color: var(--color-text-primary); font-family: var(--font-sans); font-size: 14px;
+  }
+  .crm-field input, .crm-field select { height: 38px; }
+  .crm-field textarea { padding: var(--space-2) var(--space-3); resize: vertical; }
+  .crm-field input:focus-visible, .crm-field select:focus-visible, .crm-field textarea:focus-visible, .crm-note-form textarea:focus-visible {
+    outline: 2px solid var(--color-green-500); outline-offset: 1px; border-color: var(--color-green-500);
+  }
+  .crm-inline-link { font-family: var(--font-sans); font-size: 14px; color: var(--color-green-400); text-decoration: none; }
+  .crm-inline-link:hover { color: var(--color-green-300); text-decoration: underline; }
+  .crm-hint { font-family: var(--font-mono); font-size: 11px; color: var(--color-text-muted); margin: var(--space-3) 0 0; }
+
+  .crm-form-actions { display: flex; gap: var(--space-3); margin-top: var(--space-5); }
+
+  #related[hidden] { display: none; }
+  .crm-related-title { font-family: var(--font-mono); font-size: 12px; font-variant: small-caps; letter-spacing: 0.06em; color: var(--color-text-secondary); margin: var(--space-6) 0 var(--space-2); }
+  .crm-related-empty { padding: var(--space-3); font-family: var(--font-mono); font-size: 12px; color: var(--color-text-muted); }
+
+  .crm-timeline { margin-top: var(--space-2); }
+  .crm-note-form { display: flex; gap: var(--space-2); margin-bottom: var(--space-4); align-items: flex-start; }
+  .crm-note-form textarea {
+    flex: 1; padding: var(--space-2) var(--space-3);
+    background: var(--color-surface-02); border: 1px solid var(--color-border-muted); border-radius: var(--radius-sm);
+    color: var(--color-text-primary); font-family: var(--font-sans); font-size: 14px; resize: vertical;
+  }
+  .crm-timeline-list { display: flex; flex-direction: column; gap: var(--space-2); }
+  .crm-note { padding: var(--space-3); background: var(--color-surface-02); border: 1px solid var(--color-border-subtle); border-radius: var(--radius-sm); }
+  .crm-note-body { font-family: var(--font-sans); font-size: 14px; color: var(--color-text-secondary); line-height: 1.5; white-space: pre-wrap; }
+  .crm-note-meta { display: flex; align-items: center; justify-content: space-between; margin-top: var(--space-2); font-family: var(--font-mono); font-size: 11px; color: var(--color-text-muted); }
+  .crm-note-del { background: none; border: none; color: var(--color-text-muted); font-family: var(--font-mono); font-size: 11px; cursor: pointer; padding: 0; }
+  .crm-note-del:hover { color: var(--color-error); }
+  .crm-note-del:focus-visible { outline: 2px solid var(--color-error); outline-offset: 2px; }
+
+  .crm-visually-hidden { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
+
+  @media (max-width: 700px) {
+    .crm-form-grid { grid-template-columns: 1fr; }
+    .crm-projects-grid { grid-template-columns: 1.6fr 90px 90px; }
+    .crm-header .crm-col-label:nth-child(2), .crm-header .crm-col-label:nth-child(5),
+    .crm-row .crm-cell:nth-child(2), .crm-row .crm-cell:nth-child(5) { display: none; }
+  }
+</style>

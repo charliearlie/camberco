@@ -2,6 +2,10 @@ import { defineMiddleware } from 'astro:middleware';
 import { createClient } from '@supabase/supabase-js';
 import { ADMIN_SESSION_COOKIE, isAdminPath, isProtectedAdminPath } from './lib/admin-guard';
 
+// Authenticate AND authorise: a valid Supabase session is not enough because
+// other auth users may exist. The token holder must be the configured admin.
+const ADMIN_EMAIL = (import.meta.env.ADMIN_EMAIL ?? 'charlie@camberco.co.uk').toLowerCase();
+
 async function isValidToken(token: string): Promise<boolean> {
   try {
     const supabase = createClient(
@@ -10,7 +14,8 @@ async function isValidToken(token: string): Promise<boolean> {
       { auth: { autoRefreshToken: false, persistSession: false } },
     );
     const { data, error } = await supabase.auth.getUser(token);
-    return !error && Boolean(data.user);
+    if (error || !data.user) return false;
+    return (data.user.email ?? '').toLowerCase() === ADMIN_EMAIL;
   } catch {
     return false;
   }

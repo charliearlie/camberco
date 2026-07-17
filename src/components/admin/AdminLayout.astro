@@ -61,8 +61,12 @@ const { title } = Astro.props;
     <!-- Admin top bar -->
     <header class="admin-topbar">
       <a href="/admin" class="admin-topbar-logo">$ camber admin</a>
-      <nav class="admin-topbar-actions">
+      <nav class="admin-topbar-actions" aria-label="Admin sections">
+        <a href="/admin" class="admin-topbar-link">overview</a>
         <a href="/admin/enquiries" class="admin-topbar-link">enquiries</a>
+        <a href="/admin/clients" class="admin-topbar-link">clients</a>
+        <a href="/admin/projects" class="admin-topbar-link">projects</a>
+        <a href="/admin/blog" class="admin-topbar-link">blog</a>
         <a href="/admin/settings" class="admin-topbar-link">settings</a>
         <a href="/" class="admin-topbar-link">← back to site</a>
         <button
@@ -120,6 +124,35 @@ const { title } = Astro.props;
     min-height: 100vh;
   }
 
+  /* The nav grew to seven links; let it scroll horizontally within its own
+     strip on narrow screens so the page body never scrolls sideways. */
+  .admin-topbar-actions {
+    min-width: 0;
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+
+  .admin-topbar-actions::-webkit-scrollbar {
+    display: none;
+  }
+
+  .admin-topbar-link {
+    white-space: nowrap;
+  }
+
+  .admin-topbar-link:focus-visible,
+  .admin-theme-toggle:focus-visible {
+    outline: 2px solid var(--color-green-500);
+    outline-offset: 2px;
+    border-radius: var(--radius-sm);
+  }
+
+  @media (max-width: 640px) {
+    .admin-topbar {
+      padding: 0 var(--space-3);
+    }
+  }
+
   .admin-theme-toggle {
     font-family: var(--font-mono);
     font-size: 12px;
@@ -128,6 +161,7 @@ const { title } = Astro.props;
     border: none;
     cursor: pointer;
     padding: 0;
+    white-space: nowrap;
   }
 
   .admin-theme-toggle:hover {
