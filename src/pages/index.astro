@@ -13,61 +13,6 @@ const auditHref = BOOKING_URL ?? '/contact';
 
 const recentPosts = (await getPublishedPosts()).slice(0, 3);
 
-const faqs = [
-  {
-    q: `What does an AI consultancy actually do?`,
-    a: `An AI consultancy helps businesses identify where artificial intelligence can save time, reduce costs, and improve operations. Camber Co goes further than advising. We build and deploy working tools: n8n workflow automation, websites, mobile apps, SEO, and personal AI assistants. I take on a small number of clients each quarter, so every engagement ships something real.`,
-  },
-  {
-    q: `How much does AI consultancy cost in the UK?`,
-    a: `Every service has a published starting price: workflow automation from £1,200, website builds from £2,500, mobile apps from £4,500, AI consultations at £297 per session, SEO from £750, training and coaching from £197, and personal AI from £497. The exact quote depends on scope. Every engagement starts with a free 30-minute audit call. No pitch, no obligation.`,
-  },
-  {
-    q: `What is an AI readiness audit?`,
-    a: `Two things, and they are different. The free 30-minute audit call is a conversation: you describe how your business runs, I tell you what I would automate first. The paid AI Readiness Audit (£750) is a half-day assessment with a written, prioritised report. Most people start with the free call.`,
-  },
-  {
-    q: `Can AI help small businesses in the UK?`,
-    a: `Absolutely. AI is particularly powerful for small businesses because it can automate the repetitive admin tasks that consume disproportionate amounts of time. Camber Co works with UK founders and SMEs to compress hours of manual work into automated workflows. Our approach is practical — we focus on the specific tasks eating your week and build solutions that run without constant supervision.`,
-  },
-  {
-    q: `How long does it take to implement AI in a business?`,
-    a: `Implementation timelines depend on scope. A website or landing page can ship in 1-2 weeks. An n8n workflow automation can be built and deployed in 1-2 weeks. SEO is ongoing but you will see early improvements within the first month. Consultation and training sessions can start immediately. We prioritise quick wins that deliver value from day one.`,
-  },
-  {
-    q: `Do I need technical knowledge to use the AI tools you build?`,
-    a: `No. Everything we build is designed for non-technical users. Our Solo Founder Training specifically targets founders without a technical background. We handle development, deployment, and integration, then ensure you understand how to run what we've built. You should never be dependent on us to operate your own systems — that's the whole point.`,
-  },
-  {
-    q: `Why hire an AI consultant instead of just using ChatGPT?`,
-    a: `ChatGPT is a general-purpose tool. Camber Co builds bespoke solutions tailored to your specific business — connecting AI to your actual tools, data, and workflows. Instead of manually typing queries, we build systems that run automatically: n8n pipelines that handle tasks 24/7, or a personal AI assistant trained on your business context that lives inside WhatsApp or Slack. The difference is between having a tool and having a system.`,
-  },
-  {
-    q: `Do you work with businesses outside London?`,
-    a: `Yes. While Camber Co is based in London, we work with founders and small businesses across the UK. Consultations, training, and strategy sessions are conducted remotely via video call. Automation and AI assistant projects are delivered fully remotely — geography is not a barrier.`,
-  },
-  {
-    q: `What is n8n workflow automation?`,
-    a: `N8n is an open-source workflow automation platform that connects your business tools — email, CRM, spreadsheets, payment systems — and runs automated tasks between them 24/7. Camber Co builds and deploys custom n8n automations for UK businesses, typically saving 10-30 hours per month on repetitive processes.`,
-  },
-  {
-    q: `Do you offer SEO for small businesses?`,
-    a: `Yes. Camber Co offers practical SEO for UK small businesses and founders. We cover technical audits, on-page optimisation, keyword research, and content strategy. Our focus is on traffic that converts, not vanity metrics. SEO is delivered by a small team of trusted specialists, with Charlie leading strategy and ensuring everything ties back to your business goals.`,
-  },
-  {
-    q: `Can you build me a website or app?`,
-    a: `Yes. We build clean, fast websites and simple web apps for small businesses. Whether you need a landing page, a full company site, or a lightweight web app, we handle design and development end to end. Every build is performance-focused and designed to convert visitors into customers.`,
-  },
-  {
-    q: `What is a personal AI assistant?`,
-    a: `A personal AI assistant is an AI trained on your business context, your documents, processes, and knowledge, that runs on platforms you already use like WhatsApp, Telegram, or Slack. Unlike generic AI tools like ChatGPT, it knows your business specifically and can handle tasks, answer questions, and automate workflows tailored to your operations. Camber Co deploys these using OpenClaw, an open-source platform. Standard setups use cloud AI models with sensible guardrails. On-premises builds are available if you handle sensitive data.`,
-  },
-  {
-    q: `What AI training do you offer for non-technical founders?`,
-    a: `Our Solo Founder Training is hands-on coaching designed for people who want to use AI in their business but don't have a technical background. We cover practical skills: how to evaluate AI tools, build simple automations, prompt effectively, and ship AI-powered features. Sessions are 1:1 and tailored to your specific business and goals.`,
-  },
-];
-
 const schema = JSON.stringify([
   {
     "@context": "https://schema.org",
@@ -180,16 +125,6 @@ const schema = JSON.stringify([
         "priceCurrency": "GBP",
       })),
     }
-  },
-  {
-    "@context": "https://schema.org",
-    "@type": "FAQPage",
-    "@id": "https://camberco.co.uk/#faq",
-    "mainEntity": faqs.map((faq) => ({
-      "@type": "Question",
-      "name": faq.q,
-      "acceptedAnswer": { "@type": "Answer", "text": faq.a },
-    })),
   }
 ]);
 ---
@@ -394,29 +329,6 @@ const schema = JSON.stringify([
     </section>
   )}
 
-  <!-- ===== FAQ ===== -->
-  <section class="faq" id="faq">
-    <div class="container">
-      <div class="section-header" data-reveal>
-        <span class="section-tag">common questions</span>
-        <h2>Frequently asked questions.</h2>
-      </div>
-      <div class="faq-list" data-reveal>
-        {faqs.map((faq, i) => (
-          <details class="faq-item" open={i === 0}>
-            <summary class="faq-question">
-              <span class="faq-arrow">&gt;</span>
-              <span class="faq-q-text">{faq.q}</span>
-            </summary>
-            <div class="faq-answer">
-              <p>{faq.a}</p>
-            </div>
-          </details>
-        ))}
-      </div>
-    </div>
-  </section>
-
   <!-- ===== SECTION DIVIDER 04 ===== -->
   <div class="section-divider">/* 04 — next steps */</div>
 
@@ -454,7 +366,6 @@ const schema = JSON.stringify([
   .race-section,
   .audience,
   .about-section,
-  .faq,
   .final-cta {
     position: relative;
     z-index: 2;
@@ -1147,72 +1058,6 @@ const schema = JSON.stringify([
     .writing-grid {
       grid-template-columns: 1fr;
     }
-  }
-
-  /* ============================================================
-     FAQ SECTION
-     ============================================================ */
-  .faq {
-    padding: clamp(80px, 12vw, 128px) 0;
-  }
-
-  .faq-list {
-    max-width: 760px;
-    margin-top: var(--space-8);
-  }
-
-  .faq-item {
-    border-bottom: 1px solid var(--color-border-subtle);
-  }
-
-  .faq-item:first-child {
-    border-top: 1px solid var(--color-border-subtle);
-  }
-
-  .faq-question {
-    display: flex;
-    align-items: flex-start;
-    gap: var(--space-3);
-    cursor: pointer;
-    padding: var(--space-6) 0;
-    list-style: none;
-  }
-
-  .faq-question::-webkit-details-marker {
-    display: none;
-  }
-
-  .faq-arrow {
-    font-family: var(--font-mono);
-    font-size: var(--type-body);
-    color: var(--color-green-500);
-    flex-shrink: 0;
-    margin-top: 1px;
-    transition: transform var(--duration-quick) var(--easing-smooth);
-  }
-
-  details[open] .faq-arrow {
-    transform: rotate(90deg);
-  }
-
-  .faq-q-text {
-    font-family: var(--font-sans);
-    font-size: var(--type-body);
-    font-weight: 600;
-    color: var(--color-text-primary);
-    line-height: 1.4;
-  }
-
-  .faq-answer {
-    padding: 0 0 var(--space-6) calc(var(--space-3) + 14px);
-  }
-
-  .faq-answer p {
-    font-family: var(--font-sans);
-    font-size: var(--type-body-sm);
-    color: var(--color-text-secondary);
-    line-height: 1.75;
-    margin: 0;
   }
 
   /* ============================================================
